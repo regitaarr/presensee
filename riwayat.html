@@ -347,60 +347,61 @@
                 <p style="font-size:13px; color:#555; margin-bottom:20px; text-align:center;">Lihat catatan kehadiran
                     dan laporan harian Anda.</p>
 
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;"></div>
-                <button id="btn-prev-period"
-                    style="border:none; background:#f0f4f9; width:44px; height:44px; border-radius:12px; cursor:pointer; font-weight:bold; font-size:18px; color:#555; transition:0.2s; display:flex; align-items:center; justify-content:center;">
-                    &lt;
-                </button>
-                <div style="text-align:center;">
-                    <div id="period-title" style="font-weight:800; font-size:16px; color:#1a237e;">Memuat...</div>
-                    <div id="period-date" style="font-size:12px; color:#666;">-</div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <button id="btn-prev-period"
+                        style="border:none; background:#f0f4f9; width:44px; height:44px; border-radius:12px; cursor:pointer; font-weight:bold; font-size:18px; color:#555; transition:0.2s; display:flex; align-items:center; justify-content:center;">
+                        &lt;
+                    </button>
+                    <div style="text-align:center;">
+                        <div id="period-title" style="font-weight:800; font-size:16px; color:#1a237e;">Memuat...</div>
+                        <div id="period-date" style="font-size:12px; color:#666;">-</div>
+                    </div>
+                    <button id="btn-next-period"
+                        style="border:none; background:#f0f4f9; width:44px; height:44px; border-radius:12px; cursor:pointer; font-weight:bold; font-size:18px; color:#555; transition:0.2s; display:flex; align-items:center; justify-content:center;">
+                        &gt;
+                    </button>
                 </div>
-                <button id="btn-next-period"
-                    style="border:none; background:#f0f4f9; width:44px; height:44px; border-radius:12px; cursor:pointer; font-weight:bold; font-size:18px; color:#555; transition:0.2s; display:flex; align-items:center; justify-content:center;">
-                    &gt;
-                </button>
+
+                <div class="calendar-container">
+                    <div class="cal-header"
+                        style="display:grid; grid-template-columns:repeat(7, 1fr); text-align:center; font-size:12px; font-weight:700; color:#444; border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:10px; padding-right:5px;">
+                        <div>Sen</div>
+                        <div>Sel</div>
+                        <div>Rab</div>
+                        <div>Kam</div>
+                        <div>Jum</div>
+                        <div>Sab</div>
+                        <div>Min</div>
+                    </div>
+                    <div id="calendar-grid"
+                        style="display:grid; grid-template-columns:repeat(7, 1fr); text-align:center; row-gap:10px; max-height: 280px; overflow-y: auto; overflow-x: hidden; padding-right: 5px; align-content: flex-start;">
+                        <div style="grid-column: span 7; color:#999; padding:20px; font-size:12px;">⏳ Memuat
+                            kalender...</div>
+                    </div>
+                </div>
+
+                <div
+                    style="display:flex; flex-wrap:wrap; gap:12px; margin-top:20px; font-size:11px; font-weight:600; color:#333;">
+                    <div style="display:flex; align-items:center; gap:4px;"><span
+                            style="color:#2ecc71; font-size:12px;">✔</span> Hadir disetujui</div>
+                    <div style="display:flex; align-items:center; gap:4px;"><span
+                            style="color:#27ae60; font-weight:900; font-size:12px;">–</span> Izin/Sakit disetujui
+                    </div>
+                    <div style="display:flex; align-items:center; gap:4px;"><span
+                            style="color:#e74c3c; font-size:12px;">●</span> Tidak Hadir</div>
+
+                    <div style="display:flex; align-items:center; gap:4px;"><span
+                            style="color:#95a5a6; font-size:12px;">○</span> Belum Diisi</div>
+                    <div style="display:flex; align-items:center; gap:4px;"><span
+                            style="color:#2c3e50; font-size:12px;">■</span> Hari Libur</div>
+                </div>
+
+                <a href="index.html" class="btn btn-danger"
+                    style="text-decoration:none; margin-top:30px; font-weight:700;">
+                    Kembali
+                </a>
             </div>
-
-            <div class="calendar-container">
-                <div class="cal-header"
-                    style="display:grid; grid-template-columns:repeat(7, 1fr); text-align:center; font-size:12px; font-weight:700; color:#444; border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:10px; padding-right:5px;">
-                    <div>Sen</div>
-                    <div>Sel</div>
-                    <div>Rab</div>
-                    <div>Kam</div>
-                    <div>Jum</div>
-                    <div>Sab</div>
-                    <div>Min</div>
-                </div>
-                <div id="calendar-grid"
-                    style="display:grid; grid-template-columns:repeat(7, 1fr); text-align:center; row-gap:10px; max-height: 280px; overflow-y: auto; overflow-x: hidden; padding-right: 5px; align-content: flex-start;">
-                    <div style="grid-column: span 7; color:#999; padding:20px; font-size:12px;">⏳ Memuat
-                        kalender...</div>
-                </div>
-            </div>
-
-            <div
-                style="display:flex; flex-wrap:wrap; gap:12px; margin-top:20px; font-size:11px; font-weight:600; color:#333;">
-                <div style="display:flex; align-items:center; gap:4px;"><span
-                        style="color:#2ecc71; font-size:12px;">✔</span> Hadir disetujui</div>
-                <div style="display:flex; align-items:center; gap:4px;"><span
-                        style="color:#27ae60; font-weight:900; font-size:12px;">–</span> Izin/Sakit disetujui
-                </div>
-                <div style="display:flex; align-items:center; gap:4px;"><span
-                        style="color:#e74c3c; font-size:12px;">●</span> Tidak Hadir</div>
-
-                <div style="display:flex; align-items:center; gap:4px;"><span
-                        style="color:#95a5a6; font-size:12px;">○</span> Belum Diisi</div>
-                <div style="display:flex; align-items:center; gap:4px;"><span
-                        style="color:#2c3e50; font-size:12px;">■</span> Hari Libur</div>
-            </div>
-
-            <a href="index.html" class="btn btn-danger" style="text-decoration:none; margin-top:30px; font-weight:700;">
-                Kembali
-            </a>
         </div>
-    </div>
 
     </div>
 
