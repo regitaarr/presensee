@@ -525,6 +525,21 @@
             </div>
         </div>
 
+        <!-- MODAL: GAGAL (FAILURE POP-UP) -->
+        <div class="modal" id="modal-gagal">
+            <div class="modal-content" style="text-align:center; max-width:280px; padding:25px;">
+                <img src="gagal.jpg" alt="Gagal"
+                    style="width:120px; height:120px; border-radius:50%; object-fit:cover; margin:0 auto 15px; display:block; box-shadow:0 4px 15px rgba(218,30,40,0.3); border:4px solid white;">
+                <h3 style="color:var(--danger); font-size:20px; font-weight:800; margin-bottom:8px;">Gagal!</h3>
+                <p id="teks-gagal"
+                    style="font-size:14px; color:var(--text-muted); margin-bottom:20px; line-height:1.4;">Terjadi
+                    kesalahan.</p>
+                <button class="btn btn-danger" id="btn-tutup-gagal"
+                    style="width:100%; padding:14px; border-radius:12px; font-size:15px; border:none; color:white; background:var(--danger); margin-top:0;">Oke,
+                    Mengerti</button>
+            </div>
+        </div>
+
         <!-- MODAL: TIDAK HADIR -->
         <div class="modal" id="modal-tidak-hadir">
             <div class="modal-content">
@@ -797,6 +812,25 @@
                 const offset = nowLocal.getTimezoneOffset() * 60000;
                 const tgl = (new Date(nowLocal - offset)).toISOString().split('T')[0];
 
+                // CEK PRESENSI GANDA
+                const qLimit = query(
+                    collection(db, "presensi"),
+                    where("uid", "==", currentUserData.uid),
+                    where("tanggal", "==", tgl)
+                );
+                const qSnapshot = await getDocs(qLimit);
+
+                if (!qSnapshot.empty) {
+                    document.getElementById('teks-gagal').innerText = "Gagal presensi, tadi kamu sudah presensi!";
+                    document.getElementById('modal-gagal').classList.add('active');
+
+                    document.getElementById('btn-tutup-gagal').onclick = () => {
+                        document.getElementById('modal-gagal').classList.remove('active');
+                    };
+                    validateSystemStatus();
+                    return; // Batalkan proses kirim
+                }
+
                 await addDoc(collection(db, "presensi"), {
                     uid: currentUserData.uid,
                     nik: currentUserData.nik,
@@ -822,7 +856,12 @@
 
             } catch (error) {
                 console.error(error);
-                alert("Kesalahan Jaringan. Gagal mengirim: " + error.message);
+                document.getElementById('teks-gagal').innerText = "Yah gagal, ayo coba lagi";
+                document.getElementById('modal-gagal').classList.add('active');
+
+                document.getElementById('btn-tutup-gagal').onclick = () => {
+                    document.getElementById('modal-gagal').classList.remove('active');
+                };
                 validateSystemStatus();
             } finally {
                 document.getElementById('btn-hadir').disabled = false;
@@ -902,13 +941,28 @@
             const jarak = checkJarak(lat, lng);
 
             if (jarak > 50) {
-                return alert(`❌ Lokasi Tidak Valid!\nJarak Anda ${Math.round(jarak)}m dari BPS Kota Banjar.\nHarus berada dalam radius 50m.`);
+                document.getElementById('teks-gagal').innerText = "Gagal presensi, lokasimu terlalu jauh!";
+                document.getElementById('modal-gagal').classList.add('active');
+
+                document.getElementById('btn-tutup-gagal').onclick = () => {
+                    document.getElementById('modal-gagal').classList.remove('active');
+                };
+                return;
             }
 
-            // Capture frame from video to canvas
-            camCanvas.width = camVideo.videoWidth;
-            camCanvas.height = camVideo.videoHeight;
-            camCanvas.getContext('2d').drawImage(camVideo, 0, 0);
+            // Capture frame from video to canvas dengan Limit ukuran maksimal 600px 
+            const MAX_WIDTH = 600;
+            let width = camVideo.videoWidth;
+            let height = camVideo.videoHeight;
+
+            if (width > MAX_WIDTH) {
+                height = Math.round((height * MAX_WIDTH) / width);
+                width = MAX_WIDTH;
+            }
+
+            camCanvas.width = width;
+            camCanvas.height = height;
+            camCanvas.getContext('2d').drawImage(camVideo, 0, 0, width, height);
 
             // Konversi canvas ke Base64 (Kualitas 60% untuk menghemat ukuran Firestore DB limit 1MB)
             const fotoBase64 = camCanvas.toDataURL('image/jpeg', 0.6);
@@ -951,17 +1005,37 @@
 
             const reader = new FileReader();
             reader.onload = function (evt) {
-                const fotoBase64 = evt.target.result;
+                const img = new Image();
+                img.onload = function () {
+                    let width = img.width;
+                    let height = img.height;
+                    const MAX_WIDTH = 600;
 
-                navigator.geolocation.getCurrentPosition((pos) => {
-                    const lat = pos.coords.latitude;
-                    const lng = pos.coords.longitude;
-                    // Tetap kirim record lokasi jika diizinkan (Tidak di limit jarak utk Izin/Sakit)
-                    simpanPresensi(lat, lng, st, ket, fotoBase64);
-                }, (e) => {
-                    // JIka gagal ambil GPS, tetap kirim koordinat 0 khusus untuk flow ini
-                    simpanPresensi(0, 0, st, ket, fotoBase64);
-                });
+                    if (width > MAX_WIDTH) {
+                        height = Math.round((height * MAX_WIDTH) / width);
+                        width = MAX_WIDTH;
+                    }
+
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // Compress to JPEG 60% agar ukuran file jauh di bawah 1MB
+                    const fotoBase64 = canvas.toDataURL("image/jpeg", 0.6);
+
+                    navigator.geolocation.getCurrentPosition((pos) => {
+                        const lat = pos.coords.latitude;
+                        const lng = pos.coords.longitude;
+                        // Tetap kirim record lokasi jika diizinkan (Tidak di limit jarak utk Izin/Sakit)
+                        simpanPresensi(lat, lng, st, ket, fotoBase64);
+                    }, (e) => {
+                        // JIka gagal ambil GPS, tetap kirim koordinat 0 khusus untuk flow ini
+                        simpanPresensi(0, 0, st, ket, fotoBase64);
+                    });
+                };
+                img.src = evt.target.result;
             };
 
             // Baca file sbg base64
