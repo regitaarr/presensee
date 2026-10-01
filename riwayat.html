@@ -339,11 +339,7 @@
             <div
                 style="background:white; border-radius:18px; padding:25px; box-shadow:0 4px 20px rgba(0,0,0,0.06); margin-bottom: 25px; position:relative;">
 
-                <!-- Back Button -->
-                <a href="index.html"
-                    style="text-decoration:none; display:inline-flex; align-items:center; gap:5px; color:#555; position:absolute; top:20px; left:20px; font-weight:600; font-size:12px; font-family:'Inter', sans-serif;">
-                    <span style="font-size:16px;">←</span> Kembali
-                </a>
+
 
                 <h3
                     style="font-size:20px; font-weight:800; color:#1a237e; margin:30px 0 5px; font-family:'Inter', sans-serif; text-align:center;">
@@ -351,47 +347,60 @@
                 <p style="font-size:13px; color:#555; margin-bottom:20px; text-align:center;">Lihat catatan kehadiran
                     dan laporan harian Anda.</p>
 
-                <div
-                    style="border:1px solid #eee; border-radius:12px; padding:15px; margin-bottom:20px; text-align:center;">
-                    <div style="font-weight:700; font-size:14px; color:#333;">Total Periode Magang</div>
-                    <div style="font-size:12px; color:#666;">21 Sep 2026 - 20 Mar 2027</div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;"></div>
+                <button id="btn-prev-period"
+                    style="border:none; background:#f0f4f9; width:44px; height:44px; border-radius:12px; cursor:pointer; font-weight:bold; font-size:18px; color:#555; transition:0.2s; display:flex; align-items:center; justify-content:center;">
+                    &lt;
+                </button>
+                <div style="text-align:center;">
+                    <div id="period-title" style="font-weight:800; font-size:16px; color:#1a237e;">Memuat...</div>
+                    <div id="period-date" style="font-size:12px; color:#666;">-</div>
                 </div>
+                <button id="btn-next-period"
+                    style="border:none; background:#f0f4f9; width:44px; height:44px; border-radius:12px; cursor:pointer; font-weight:bold; font-size:18px; color:#555; transition:0.2s; display:flex; align-items:center; justify-content:center;">
+                    &gt;
+                </button>
+            </div>
 
-                <div class="calendar-container">
-                    <div class="cal-header"
-                        style="display:grid; grid-template-columns:repeat(7, 1fr); text-align:center; font-size:12px; font-weight:700; color:#444; border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:10px; padding-right:5px;">
-                        <div>Sen</div>
-                        <div>Sel</div>
-                        <div>Rab</div>
-                        <div>Kam</div>
-                        <div>Jum</div>
-                        <div>Sab</div>
-                        <div>Min</div>
-                    </div>
-                    <div id="calendar-grid"
-                        style="display:grid; grid-template-columns:repeat(7, 1fr); text-align:center; row-gap:10px; max-height: 280px; overflow-y: auto; overflow-x: hidden; padding-right: 5px; align-content: flex-start;">
-                        <div style="grid-column: span 7; color:#999; padding:20px; font-size:12px;">⏳ Memuat
-                            kalender...</div>
-                    </div>
+            <div class="calendar-container">
+                <div class="cal-header"
+                    style="display:grid; grid-template-columns:repeat(7, 1fr); text-align:center; font-size:12px; font-weight:700; color:#444; border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:10px; padding-right:5px;">
+                    <div>Sen</div>
+                    <div>Sel</div>
+                    <div>Rab</div>
+                    <div>Kam</div>
+                    <div>Jum</div>
+                    <div>Sab</div>
+                    <div>Min</div>
                 </div>
-
-                <div
-                    style="display:flex; flex-wrap:wrap; gap:12px; margin-top:20px; font-size:11px; font-weight:600; color:#333;">
-                    <div style="display:flex; align-items:center; gap:4px;"><span
-                            style="color:#2ecc71; font-size:12px;">✔</span> Hadir disetujui</div>
-                    <div style="display:flex; align-items:center; gap:4px;"><span
-                            style="color:#27ae60; font-weight:900; font-size:12px;">–</span> Izin/Sakit disetujui
-                    </div>
-                    <div style="display:flex; align-items:center; gap:4px;"><span
-                            style="color:#e74c3c; font-size:12px;">●</span> Tidak Hadir</div>
-
-                    <div style="display:flex; align-items:center; gap:4px;"><span
-                            style="color:#95a5a6; font-size:12px;">○</span> Belum Diisi</div>
-                    <div style="display:flex; align-items:center; gap:4px;"><span
-                            style="color:#2c3e50; font-size:12px;">■</span> Hari Libur</div>
+                <div id="calendar-grid"
+                    style="display:grid; grid-template-columns:repeat(7, 1fr); text-align:center; row-gap:10px; max-height: 280px; overflow-y: auto; overflow-x: hidden; padding-right: 5px; align-content: flex-start;">
+                    <div style="grid-column: span 7; color:#999; padding:20px; font-size:12px;">⏳ Memuat
+                        kalender...</div>
                 </div>
             </div>
+
+            <div
+                style="display:flex; flex-wrap:wrap; gap:12px; margin-top:20px; font-size:11px; font-weight:600; color:#333;">
+                <div style="display:flex; align-items:center; gap:4px;"><span
+                        style="color:#2ecc71; font-size:12px;">✔</span> Hadir disetujui</div>
+                <div style="display:flex; align-items:center; gap:4px;"><span
+                        style="color:#27ae60; font-weight:900; font-size:12px;">–</span> Izin/Sakit disetujui
+                </div>
+                <div style="display:flex; align-items:center; gap:4px;"><span
+                        style="color:#e74c3c; font-size:12px;">●</span> Tidak Hadir</div>
+
+                <div style="display:flex; align-items:center; gap:4px;"><span
+                        style="color:#95a5a6; font-size:12px;">○</span> Belum Diisi</div>
+                <div style="display:flex; align-items:center; gap:4px;"><span
+                        style="color:#2c3e50; font-size:12px;">■</span> Hari Libur</div>
+            </div>
+
+            <a href="index.html" class="btn btn-danger" style="text-decoration:none; margin-top:30px; font-weight:700;">
+                ← Kembali ke Dashboard
+            </a>
         </div>
+    </div>
 
     </div>
 
@@ -419,6 +428,18 @@
 
         // State variables
         let nationalHolidays = [];
+        let globalDataMap = {};
+
+        const periods = [
+            { title: "Periode 1", start: "2026-09-21", end: "2026-10-20" },
+            { title: "Periode 2", start: "2026-10-21", end: "2026-11-20" },
+            { title: "Periode 3", start: "2026-11-21", end: "2026-12-20" },
+            { title: "Periode 4", start: "2026-12-21", end: "2027-01-20" },
+            { title: "Periode 5", start: "2027-01-21", end: "2027-02-20" },
+            { title: "Periode 6", start: "2027-02-21", end: "2027-03-20" }
+        ];
+
+        let currentPeriodIndex = 0;
 
         // Auth Listeners
         onAuthStateChanged(auth, async (user) => {
@@ -442,7 +463,110 @@
             }
         });
 
-        // Rekapitulasi
+        // Pagination Controls
+        document.getElementById('btn-prev-period').onclick = () => {
+            if (currentPeriodIndex > 0) {
+                currentPeriodIndex--;
+                renderCalendarForPeriod(currentPeriodIndex);
+            }
+        };
+
+        document.getElementById('btn-next-period').onclick = () => {
+            if (currentPeriodIndex < periods.length - 1) {
+                currentPeriodIndex++;
+                renderCalendarForPeriod(currentPeriodIndex);
+            }
+        };
+
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agt", "Sep", "Okt", "Nov", "Des"];
+        function formatPeriodeDate(dateStr) {
+            const d = new Date(dateStr);
+            return `${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+        }
+
+        function renderCalendarForPeriod(index) {
+            const period = periods[index];
+            const startDate = new Date(period.start);
+            const endDate = new Date(period.end);
+
+            document.getElementById('period-title').innerText = period.title;
+            document.getElementById('period-date').innerText = formatPeriodeDate(period.start) + ' - ' + formatPeriodeDate(period.end);
+
+            // disable/enable buttons
+            document.getElementById('btn-prev-period').style.opacity = index === 0 ? "0.3" : "1";
+            document.getElementById('btn-prev-period').style.pointerEvents = index === 0 ? "none" : "auto";
+            document.getElementById('btn-next-period').style.opacity = index === periods.length - 1 ? "0.3" : "1";
+            document.getElementById('btn-next-period').style.pointerEvents = index === periods.length - 1 ? "none" : "auto";
+
+            const calGrid = document.getElementById('calendar-grid');
+            if (!calGrid) return;
+
+            const totalDays = Math.round((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+            let startDayOfWeek = startDate.getDay();
+            let padStart = (startDayOfWeek === 0) ? 6 : startDayOfWeek - 1;
+
+            let html = '';
+
+            // Empty blocks before Day 1
+            for (let i = 0; i < padStart; i++) {
+                html += `<div style="background:#f9fafb; border-bottom:1px solid #f0f0f0;"></div>`;
+            }
+
+            for (let i = 0; i < totalDays; i++) {
+                const currentDate = new Date(startDate);
+                currentDate.setDate(startDate.getDate() + i);
+
+                const tglStr = currentDate.toISOString().split('T')[0];
+                const dayNum = currentDate.getDate();
+                const dayOfWeek = currentDate.getDay(); // 0 is Sun, 6 is Sat
+
+                const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6 || nationalHolidays.includes(tglStr));
+                let iconHtml = `<span style="color:#95a5a6; font-size:11px;">○</span>`; // default belum diisi
+
+                if (isWeekend) {
+                    iconHtml = `<span style="color:#2c3e50; font-size:11px;">■</span>`; // hari libur
+                }
+
+                if (globalDataMap[tglStr] && globalDataMap[tglStr].length > 0) {
+                    let hasHadir = globalDataMap[tglStr].some(d => d.status.includes('Hadir') && !d.status.includes('Tidak Hadir'));
+                    let hasIzinSakit = globalDataMap[tglStr].some(d => d.status === 'Izin' || d.status === 'Sakit');
+
+                    if (hasHadir) {
+                        iconHtml = `<span style="color:#2ecc71; font-size:11px;">✔</span>`;
+                    } else if (hasIzinSakit) {
+                        iconHtml = `<span style="color:#27ae60; font-weight:900; font-size:11px;">–</span>`;
+                    } else {
+                        iconHtml = `<span style="color:#e74c3c; font-size:11px;">●</span>`;
+                    }
+                }
+
+                const todayStr = (new Date()).toISOString().split('T')[0];
+                const isToday = (todayStr === tglStr);
+                const circleStyles = isToday ? `border: 1px solid #1a237e; color:#1a237e; border-radius:50%; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center;` : `color:#555; height:24px; display:inline-flex; align-items:center; justify-content:center;`;
+
+                const bgCell = isWeekend ? "background:#fbfbfb;" : "";
+
+                html += `
+                <div style="${bgCell} padding:4px 0; display:flex; flex-direction:column; align-items:center; gap:8px; border-bottom:1px solid #f0f0f0;">
+                    <span style="font-size:13px; padding-top:2px; ${circleStyles}">${dayNum}</span>
+                    ${iconHtml}
+                </div>`;
+            }
+
+            // Empty blocks after end date to complete a row
+            let totalCells = padStart + totalDays;
+            let remainder = totalCells % 7;
+            if (remainder !== 0) {
+                let padEnd = 7 - remainder;
+                for (let i = 0; i < padEnd; i++) {
+                    html += `<div style="background:#f9fafb; border-bottom:1px solid #f0f0f0;"></div>`;
+                }
+            }
+
+            calGrid.innerHTML = html;
+        }
+
+        // Rekapitulasi Initialization
         async function loadRecap(uid) {
             try {
                 const q = query(
@@ -460,56 +584,22 @@
                     }
                     dataMap[tgl].push(d);
                 });
+                globalDataMap = dataMap;
 
-                const calGrid = document.getElementById('calendar-grid');
-                if (!calGrid) return;
-                calGrid.innerHTML = "";
-
-                // Start Date: 2026-09-21
-                const startDate = new Date(2026, 8, 21); // Bulan indeks ke-8 = September
-                let html = '';
-
-                for (let i = 0; i < 181; i++) { // Render 181 Hari (21 Sep 26 s/d 20 Mar 27)
-                    const currentDate = new Date(startDate);
-                    currentDate.setDate(startDate.getDate() + i);
-
-                    const tglStr = currentDate.toISOString().split('T')[0];
-                    const dayNum = currentDate.getDate();
-                    const dayOfWeek = currentDate.getDay(); // 0 is Sun, 6 is Sat
-
-                    const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6 || nationalHolidays.includes(tglStr));
-                    let iconHtml = `<span style="color:#95a5a6; font-size:11px;">○</span>`; // default belum diisi
-
-                    if (isWeekend) {
-                        iconHtml = `<span style="color:#2c3e50; font-size:11px;">■</span>`; // hari libur
+                // Identify default active period
+                const today = new Date();
+                currentPeriodIndex = 0;
+                for (let i = 0; i < periods.length; i++) {
+                    const ps = new Date(periods[i].start);
+                    const pe = new Date(periods[i].end);
+                    pe.setHours(23, 59, 59); // include the whole end day
+                    if (today >= ps && today <= pe) {
+                        currentPeriodIndex = i;
+                        break;
                     }
-
-                    if (dataMap[tglStr] && dataMap[tglStr].length > 0) {
-                        // Assess based on status
-                        let hasHadir = dataMap[tglStr].some(d => d.status.includes('Hadir') && !d.status.includes('Tidak Hadir'));
-                        let hasIzinSakit = dataMap[tglStr].some(d => d.status === 'Izin' || d.status === 'Sakit');
-
-                        if (hasHadir) {
-                            iconHtml = `<span style="color:#2ecc71; font-size:11px;">✔</span>`;
-                        } else if (hasIzinSakit) {
-                            iconHtml = `<span style="color:#27ae60; font-weight:900; font-size:11px;">–</span>`;
-                        } else {
-                            iconHtml = `<span style="color:#e74c3c; font-size:11px;">●</span>`;
-                        }
-                    }
-
-                    const todayStr = (new Date()).toISOString().split('T')[0];
-                    const isToday = (todayStr === tglStr);
-                    const circleStyles = isToday ? `border: 1px solid #1a237e; color:#1a237e; border-radius:50%; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center;` : `color:#555; height:24px; display:inline-flex; align-items:center; justify-content:center;`;
-
-                    html += `
-                    <div style="padding:4px 0; display:flex; flex-direction:column; align-items:center; gap:8px; border-bottom:1px solid #f0f0f0;">
-                        <span style="font-size:13px; padding-top:2px; ${circleStyles}">${dayNum}</span>
-                        ${iconHtml}
-                    </div>`;
                 }
 
-                calGrid.innerHTML = html;
+                renderCalendarForPeriod(currentPeriodIndex);
 
             } catch (error) {
                 console.error(error);
