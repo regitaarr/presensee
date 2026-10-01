@@ -514,7 +514,7 @@
         <div class="modal" id="modal-berhasil">
             <div class="modal-content" style="text-align:center; max-width:280px; padding:25px;">
                 <img id="img-berhasil" src="berhasil.jpg" alt="Berhasil"
-                    style="width:120px; height:120px; border-radius:50%; object-fit:cover; margin:0 auto 15px; display:block; box-shadow:0 4px 15px rgba(92,184,92,0.3); border:4px solid white;">
+                    style="width:120px; height:120px; border-radius:16px; object-fit:cover; margin:0 auto 15px; display:block; box-shadow:0 4px 15px rgba(92,184,92,0.3); border:4px solid white;">
                 <h3 style="color:var(--success); font-size:20px; font-weight:800; margin-bottom:8px;">Berhasil!</h3>
                 <p id="teks-berhasil"
                     style="font-size:14px; color:var(--text-muted); margin-bottom:20px; line-height:1.4;">Presensi Anda
@@ -529,7 +529,7 @@
         <div class="modal" id="modal-gagal">
             <div class="modal-content" style="text-align:center; max-width:280px; padding:25px;">
                 <img id="img-gagal" src="gagal.jpg" alt="Gagal"
-                    style="width:120px; height:120px; border-radius:50%; object-fit:cover; margin:0 auto 15px; display:block; box-shadow:0 4px 15px rgba(218,30,40,0.3); border:4px solid white;">
+                    style="width:120px; height:120px; border-radius:16px; object-fit:cover; margin:0 auto 15px; display:block; box-shadow:0 4px 15px rgba(218,30,40,0.3); border:4px solid white;">
                 <h3 style="color:var(--danger); font-size:20px; font-weight:800; margin-bottom:8px;">Gagal!</h3>
                 <p id="teks-gagal"
                     style="font-size:14px; color:var(--text-muted); margin-bottom:20px; line-height:1.4;">Terjadi
@@ -544,7 +544,7 @@
         <div class="modal" id="modal-tunggu">
             <div class="modal-content" style="text-align:center; max-width:280px; padding:25px;">
                 <img src="tunggu.jpg" alt="Tunggu"
-                    style="width:120px; height:120px; border-radius:50%; object-fit:cover; margin:0 auto 15px; display:block; box-shadow:0 4px 15px rgba(243,156,18,0.3); border:4px solid white;">
+                    style="width:120px; height:120px; border-radius:16px; object-fit:cover; margin:0 auto 15px; display:block; box-shadow:0 4px 15px rgba(243,156,18,0.3); border:4px solid white;">
                 <h3 style="color:#f39c12; font-size:20px; font-weight:800; margin-bottom:8px;">Mohon Tunggu</h3>
                 <p id="teks-tunggu"
                     style="font-size:14px; color:var(--text-muted); margin-bottom:20px; line-height:1.4;">GPS belum
@@ -905,7 +905,8 @@
                     document.getElementById('teks-berhasil').innerText = "Presensi Anda (Izin) Berhasil Tersimpan!";
                     if (imgElem) imgElem.src = "terima.jpg";
                 } else {
-                    document.getElementById('teks-berhasil').innerText = "Presensi Anda (" + status + ") Berhasil Tersimpan!";
+                    const timeString = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`;
+                    document.getElementById('teks-berhasil').innerText = `Presensi Anda (${status}) Berhasil Tersimpan pada pukul ${timeString}!`;
                     if (imgElem) imgElem.src = "berhasil.jpg";
                 }
 
