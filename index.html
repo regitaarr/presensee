@@ -856,7 +856,7 @@
 
             } catch (error) {
                 console.error(error);
-                document.getElementById('teks-gagal').innerText = "Yah gagal, ayo coba lagi";
+                document.getElementById('teks-gagal').innerText = "Gagal memproses: " + error.message;
                 document.getElementById('modal-gagal').classList.add('active');
 
                 document.getElementById('btn-tutup-gagal').onclick = () => {
