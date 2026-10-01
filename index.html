@@ -457,58 +457,12 @@
                     <p style="font-size:11px; color:#999; text-align:center; margin-top:8px;">📍 Geofencing 50m aktif ·
                         BPS Kota Banjar</p>
                 </div>
-
-                <!-- RIWAYAT KEHADIRAN CALENDAR -->
-                <div
-                    style="background:white; border-radius:18px; padding:25px; box-shadow:0 4px 20px rgba(0,0,0,0.06); margin-bottom: 25px;">
-                    <h3
-                        style="font-size:22px; font-weight:800; color:#1a237e; margin:0 0 5px; font-family:'Inter', sans-serif;">
-                        Riwayat Kehadiran</h3>
-                    <p style="font-size:13px; color:#555; margin-bottom:20px;">Lihat catatan kehadiran dan laporan
-                        harian Anda.</p>
-
-                    <div
-                        style="border:1px solid #eee; border-radius:12px; padding:15px; margin-bottom:20px; text-align:center;">
-                        <div style="font-weight:700; font-size:14px; color:#333;">Periode 1</div>
-                        <div style="font-size:12px; color:#666;">21 Sep 2026 - 20 Okt 2026</div>
-                    </div>
-
-                    <div class="calendar-container">
-                        <div class="cal-header"
-                            style="display:grid; grid-template-columns:repeat(7, 1fr); text-align:center; font-size:12px; font-weight:700; color:#444; border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:10px;">
-                            <div>Sen</div>
-                            <div>Sel</div>
-                            <div>Rab</div>
-                            <div>Kam</div>
-                            <div>Jum</div>
-                            <div>Sab</div>
-                            <div>Min</div>
-                        </div>
-                        <div id="calendar-grid"
-                            style="display:grid; grid-template-columns:repeat(7, 1fr); text-align:center; row-gap:10px;">
-                            <div style="grid-column: span 7; color:#999; padding:20px; font-size:12px;">⏳ Memuat
-                                kalender...</div>
-                        </div>
-                    </div>
-
-                    <div
-                        style="display:flex; flex-wrap:wrap; gap:12px; margin-top:20px; font-size:11px; font-weight:600; color:#333;">
-                        <div style="display:flex; align-items:center; gap:4px;"><span
-                                style="color:#2ecc71; font-size:12px;">✔</span> Hadir disetujui</div>
-                        <div style="display:flex; align-items:center; gap:4px;"><span
-                                style="color:#27ae60; font-weight:900; font-size:12px;">–</span> Izin/Sakit disetujui
-                        </div>
-                        <div style="display:flex; align-items:center; gap:4px;"><span
-                                style="color:#e74c3c; font-size:12px;">●</span> Tidak Hadir</div>
-                        <div style="display:flex; align-items:center; gap:4px;"><span
-                                style="color:#f39c12; font-size:12px;">▲</span> Perlu Tindakan Anda</div>
-                        <div style="display:flex; align-items:center; gap:4px;"><span
-                                style="color:#2980b9; font-size:12px;">◆</span> Menunggu Tindakan Mentor</div>
-                        <div style="display:flex; align-items:center; gap:4px;"><span
-                                style="color:#95a5a6; font-size:12px;">○</span> Belum Diisi</div>
-                        <div style="display:flex; align-items:center; gap:4px;"><span
-                                style="color:#2c3e50; font-size:12px;">■</span> Hari Libur</div>
-                    </div>
+                <!-- RIWAYAT KEHADIRAN BUTTON -->
+                <div style="margin-top:5px; margin-bottom:20px;">
+                    <a href="riwayat.html" class="btn btn-outline"
+                        style="text-decoration:none; display:flex; justify-content:center; align-items:center; background:white; color:var(--bps-blue); border:2px solid var(--bps-blue); font-weight:700;">
+                        📅 Buka Riwayat Kehadiran
+                    </a>
                 </div>
                 <div id="recap-list" style="display:none;">
                 </div>
@@ -742,7 +696,6 @@
                         if (avatarEl) avatarEl.innerText = currentUserData.nama.charAt(0).toUpperCase();
                         switchView(viewDashboard);
                         validateSystemStatus();
-                        loadRecap(user.uid);
                     }
                 } catch (e) {
                     alert("Akun ditemukan, namun profil detail tidak bisa dimuat dari Database.");
@@ -813,87 +766,7 @@
             if (confirm("Apakah Anda yakin ingin keluar?")) signOut(auth);
         };
 
-        // Rekapitulasi
-        async function loadRecap(uid) {
-            try {
-                // Hapus orderBy("waktu") agar tidak error Missing Index di Firestore
-                const q = query(
-                    collection(db, "presensi"),
-                    where("uid", "==", uid)
-                );
-                const querySnapshot = await getDocs(q);
-
-                let dataMap = {};
-                querySnapshot.forEach((doc) => {
-                    const d = doc.data();
-                    let tgl = d.tanggal;
-                    if (!dataMap[tgl]) {
-                        dataMap[tgl] = [];
-                    }
-                    dataMap[tgl].push(d);
-                });
-
-                const calGrid = document.getElementById('calendar-grid');
-                if (!calGrid) return;
-                calGrid.innerHTML = "";
-
-                // Start Date: 2026-09-21
-                const startDate = new Date(2026, 8, 21); // Bulan indeks ke-8 = September
-                let html = '';
-
-                for (let i = 0; i < 35; i++) { // Render 5 minggu 
-                    if (i >= 30) {
-                        html += `<div style="padding:15px 0;"></div>`;
-                        continue;
-                    }
-
-                    const currentDate = new Date(startDate);
-                    currentDate.setDate(startDate.getDate() + i);
-
-                    const tglStr = currentDate.toISOString().split('T')[0];
-                    const dayNum = currentDate.getDate();
-                    const dayOfWeek = currentDate.getDay(); // 0 is Sun, 6 is Sat
-
-                    const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6 || nationalHolidays.includes(tglStr));
-                    let iconHtml = `<span style="color:#95a5a6; font-size:11px;">○</span>`; // default belum diisi
-
-                    if (isWeekend) {
-                        iconHtml = `<span style="color:#2c3e50; font-size:11px;">■</span>`; // hari libur
-                    }
-
-                    if (dataMap[tglStr] && dataMap[tglStr].length > 0) {
-                        // Assess based on status
-                        let hasHadir = dataMap[tglStr].some(d => d.status.includes('Hadir') && !d.status.includes('Tidak Hadir'));
-                        let hasIzinSakit = dataMap[tglStr].some(d => d.status === 'Izin' || d.status === 'Sakit');
-
-                        if (hasHadir) {
-                            iconHtml = `<span style="color:#2ecc71; font-size:11px;">✔</span>`;
-                        } else if (hasIzinSakit) {
-                            iconHtml = `<span style="color:#27ae60; font-weight:900; font-size:11px;">–</span>`;
-                        } else {
-                            iconHtml = `<span style="color:#e74c3c; font-size:11px;">●</span>`;
-                        }
-                    }
-
-                    const todayStr = (new Date()).toISOString().split('T')[0];
-                    const isToday = (todayStr === tglStr);
-                    const circleStyles = isToday ? `border: 1px solid #1a237e; color:#1a237e; border-radius:50%; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center;` : `color:#555; height:24px; display:inline-flex; align-items:center; justify-content:center;`;
-
-                    html += `
-                    <div style="padding:4px 0; display:flex; flex-direction:column; align-items:center; gap:8px; border-bottom:1px solid #f0f0f0;">
-                        <span style="font-size:13px; padding-top:2px; ${circleStyles}">${dayNum}</span>
-                        ${iconHtml}
-                    </div>`;
-                }
-
-                calGrid.innerHTML = html;
-
-            } catch (error) {
-                console.error(error);
-                const el = document.getElementById('calendar-grid');
-                if (el) el.innerHTML = `<div style="grid-column: span 7; color:red; padding:20px; font-size:12px;">Gagal memuat rekap: ${error.message}</div>`;
-            }
-        }
+        // Remove loadRecap function and calls
 
         // Logic WFO Geolocation - BPS Banjar
         const BPS_LAT = -7.3834252;
@@ -1016,7 +889,6 @@
                 };
 
                 validateSystemStatus();
-                loadRecap(currentUserData.uid);
 
             } catch (error) {
                 console.error(error);

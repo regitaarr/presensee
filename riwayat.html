@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Presensee</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bps-blue: #1B9AD6;
+            --bps-orange: #F5821E;
+            --bps-green: #5CB85C;
+            --primary: #1B9AD6;
+            --primary-hover: #1482B8;
+            --success: #5CB85C;
+            --warning: #F5821E;
+            --danger: #DA1E28;
+            --bg-color: #F0F4F9;
+            --card-bg: rgba(255, 255, 255, 0.97);
+            --text-main: #1a1a2e;
+            --text-muted: #6b7280;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, #d0eaff 0%, #fff8f0 50%, #e6f9e6 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .phone-container {
+            width: 100%;
+            max-width: 420px;
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            min-height: 600px;
+            max-height: 90vh;
+        }
+
+        .header {
+            padding: 24px 20px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--bps-blue) 0%, #1482B8 100%);
+            border-bottom: none;
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            width: 120px;
+            height: 120px;
+            background: rgba(245, 130, 30, 0.25);
+            border-radius: 50%;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: -20px;
+            width: 90px;
+            height: 90px;
+            background: rgba(92, 184, 92, 0.2);
+            border-radius: 50%;
+        }
+
+        .header h2 {
+            font-size: 16px;
+            margin-bottom: 4px;
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+        }
+
+        .clock-display {
+            font-size: 36px;
+            font-weight: 800;
+            color: #fff;
+            margin: 8px 0 4px;
+            letter-spacing: -1px;
+            line-height: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-date {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.75);
+            position: relative;
+            z-index: 1;
+        }
+
+        .content {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(15, 98, 254, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            color: white;
+            margin-top: 10px;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            box-shadow: 0 4px 10px rgba(218, 30, 40, 0.2);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid #ccc;
+        }
+
+        /* SPA Views */
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .status-card {
+            background: linear-gradient(135deg, #f0f9ff, #e6f9e6);
+            border-radius: 16px;
+            padding: 14px 16px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-main);
+            border: 1.5px solid rgba(27, 154, 214, 0.2);
+            box-shadow: 0 2px 8px rgba(27, 154, 214, 0.08);
+        }
+
+        .status-card.error {
+            color: var(--danger);
+            background: linear-gradient(135deg, #ffebee, #fff3f3);
+            border-color: #ffcdd2;
+        }
+
+        /* Modal */
+        .modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 0px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .recap-item {
+            padding: 12px 14px;
+            border-bottom: 1px solid #f0f4f9;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            align-items: center;
+        }
+
+        .recap-item:last-child {
+            border-bottom: none;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .badge-hadir {
+            background: var(--success);
+        }
+
+        .badge-izin {
+            background: var(--warning);
+            color: #333;
+        }
+
+        .badge-sakit {
+            background: var(--danger);
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading .spinner {
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="phone-container">
+
+        <!-- RIWAYAT VIEW -->
+        <div id="view-riwayat" class="view active content">
+            <div
+                style="background:white; border-radius:18px; padding:25px; box-shadow:0 4px 20px rgba(0,0,0,0.06); margin-bottom: 25px; position:relative;">
+
+                <!-- Back Button -->
+                <a href="index.html"
+                    style="text-decoration:none; display:inline-flex; align-items:center; gap:5px; color:#555; position:absolute; top:20px; left:20px; font-weight:600; font-size:12px; font-family:'Inter', sans-serif;">
+                    <span style="font-size:16px;">←</span> Kembali
+                </a>
+
+                <h3
+                    style="font-size:20px; font-weight:800; color:#1a237e; margin:30px 0 5px; font-family:'Inter', sans-serif; text-align:center;">
+                    Riwayat Kehadiran</h3>
+                <p style="font-size:13px; color:#555; margin-bottom:20px; text-align:center;">Lihat catatan kehadiran
+                    dan laporan harian Anda.</p>
+
+                <div
+                    style="border:1px solid #eee; border-radius:12px; padding:15px; margin-bottom:20px; text-align:center;">
+                    <div style="font-weight:700; font-size:14px; color:#333;">Total Periode Magang</div>
+                    <div style="font-size:12px; color:#666;">21 Sep 2026 - 20 Mar 2027</div>
+                </div>
+
+                <div class="calendar-container">
+                    <div class="cal-header"
+                        style="display:grid; grid-template-columns:repeat(7, 1fr); text-align:center; font-size:12px; font-weight:700; color:#444; border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:10px; padding-right:5px;">
+                        <div>Sen</div>
+                        <div>Sel</div>
+                        <div>Rab</div>
+                        <div>Kam</div>
+                        <div>Jum</div>
+                        <div>Sab</div>
+                        <div>Min</div>
+                    </div>
+                    <div id="calendar-grid"
+                        style="display:grid; grid-template-columns:repeat(7, 1fr); text-align:center; row-gap:10px; max-height: 280px; overflow-y: auto; overflow-x: hidden; padding-right: 5px; align-content: flex-start;">
+                        <div style="grid-column: span 7; color:#999; padding:20px; font-size:12px;">⏳ Memuat
+                            kalender...</div>
+                    </div>
+                </div>
+
+                <div
+                    style="display:flex; flex-wrap:wrap; gap:12px; margin-top:20px; font-size:11px; font-weight:600; color:#333;">
+                    <div style="display:flex; align-items:center; gap:4px;"><span
+                            style="color:#2ecc71; font-size:12px;">✔</span> Hadir disetujui</div>
+                    <div style="display:flex; align-items:center; gap:4px;"><span
+                            style="color:#27ae60; font-weight:900; font-size:12px;">–</span> Izin/Sakit disetujui
+                    </div>
+                    <div style="display:flex; align-items:center; gap:4px;"><span
+                            style="color:#e74c3c; font-size:12px;">●</span> Tidak Hadir</div>
+                    <div style="display:flex; align-items:center; gap:4px;"><span
+                            style="color:#f39c12; font-size:12px;">▲</span> Perlu Tindakan Anda</div>
+                    <div style="display:flex; align-items:center; gap:4px;"><span
+                            style="color:#2980b9; font-size:12px;">◆</span> Menunggu Tindakan Mentor</div>
+                    <div style="display:flex; align-items:center; gap:4px;"><span
+                            style="color:#95a5a6; font-size:12px;">○</span> Belum Diisi</div>
+                    <div style="display:flex; align-items:center; gap:4px;"><span
+                            style="color:#2c3e50; font-size:12px;">■</span> Hari Libur</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Firebase SDK Modular (v10.8) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Konfigurasi Firebase Anda
+        const firebaseConfig = {
+            apiKey: "AIzaSyDe394Hog3cODzHBWgC00jtQybKq_Ul4l4",
+            authDomain: "presensee-d653b.firebaseapp.com",
+            databaseURL: "https://presensee-d653b-default-rtdb.firebaseio.com",
+            projectId: "presensee-d653b",
+            storageBucket: "presensee-d653b.firebasestorage.app",
+            messagingSenderId: "983111308568",
+            appId: "1:983111308568:web:de94c7403005a596083a6d",
+            measurementId: "G-9WBWFBFGYQ"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // State variables
+        let nationalHolidays = [];
+
+        // Auth Listeners
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                try {
+                    // Muat status libur nasional jika ada
+                    try {
+                        const qLibur = await getDocs(collection(db, "libur_nasional"));
+                        nationalHolidays = [];
+                        qLibur.forEach(d => {
+                            if (d.data().tanggal) nationalHolidays.push(d.data().tanggal);
+                        });
+                    } catch (e) { }
+
+                    loadRecap(user.uid);
+                } catch (e) {
+                    console.warn(e);
+                }
+            } else {
+                window.location.href = "index.html"; // Redirect ke beranda jika belum login
+            }
+        });
+
+        // Rekapitulasi
+        async function loadRecap(uid) {
+            try {
+                const q = query(
+                    collection(db, "presensi"),
+                    where("uid", "==", uid)
+                );
+                const querySnapshot = await getDocs(q);
+
+                let dataMap = {};
+                querySnapshot.forEach((doc) => {
+                    const d = doc.data();
+                    let tgl = d.tanggal;
+                    if (!dataMap[tgl]) {
+                        dataMap[tgl] = [];
+                    }
+                    dataMap[tgl].push(d);
+                });
+
+                const calGrid = document.getElementById('calendar-grid');
+                if (!calGrid) return;
+                calGrid.innerHTML = "";
+
+                // Start Date: 2026-09-21
+                const startDate = new Date(2026, 8, 21); // Bulan indeks ke-8 = September
+                let html = '';
+
+                for (let i = 0; i < 181; i++) { // Render 181 Hari (21 Sep 26 s/d 20 Mar 27)
+                    const currentDate = new Date(startDate);
+                    currentDate.setDate(startDate.getDate() + i);
+
+                    const tglStr = currentDate.toISOString().split('T')[0];
+                    const dayNum = currentDate.getDate();
+                    const dayOfWeek = currentDate.getDay(); // 0 is Sun, 6 is Sat
+
+                    const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6 || nationalHolidays.includes(tglStr));
+                    let iconHtml = `<span style="color:#95a5a6; font-size:11px;">○</span>`; // default belum diisi
+
+                    if (isWeekend) {
+                        iconHtml = `<span style="color:#2c3e50; font-size:11px;">■</span>`; // hari libur
+                    }
+
+                    if (dataMap[tglStr] && dataMap[tglStr].length > 0) {
+                        // Assess based on status
+                        let hasHadir = dataMap[tglStr].some(d => d.status.includes('Hadir') && !d.status.includes('Tidak Hadir'));
+                        let hasIzinSakit = dataMap[tglStr].some(d => d.status === 'Izin' || d.status === 'Sakit');
+
+                        if (hasHadir) {
+                            iconHtml = `<span style="color:#2ecc71; font-size:11px;">✔</span>`;
+                        } else if (hasIzinSakit) {
+                            iconHtml = `<span style="color:#27ae60; font-weight:900; font-size:11px;">–</span>`;
+                        } else {
+                            iconHtml = `<span style="color:#e74c3c; font-size:11px;">●</span>`;
+                        }
+                    }
+
+                    const todayStr = (new Date()).toISOString().split('T')[0];
+                    const isToday = (todayStr === tglStr);
+                    const circleStyles = isToday ? `border: 1px solid #1a237e; color:#1a237e; border-radius:50%; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center;` : `color:#555; height:24px; display:inline-flex; align-items:center; justify-content:center;`;
+
+                    html += `
+                    <div style="padding:4px 0; display:flex; flex-direction:column; align-items:center; gap:8px; border-bottom:1px solid #f0f0f0;">
+                        <span style="font-size:13px; padding-top:2px; ${circleStyles}">${dayNum}</span>
+                        ${iconHtml}
+                    </div>`;
+                }
+
+                calGrid.innerHTML = html;
+
+            } catch (error) {
+                console.error(error);
+                const el = document.getElementById('calendar-grid');
+                if (el) el.innerHTML = `<div style="grid-column: span 7; color:red; padding:20px; font-size:12px;">Gagal memuat rekap: ${error.message}</div>`;
+            }
+        }
+
+    </script>
+</body>
+
+</html>
