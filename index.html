@@ -418,11 +418,11 @@
                 <div style="display:flex; justify-content:center;">
                     <div
                         style="width:180px; height:180px; border-radius:16px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,0.08); position:relative; flex-shrink:0;">
-                        <img src="reminder.jpg" alt="Reminder Presensi"
+                        <img id="banner-img" src="reminder.jpg" alt="Reminder Presensi"
                             style="width:100%; height:100%; object-fit:cover; display:block;">
                         <div
                             style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent, rgba(0,0,0,0.65)); padding:14px 8px 8px;">
-                            <p
+                            <p id="banner-text"
                                 style="color:white; font-size:11px; font-weight:700; margin:0; text-align:center; text-shadow:0 1px 3px rgba(0,0,0,0.5);">
                                 🔔 Jangan lupa presensi ya guys!</p>
                         </div>
@@ -793,6 +793,15 @@
                     lng: lng,
                     foto_url: fotoUrl // Disimpan dalam format Base64 secara native di Firestore
                 });
+
+                if (status === 'Hadir') {
+                    const bannerImg = document.getElementById('banner-img');
+                    const bannerText = document.getElementById('banner-text');
+                    if (bannerImg && bannerText) {
+                        bannerImg.src = "berhasil.jpg";
+                        bannerText.innerText = "🎉 Presensi Anda Berhasil!";
+                    }
+                }
 
                 alert("Presensi Anda (" + status + ") Berhasil Tersimpan!");
                 validateSystemStatus();
