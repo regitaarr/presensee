@@ -327,6 +327,31 @@
         .loading .spinner {
             display: inline-block;
         }
+
+        /* Mobile Adjustments */
+        @media (max-width: 480px) {
+            body {
+                padding: 0;
+                align-items: flex-start;
+                min-height: 100dvh;
+                height: 100dvh;
+                overflow: hidden;
+            }
+
+            .phone-container {
+                border-radius: 0;
+                max-width: 100%;
+                min-height: 100dvh;
+                max-height: 100dvh;
+                box-shadow: none;
+                flex-grow: 1;
+            }
+
+            #view-dashboard.content,
+            #view-register.content {
+                padding-bottom: 30px;
+            }
+        }
     </style>
 </head>
 
@@ -542,7 +567,7 @@
                 style="width:120px; height:120px; border-radius:16px; object-fit:cover; margin:0 auto 15px; display:block; box-shadow:0 4px 15px rgba(92,184,92,0.3); border:4px solid white;">
             <h3 style="color:var(--success); font-size:20px; font-weight:800; margin-bottom:8px;">Berhasil!</h3>
             <p id="teks-berhasil" style="font-size:14px; color:var(--text-muted); margin-bottom:20px; line-height:1.4;">
-                Presensi Anda
+                Presensi kamu
                 berhasil disimpan.</p>
             <button class="btn btn-primary" id="btn-tutup-berhasil"
                 style="width:100%; padding:14px; border-radius:12px; font-size:15px; margin-top:0;">Oke,
@@ -574,8 +599,27 @@
             <p id="teks-tunggu" style="font-size:14px; color:var(--text-muted); margin-bottom:20px; line-height:1.4;">
                 GPS belum
                 siap. Tunggu sebentar hingga lokasi terdeteksi.</p>
-            <button class="btn btn-primary" id="btn-tutup-tunggu"
-                style="width:100%; padding:14px; border-radius:12px; font-size:15px; border:none; color:white; background:#f39c12; margin-top:0;">Oke</button>
+            <button class="btn btn-outline" id="btn-tutup-tunggu"
+                style="width:100%; padding:14px; border-radius:12px; font-size:15px; margin-top:0;">Oke,
+                Tunggu</button>
+        </div>
+    </div>
+
+    <!-- MODAL: KELUAR (LOGOUT POP-UP) -->
+    <div class="modal" id="modal-keluar">
+        <div class="modal-content" style="text-align:center; max-width:280px; padding:25px;">
+            <img src="keluar.jpg" alt="Keluar"
+                style="width:120px; height:120px; border-radius:16px; object-fit:cover; margin:0 auto 15px; display:block; box-shadow:0 4px 15px rgba(218,30,40,0.3); border:4px solid white;">
+            <h3 style="color:var(--danger); font-size:20px; font-weight:800; margin-bottom:8px;">Keluar Akun?</h3>
+            <p style="font-size:14px; color:var(--text-muted); margin-bottom:20px; line-height:1.4;">
+                Apakah kamu yakin ingin keluar dari aplikasi?</p>
+            <div style="display:flex; gap:10px;">
+                <button class="btn btn-outline" id="btn-batal-keluar"
+                    style="width:50%; margin-top:0; border-radius:12px; padding:12px; font-size:14px;">Batal</button>
+                <button class="btn btn-danger" id="btn-konfirm-keluar"
+                    style="width:50%; margin-top:0; border-radius:12px; padding:12px; font-size:14px;">Ya,
+                    Keluar</button>
+            </div>
         </div>
     </div>
 
@@ -619,7 +663,7 @@
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Konfigurasi Firebase Anda
+        // Konfigurasi Firebase Kamu
         const firebaseConfig = {
             apiKey: "AIzaSyDe394Hog3cODzHBWgC00jtQybKq_Ul4l4",
             authDomain: "presensee-d653b.firebaseapp.com",
@@ -765,7 +809,7 @@
                     uid: user.uid, nik, nama, no_hp: hp, email, perusahaan: perus, posisi, created_at: serverTimestamp()
                 });
                 await signOut(auth);
-                alert("Pendaftaran Sukses! Silakan masuk dengan akun Anda.");
+                alert("Pendaftaran Sukses! Silakan masuk dengan akun kamu.");
                 btn.classList.remove('loading');
                 switchView(viewLogin);
             } catch (error) {
@@ -792,7 +836,14 @@
         };
 
         document.getElementById('btn-logout').onclick = () => {
-            if (confirm("Apakah Anda yakin ingin keluar?")) signOut(auth);
+            document.getElementById('modal-keluar').classList.add('active');
+        };
+        document.getElementById('btn-batal-keluar').onclick = () => {
+            document.getElementById('modal-keluar').classList.remove('active');
+        };
+        document.getElementById('btn-konfirm-keluar').onclick = () => {
+            document.getElementById('modal-keluar').classList.remove('active');
+            signOut(auth);
         };
 
         // Remove loadRecap function and calls
@@ -900,14 +951,14 @@
                 // Tampilkan Pop-up Berhasil
                 const imgElem = document.getElementById('img-berhasil');
                 if (status === 'Sakit') {
-                    document.getElementById('teks-berhasil').innerText = "Presensi Anda (Sakit) Berhasil Tersimpan!\nSemoga lekas sembuh 😊";
+                    document.getElementById('teks-berhasil').innerText = "Presensi kamu (Sakit) Berhasil Tersimpan!\nSemoga lekas sembuh 😊";
                     if (imgElem) imgElem.src = "berhasil.jpg";
                 } else if (status === 'Izin') {
-                    document.getElementById('teks-berhasil').innerText = "Presensi Anda (Izin) Berhasil Tersimpan!";
+                    document.getElementById('teks-berhasil').innerText = "Presensi kamu (Izin) Berhasil Tersimpan!";
                     if (imgElem) imgElem.src = "terima.jpg";
                 } else {
                     const timeString = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`;
-                    document.getElementById('teks-berhasil').innerText = `Presensi Anda (${status}) Berhasil Tersimpan pada pukul ${timeString}!`;
+                    document.getElementById('teks-berhasil').innerText = `Presensi kamu (${status}) Berhasil Tersimpan pada pukul ${timeString}!`;
                     if (imgElem) imgElem.src = "berhasil.jpg";
                 }
 

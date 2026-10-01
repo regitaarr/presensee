@@ -327,6 +327,30 @@
         .loading .spinner {
             display: inline-block;
         }
+
+        /* Mobile Adjustments */
+        @media (max-width: 480px) {
+            body {
+                padding: 0;
+                align-items: flex-start;
+                min-height: 100dvh;
+                height: 100dvh;
+                overflow: hidden;
+            }
+
+            .phone-container {
+                border-radius: 0;
+                max-width: 100%;
+                min-height: 100dvh;
+                max-height: 100dvh;
+                box-shadow: none;
+                flex-grow: 1;
+            }
+
+            #view-riwayat.content {
+                padding-bottom: 30px;
+            }
+        }
     </style>
 </head>
 
@@ -344,8 +368,6 @@
                 <h3
                     style="font-size:20px; font-weight:800; color:#1a237e; margin:30px 0 5px; font-family:'Inter', sans-serif; text-align:center;">
                     Riwayat Kehadiran</h3>
-                <p style="font-size:13px; color:#555; margin-bottom:20px; text-align:center;">Lihat catatan kehadiran
-                    dan laporan harian Anda.</p>
 
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                     <button id="btn-prev-period"
@@ -380,6 +402,14 @@
                     </div>
                 </div>
 
+                <div id="holiday-list-container"
+                    style="display:none; margin-top:15px; background:#fffbf7; border:1px solid #ffe3b3; border-radius:10px; padding:12px;">
+                    <div style="font-size:12px; font-weight:800; color:#d35400; margin-bottom:5px;">📌 Daftar Libur
+                        Nasional:</div>
+                    <div id="holiday-list-ul"
+                        style="font-size:11.5px; color:#555; display:flex; flex-direction:column; gap:4px;"></div>
+                </div>
+
                 <div
                     style="display:flex; flex-wrap:wrap; gap:12px; margin-top:20px; font-size:11px; font-weight:600; color:#333;">
                     <div style="display:flex; align-items:center; gap:4px;"><span
@@ -411,7 +441,7 @@
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Konfigurasi Firebase Anda
+        // Konfigurasi Firebase kamu
         const firebaseConfig = {
             apiKey: "AIzaSyDe394Hog3cODzHBWgC00jtQybKq_Ul4l4",
             authDomain: "presensee-d653b.firebaseapp.com",
@@ -428,7 +458,7 @@
         const db = getFirestore(app);
 
         // State variables
-        let nationalHolidays = [];
+        let nationalHolidayMap = {};
         let globalDataMap = {};
 
         const periods = [
@@ -449,9 +479,11 @@
                     // Muat status libur nasional jika ada
                     try {
                         const qLibur = await getDocs(collection(db, "libur_nasional"));
-                        nationalHolidays = [];
+                        nationalHolidayMap = {};
                         qLibur.forEach(d => {
-                            if (d.data().tanggal) nationalHolidays.push(d.data().tanggal);
+                            if (d.data().tanggal) {
+                                nationalHolidayMap[d.data().tanggal] = d.data().keterangan || "Libur Nasional";
+                            }
                         });
                     } catch (e) { }
 
@@ -513,6 +545,8 @@
                 html += `<div style="background:#f9fafb; border-bottom:1px solid #f0f0f0;"></div>`;
             }
 
+            let periodHolidays = [];
+
             for (let i = 0; i < totalDays; i++) {
                 const currentDate = new Date(startDate);
                 currentDate.setDate(startDate.getDate() + i);
@@ -521,7 +555,13 @@
                 const dayNum = currentDate.getDate();
                 const dayOfWeek = currentDate.getDay(); // 0 is Sun, 6 is Sat
 
-                const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6 || nationalHolidays.includes(tglStr));
+                const isNatHoliday = !!nationalHolidayMap[tglStr];
+                const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6 || isNatHoliday);
+
+                if (isNatHoliday) {
+                    periodHolidays.push({ tgl: tglStr, ket: nationalHolidayMap[tglStr] });
+                }
+
                 let iconHtml = `<span style="color:#95a5a6; font-size:11px;">○</span>`; // default belum diisi
 
                 if (isWeekend) {
@@ -565,6 +605,19 @@
             }
 
             calGrid.innerHTML = html;
+
+            const holContainer = document.getElementById('holiday-list-container');
+            const holUl = document.getElementById('holiday-list-ul');
+            if (periodHolidays.length > 0) {
+                holContainer.style.display = 'block';
+                let holHtml = '';
+                periodHolidays.forEach(h => {
+                    holHtml += `<div>• <b>${formatPeriodeDate(h.tgl)}</b> : ${h.ket}</div>`;
+                });
+                holUl.innerHTML = holHtml;
+            } else {
+                holContainer.style.display = 'none';
+            }
         }
 
         // Rekapitulasi Initialization
