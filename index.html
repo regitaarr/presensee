@@ -549,7 +549,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
         // Konfigurasi Firebase Anda
         const firebaseConfig = {
@@ -566,7 +565,6 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const storage = getStorage(app);
 
         // State variables
         let currentUserData = null;
@@ -740,7 +738,7 @@
                                 <span style="font-size:12px; color:#777; display:block; margin-top:5px;">📅 ${d.tanggal}</span>
                             </div>
                             <div style="text-align:right">
-                                <a href="${d.foto_url}" target="_blank" style="font-size:12px; font-weight:500; color:var(--primary); text-decoration:none; padding:6px 10px; background:#eff4ff; border-radius:6px;">Lihat Bukti</a>
+                                ${d.foto_url ? `<a href="${d.foto_url}" target="_blank" style="font-size:12px; font-weight:500; color:var(--primary); text-decoration:none; padding:6px 10px; background:#eff4ff; border-radius:6px;">Lihat Bukti</a>` : '<span style="font-size:11px; color:#999;font-style:italic;">Tanpa Foto</span>'}
                                 ${d.keterangan ? `<div style="font-size:11px; margin-top:4px; max-width:120px; color:#555; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">"${d.keterangan}"</div>` : ''}
                             </div>
                         </div>
@@ -773,19 +771,12 @@
             el.innerHTML = msg;
         }
 
-        async function simpanPresensi(lat, lng, fotoFile, status, keterangan = '') {
-            setStatus("⏳ Sedang mengunggah foto. Mohon tunggu...");
+        async function simpanPresensi(lat, lng, status, keterangan = '', fotoUrl = '') {
+            setStatus("⏳ Sedang memproses data absen...");
             document.getElementById('btn-hadir').disabled = true;
             document.getElementById('btn-tidak-hadir').disabled = true;
 
             try {
-                // Upload Foto
-                const fotoRef = ref(storage, `presensi/${currentUserData.uid}/${Date.now()}.jpg`);
-                await uploadBytes(fotoRef, fotoFile);
-                const fotoUrl = await getDownloadURL(fotoRef);
-
-                setStatus("☁️ Mencatat data ke Database...");
-
                 // Tanggal lokal standar (menghindari timezone issue di browser)
                 const nowLocal = new Date();
                 const offset = nowLocal.getTimezoneOffset() * 60000;
@@ -800,7 +791,7 @@
                     keterangan: keterangan,
                     lat: lat,
                     lng: lng,
-                    foto_url: fotoUrl
+                    foto_url: fotoUrl // Disimpan dalam format Base64 secara native di Firestore
                 });
 
                 alert("Presensi Anda (" + status + ") Berhasil Tersimpan!");
@@ -897,11 +888,12 @@
             camCanvas.height = camVideo.videoHeight;
             camCanvas.getContext('2d').drawImage(camVideo, 0, 0);
 
-            camCanvas.toBlob(async (blob) => {
-                stopCamera();
-                modalKamera.classList.remove('active');
-                await simpanPresensi(lat, lng, blob, 'Hadir');
-            }, 'image/jpeg', 0.85);
+            // Konversi canvas ke Base64 (Kualitas 60% untuk menghemat ukuran Firestore DB limit 1MB)
+            const fotoBase64 = camCanvas.toDataURL('image/jpeg', 0.6);
+
+            stopCamera();
+            modalKamera.classList.remove('active');
+            await simpanPresensi(lat, lng, 'Hadir', '', fotoBase64);
         };
 
         // Tidak Hadir Flow
@@ -930,20 +922,28 @@
             const st = document.getElementById('form-status').value;
             const ket = document.getElementById('form-keterangan').value;
             if (!ket.trim()) return alert("Form Keterangan wajib diisi dengan jelas!");
-            if (!fileBukti) return alert("Foto Bukti (Misal: Surat Dokter) harus dilampirkan via kamera!");
+            if (!fileBukti) return alert("Foto Bukti (Misal: Surat Dokter) harus dilampirkan!");
 
             modalTh.classList.remove('active');
             setStatus("📌 Melakukan submit Laporan Tidak Hadir...", false);
 
-            navigator.geolocation.getCurrentPosition((pos) => {
-                const lat = pos.coords.latitude;
-                const lng = pos.coords.longitude;
-                // Tetap kirim record lokasi jika diizinkan (Tidak di limit jarak utk Izin/Sakit)
-                simpanPresensi(lat, lng, fileBukti, st, ket);
-            }, (e) => {
-                // JIka gagal ambil GPS, tetap kirim koordinat 0 khusus untuk flow ini
-                simpanPresensi(0, 0, fileBukti, st, ket);
-            });
+            const reader = new FileReader();
+            reader.onload = function (evt) {
+                const fotoBase64 = evt.target.result;
+
+                navigator.geolocation.getCurrentPosition((pos) => {
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
+                    // Tetap kirim record lokasi jika diizinkan (Tidak di limit jarak utk Izin/Sakit)
+                    simpanPresensi(lat, lng, st, ket, fotoBase64);
+                }, (e) => {
+                    // JIka gagal ambil GPS, tetap kirim koordinat 0 khusus untuk flow ini
+                    simpanPresensi(0, 0, st, ket, fotoBase64);
+                });
+            };
+
+            // Baca file sbg base64
+            reader.readAsDataURL(fileBukti);
         }
     </script>
 </body>
