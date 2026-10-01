@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Presensee</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bps-blue: #1B9AD6;
+            --bps-orange: #F5821E;
+            --bps-green: #5CB85C;
+            --primary: #1B9AD6;
+            --primary-hover: #1482B8;
+            --success: #5CB85C;
+            --warning: #F5821E;
+            --danger: #DA1E28;
+            --bg-color: #F0F4F9;
+            --card-bg: rgba(255, 255, 255, 0.97);
+            --text-main: #1a1a2e;
+            --text-muted: #6b7280;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, #d0eaff 0%, #fff8f0 50%, #e6f9e6 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .phone-container {
+            width: 100%;
+            max-width: 420px;
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            min-height: 600px;
+            max-height: 90vh;
+        }
+
+        .header {
+            padding: 24px 20px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--bps-blue) 0%, #1482B8 100%);
+            border-bottom: none;
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            width: 120px;
+            height: 120px;
+            background: rgba(245, 130, 30, 0.25);
+            border-radius: 50%;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: -20px;
+            width: 90px;
+            height: 90px;
+            background: rgba(92, 184, 92, 0.2);
+            border-radius: 50%;
+        }
+
+        .header h2 {
+            font-size: 16px;
+            margin-bottom: 4px;
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+        }
+
+        .clock-display {
+            font-size: 36px;
+            font-weight: 800;
+            color: #fff;
+            margin: 8px 0 4px;
+            letter-spacing: -1px;
+            line-height: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-date {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.75);
+            position: relative;
+            z-index: 1;
+        }
+
+        .content {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(15, 98, 254, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            color: white;
+            margin-top: 10px;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            box-shadow: 0 4px 10px rgba(218, 30, 40, 0.2);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid #ccc;
+        }
+
+        /* SPA Views */
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .status-card {
+            background: linear-gradient(135deg, #f0f9ff, #e6f9e6);
+            border-radius: 16px;
+            padding: 14px 16px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-main);
+            border: 1.5px solid rgba(27, 154, 214, 0.2);
+            box-shadow: 0 2px 8px rgba(27, 154, 214, 0.08);
+        }
+
+        .status-card.error {
+            color: var(--danger);
+            background: linear-gradient(135deg, #ffebee, #fff3f3);
+            border-color: #ffcdd2;
+        }
+
+        /* Modal */
+        .modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 0px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .recap-item {
+            padding: 12px 14px;
+            border-bottom: 1px solid #f0f4f9;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            align-items: center;
+        }
+
+        .recap-item:last-child {
+            border-bottom: none;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .badge-hadir {
+            background: var(--success);
+        }
+
+        .badge-izin {
+            background: var(--warning);
+            color: #333;
+        }
+
+        .badge-sakit {
+            background: var(--danger);
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading .spinner {
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="phone-container">
+
+        <!-- VIEW: LOGIN -->
+        <div id="view-login" class="view active content" style="justify-content: center;">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h2
+                    style="color:var(--primary); font-size:28px; font-weight:800; letter-spacing: -1px; margin-bottom: 12px;">
+                    Presensi
+                    Peserta MagangHub</h2>
+                <p style="color:var(--text-muted); font-size:14px; font-weight:800;">Badan Pusat Statistik Kota
+                    Banjar</p>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="log-email" placeholder="xyz@gmail.com">
+            </div>
+            <div class="form-group">
+                <label>Kata Sandi</label>
+                <input type="password" id="log-pass" placeholder="******">
+            </div>
+            <button class="btn btn-primary" id="btn-login"><span class="spinner" id="log-spin"></span>Masuk</button>
+            <p style="text-align:center; margin-top:20px; font-size:14px;">Belum punya akun? <a href="#"
+                    id="link-register" style="color:var(--primary); font-weight:600; text-decoration:none;">Daftar di
+                    sini</a></p>
+            <div style="display: flex; justify-content: center; gap: 20px; align-items: center; margin-top: 30px;">
+                <img src="bps.png" alt="BPS Logo" style="height: 45px; object-fit: contain;">
+                <img src="MagangHub.png" alt="MagangHub Logo" style="height: 30px; object-fit: contain;">
+            </div>
+        </div>
+
+        <!-- VIEW: REGISTER -->
+        <div id="view-register" class="view content">
+            <h2 style="margin-bottom: 20px; text-align:center;">Daftar Akun Baru</h2>
+            <div style="overflow-y:auto; flex-grow:1; margin-bottom:10px; padding-right:10px;">
+                <div class="form-group"><label>NIK</label><input type="number" id="reg-nik"
+                        placeholder="XXXXXXXXXXXXXXXX"></div>
+                <div class="form-group"><label>Nama Lengkap</label><input type="text" id="reg-nama"
+                        placeholder="Namamu"></div>
+                <div class="form-group"><label>Nomor HP</label><input type="tel" id="reg-hp" placeholder="08XXXXXXXXXX">
+                </div>
+                <div class="form-group"><label>Perusahaan</label><input type="text" id="reg-perusahaan"
+                        placeholder="BPS Kota Banjar"></div>
+                <div class="form-group"><label>Posisi</label><input type="text" id="reg-posisi" placeholder="Posisimu">
+                </div>
+                <hr style="margin:20px 0; border:0; border-top:1px solid #ddd;">
+                <div class="form-group"><label>Email</label><input type="email" id="reg-email"
+                        placeholder="xyz@gmail.com"></div>
+                <div class="form-group"><label>Kata Sandi</label><input type="password" id="reg-pass"
+                        placeholder="Minimal 6 karakter"></div>
+                <div class="form-group"><label>Konfirmasi Kata Sandi</label><input type="password" id="reg-pass-conf"
+                        placeholder="Ulangi kata sandi"></div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px; margin-top:5px;">
+                <button class="btn btn-primary" id="btn-register" style="margin-top:0;"><span class="spinner"
+                        id="reg-spin"></span>Daftar</button>
+            </div>
+            <p style="text-align:center; margin-top:20px; font-size:14px;">Sudah punya akun? <a href="#" id="link-login"
+                    style="color:var(--primary); font-weight:600; text-decoration:none;">Login</a></p>
+        </div>
+
+        <!-- VIEW: DASHBOARD -->
+        <div id="view-dashboard" class="view" style="flex-grow:1;">
+            <!-- Hero Header -->
+            <div class="header">
+                <h2>Dashboard Presensi</h2>
+                <div class="clock-display" id="clock">00:00:00</div>
+                <p class="header-date" id="header-date">Kamis, 01 Oktober 2026</p>
+                <div id="user-chip"
+                    style="display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.18); border-radius:30px; padding:6px 14px; margin-top:12px; position:relative; z-index:1;">
+                    <div style="width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg, var(--bps-orange), var(--bps-green)); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:white;"
+                        id="user-avatar">?</div>
+                    <span id="user-info" style="font-size:12px; color:white; font-weight:500;">Memuat...</span>
+                </div>
+            </div>
+
+            <div class="content" style="padding-top:16px; gap:12px;">
+
+                <!-- Status Info Card -->
+                <div id="status-card" class="status-card">
+                    ⏳ Mengecek sistem...
+                </div>
+
+                <!-- Reminder Banner -->
+                <div style="display:flex; justify-content:center;">
+                    <div
+                        style="width:180px; height:180px; border-radius:16px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,0.08); position:relative; flex-shrink:0;">
+                        <img src="reminder.jpg" alt="Reminder Presensi"
+                            style="width:100%; height:100%; object-fit:cover; display:block;">
+                        <div
+                            style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent, rgba(0,0,0,0.65)); padding:14px 8px 8px;">
+                            <p
+                                style="color:white; font-size:11px; font-weight:700; margin:0; text-align:center; text-shadow:0 1px 3px rgba(0,0,0,0.5);">
+                                🔔 Jangan lupa presensi ya guys!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div id="action-buttons" style="display:none;">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                        <!-- Hadir - Now opens live camera modal -->
+                        <button id="btn-hadir" style="
+                            background: linear-gradient(135deg, var(--bps-green), #48a448);
+                            border-radius: 16px; padding: 18px 12px; display:flex; flex-direction:column;
+                            align-items:center; gap:8px; cursor:pointer; box-shadow: 0 4px 15px rgba(92,184,92,0.3);
+                            transition: transform 0.2s; color: white; font-weight:700; font-size:13px; border:none;
+                            text-align:center; width:100%;">
+                            <span style="font-size:30px;">📸</span>
+                            HADIR
+                        </button>
+
+                        <!-- Tidak Hadir -->
+                        <button id="btn-tidak-hadir" style="
+                            background: linear-gradient(135deg, var(--bps-orange), #e06b0a);
+                            border-radius: 16px; padding: 18px 12px; display:flex; flex-direction:column;
+                            align-items:center; gap:8px; cursor:pointer; box-shadow: 0 4px 15px rgba(245,130,30,0.3);
+                            transition: transform 0.2s; color: white; font-weight:700; font-size:13px; border:none;
+                            text-align:center; width:100%;">
+                            <span style="font-size:30px;">❌</span>
+                            TIDAK HADIR
+                        </button>
+                    </div>
+                    <p style="font-size:11px; color:#999; text-align:center; margin-top:8px;">📍 Geofencing 50m aktif ·
+                        BPS Kota Banjar</p>
+                </div>
+
+                <!-- Rekap Section -->
+                <div style="margin-top:4px;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+                        <h3 style="font-size:14px; font-weight:700; color:var(--text-main);">📋 Rekap Bulan Ini</h3>
+                        <span
+                            style="font-size:11px; color:var(--bps-blue); font-weight:600; background:#e8f4fd; padding:3px 8px; border-radius:20px;">30
+                            hari terakhir</span>
+                    </div>
+                    <div id="recap-list"
+                        style="background:#fff; border-radius:16px; border:1.5px solid #e8f0f9; overflow-y:auto; overflow-x:hidden; max-height:220px; box-shadow:0 2px 8px rgba(27,154,214,0.07);">
+                        <p style="text-align:center; font-size:13px; color:#aaa; padding:24px;">Belum ada riwayat</p>
+                    </div>
+                </div>
+
+                <button class="btn" id="btn-logout"
+                    style="background:transparent; color:#999; border:1.5px solid #e5e7eb; border-radius:12px; padding:12px; margin-top:4px; font-size:13px;">🚪
+                    Keluar Akun</button>
+            </div>
+        </div>
+
+        <!-- MODAL: KAMERA LIVE (HADIR) -->
+        <div class="modal" id="modal-kamera">
+            <div class="modal-content" style="padding:0; overflow:hidden; border-radius:20px;">
+                <!-- Camera Header -->
+                <div
+                    style="background:linear-gradient(135deg,var(--bps-blue),#1482B8); padding:14px 18px; display:flex; align-items:center; justify-content:space-between;">
+                    <span style="color:white; font-weight:700; font-size:15px;">📸 Kamera Absensi</span>
+                    <button id="btn-tutup-kamera"
+                        style="background:rgba(255,255,255,0.2); border:none; color:white; border-radius:50%; width:30px; height:30px; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center;">✕</button>
+                </div>
+                <!-- Live Video -->
+                <div style="position:relative; background:#000;">
+                    <video id="cam-video" autoplay playsinline muted
+                        style="width:100%; display:block; max-height:260px; object-fit:cover;"></video>
+                    <canvas id="cam-canvas" style="display:none;"></canvas>
+                    <!-- GPS Overlay -->
+                    <div id="cam-gps-status"
+                        style="position:absolute; bottom:10px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.6); color:white; font-size:11px; padding:4px 12px; border-radius:20px; white-space:nowrap;">
+                        📡 Mengambil GPS...</div>
+                </div>
+                <!-- Capture Button -->
+                <div style="padding:16px; display:flex; flex-direction:column; gap:10px;">
+                    <button id="btn-capture-hadir"
+                        style="width:100%; padding:14px; border-radius:12px; border:none; background:linear-gradient(135deg,var(--bps-green),#48a448); color:white; font-weight:700; font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+                        📷 Ambil Foto & Absen Sekarang
+                    </button>
+                    <p style="font-size:11px; color:#999; text-align:center;">GPS & foto diambil bersamaan saat klik
+                        tombol</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL: TIDAK HADIR -->
+        <div class="modal" id="modal-tidak-hadir">
+            <div class="modal-content">
+                <h3 style="margin-bottom:15px; text-align:center; font-size:18px;">Form Tidak Hadir</h3>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="form-status">
+                        <option value="Sakit">Sakit</option>
+                        <option value="Izin">Izin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Keterangan Lengkap (Wajib)</label>
+                    <textarea id="form-keterangan" rows="3"
+                        placeholder="Contoh: Izin bimbingan skripsi / Sakit demam berdarah..."></textarea>
+                </div>
+                <div class="form-group" style="margin-top:5px;">
+                    <label for="kamera-bukti" class="btn btn-outline"
+                        style="text-align:center; font-size:14px; padding:12px; margin-top:0;">📸 Lampirkan Dokumen/Foto
+                        Bukti</label>
+                    <input type="file" id="kamera-bukti" accept="image/*" capture="environment">
+                    <span id="file-name"
+                        style="font-size:12px; color:var(--success); margin-top:5px; text-align:center; display:block; min-height:15px;">Belum
+                        ada file dipilih</span>
+                </div>
+                <div style="display:flex; gap:10px; margin-top:15px;">
+                    <button class="btn btn-outline" id="btn-batal-modal" style="flex:1;">Batal</button>
+                    <button class="btn btn-primary" id="btn-kirim-modal" style="flex:1;">Kirim Laporan</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Firebase SDK Modular (v10.8) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+
+        // Konfigurasi Firebase Anda
+        const firebaseConfig = {
+            apiKey: "AIzaSyDe394Hog3cODzHBWgC00jtQybKq_Ul4l4",
+            authDomain: "presensee-d653b.firebaseapp.com",
+            databaseURL: "https://presensee-d653b-default-rtdb.firebaseio.com",
+            projectId: "presensee-d653b",
+            storageBucket: "presensee-d653b.firebasestorage.app",
+            messagingSenderId: "983111308568",
+            appId: "1:983111308568:web:de94c7403005a596083a6d",
+            measurementId: "G-9WBWFBFGYQ"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        // State variables
+        let currentUserData = null;
+
+        // UI Management
+        const viewLogin = document.getElementById('view-login');
+        const viewRegister = document.getElementById('view-register');
+        const viewDashboard = document.getElementById('view-dashboard');
+
+        function switchView(view) {
+            viewLogin.classList.remove('active');
+            viewRegister.classList.remove('active');
+            viewDashboard.classList.remove('active');
+            viewLogin.style.display = '';
+            viewRegister.style.display = '';
+            viewDashboard.style.display = '';
+            if (view) view.classList.add('active');
+        }
+
+        document.getElementById('link-register').onclick = (e) => { e.preventDefault(); switchView(viewRegister); };
+        document.getElementById('link-login').onclick = (e) => { e.preventDefault(); switchView(viewLogin); };
+
+        // Core Requirement Validations
+        function validateSystemStatus() {
+            const now = new Date();
+            const statusCard = document.getElementById('status-card');
+            const actionBtns = document.getElementById('action-buttons');
+
+            // 1. Validasi Periode: 21 Sep 2026 - 20 Mar 2027
+            const startPeriod = new Date('2026-09-21T00:00:00');
+            const endPeriod = new Date('2027-03-20T23:59:59');
+
+            if (now < startPeriod || now > endPeriod) {
+                statusCard.className = "status-card error";
+                statusCard.innerHTML = "❌ <b>Di luar periode magang aktif</b><br>Periode diperbolehkan: 21 Sep 2026 - 20 Mar 2027.";
+                actionBtns.style.display = 'none';
+                return false;
+            }
+
+            // 2. Validasi Weekend (Sabtu = 6, Minggu = 0)
+            const day = now.getDay();
+            if (day === 0 || day === 6) {
+                statusCard.className = "status-card error";
+                statusCard.innerText = "🛌 Hari libur akhir pekan (Sabtu/Minggu), tidak ada presensi.";
+                actionBtns.style.display = 'none';
+                return false;
+            }
+
+            // Sistem OK
+            statusCard.className = "status-card";
+            statusCard.innerHTML = "✅ <b>Sistem Aktif</b>";
+            actionBtns.style.display = 'block';
+            return true;
+        }
+
+        // Clock + Date Update
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(/\./g, ':');
+            const dateEl = document.getElementById('header-date');
+            if (dateEl) dateEl.innerText = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // Auth Listeners
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                document.getElementById('btn-login').classList.remove('loading');
+                try {
+                    const docSnap = await getDoc(doc(db, "users", user.uid));
+                    if (docSnap.exists()) {
+                        currentUserData = docSnap.data();
+                        document.getElementById('user-info').innerText = `${currentUserData.nama} · ${currentUserData.posisi}`;
+                        const avatarEl = document.getElementById('user-avatar');
+                        if (avatarEl) avatarEl.innerText = currentUserData.nama.charAt(0).toUpperCase();
+                        switchView(viewDashboard);
+                        validateSystemStatus();
+                        loadRecap(user.uid);
+                    }
+                } catch (e) {
+                    alert("Akun ditemukan, namun profil detail tidak bisa dimuat dari Database.");
+                    signOut(auth);
+                }
+            } else {
+                switchView(viewLogin);
+                document.getElementById('btn-login').classList.remove('loading');
+            }
+        });
+
+        // Register Logic
+        document.getElementById('btn-register').onclick = async () => {
+            const btn = document.getElementById('btn-register');
+            const nik = document.getElementById('reg-nik').value;
+            const nama = document.getElementById('reg-nama').value;
+            const hp = document.getElementById('reg-hp').value;
+            const email = document.getElementById('reg-email').value;
+            const perus = document.getElementById('reg-perusahaan').value;
+            const posisi = document.getElementById('reg-posisi').value;
+            const pass = document.getElementById('reg-pass').value;
+            const passConf = document.getElementById('reg-pass-conf').value;
+
+            if (!nik || !nama || !hp || !email || !perus || !posisi || !pass || !passConf) {
+                return alert("Seluruh kolom formulir registrasi wajib diisi!");
+            }
+            if (pass !== passConf) return alert("Konfirmasi kata sandi tidak cocok!");
+            if (pass.length < 6) return alert("Peringatan: Kata sandi minimal 6 karakter.");
+
+            btn.classList.add('loading');
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+                const user = userCredential.user;
+
+                // Simpan profil detail ke db users
+                await setDoc(doc(db, "users", user.uid), {
+                    uid: user.uid, nik, nama, no_hp: hp, email, perusahaan: perus, posisi, created_at: serverTimestamp()
+                });
+                await signOut(auth);
+                alert("Pendaftaran Sukses! Silakan masuk dengan akun Anda.");
+                btn.classList.remove('loading');
+                switchView(viewLogin);
+            } catch (error) {
+                btn.classList.remove('loading');
+                alert("Pendaftaran Gagal: " + error.message);
+            }
+        };
+
+        // Login Logic
+        document.getElementById('btn-login').onclick = async () => {
+            const btn = document.getElementById('btn-login');
+            const email = document.getElementById('log-email').value;
+            const pass = document.getElementById('log-pass').value;
+            if (!email || !pass) return alert("Harap isi Email dan Kata Sandi.");
+
+            btn.classList.add('loading');
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+            }
+            catch (error) {
+                btn.classList.remove('loading');
+                alert("Akses Ditolak: Email atau Kata Sandi salah.");
+            }
+        };
+
+        document.getElementById('btn-logout').onclick = () => {
+            if (confirm("Apakah Anda yakin ingin keluar?")) signOut(auth);
+        };
+
+        // Rekapitulasi
+        async function loadRecap(uid) {
+            const listObj = document.getElementById('recap-list');
+            listObj.innerHTML = "<p style='text-align:center; padding:20px; font-size:12px;'>Mengambil riwayat dari server...</p>";
+            try {
+                // Fetch riwayat user
+                const q = query(collection(db, "presensi"), where("uid", "==", uid), orderBy("tanggal", "desc"), limit(30));
+                const querySnapshot = await getDocs(q);
+                listObj.innerHTML = "";
+                if (querySnapshot.empty) {
+                    listObj.innerHTML = "<p style='text-align:center; font-size:13px; color:#aaa; padding:20px;'>Belum ada riwayat tercatat</p>";
+                    return;
+                }
+
+                querySnapshot.forEach((doc) => {
+                    const d = doc.data();
+                    let badgeClass = d.status == 'Hadir' ? 'badge-hadir' : (d.status == 'Izin' ? 'badge-izin' : 'badge-sakit');
+                    listObj.innerHTML += `
+                        <div class="recap-item">
+                            <div>
+                                <span class="badge ${badgeClass}">${d.status}</span><br>
+                                <span style="font-size:12px; color:#777; display:block; margin-top:5px;">📅 ${d.tanggal}</span>
+                            </div>
+                            <div style="text-align:right">
+                                <a href="${d.foto_url}" target="_blank" style="font-size:12px; font-weight:500; color:var(--primary); text-decoration:none; padding:6px 10px; background:#eff4ff; border-radius:6px;">Lihat Bukti</a>
+                                ${d.keterangan ? `<div style="font-size:11px; margin-top:4px; max-width:120px; color:#555; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">"${d.keterangan}"</div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                // Ignore missing index err on standard load if occurs in fresh db
+                listObj.innerHTML = `<div style="padding:15px; text-align:center; font-size:12px; color:var(--warning);">
+                    <b>Catatan Sistem:</b> Database Firestore belum meng-index tabel sehingga riwayat belum bisa ditampilkan.<br>Klik link pembuatan index di log console Firebase bagi admin.</div>`;
+                console.warn(error);
+            }
+        }
+
+        // Logic WFO Geolocation - BPS Banjar
+        const BPS_LAT = -7.3834252;
+        const BPS_LNG = 108.5399708;
+
+        function checkJarak(lat, lng) {
+            const R = 6371e3;
+            const p1 = BPS_LAT * Math.PI / 180, p2 = lat * Math.PI / 180;
+            const dp = (lat - BPS_LAT) * Math.PI / 180;
+            const dl = (lng - BPS_LNG) * Math.PI / 180;
+            const a = Math.sin(dp / 2) ** 2 + Math.cos(p1) * Math.cos(p2) * Math.sin(dl / 2) ** 2;
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); // Hasil dalam Meter
+        }
+
+        function setStatus(msg, isError = false) {
+            const el = document.getElementById('status-card');
+            el.className = isError ? "status-card error" : "status-card";
+            el.innerHTML = msg;
+        }
+
+        async function simpanPresensi(lat, lng, fotoFile, status, keterangan = '') {
+            setStatus("⏳ Sedang mengunggah foto. Mohon tunggu...");
+            document.getElementById('btn-hadir').disabled = true;
+            document.getElementById('btn-tidak-hadir').disabled = true;
+
+            try {
+                // Upload Foto
+                const fotoRef = ref(storage, `presensi/${currentUserData.uid}/${Date.now()}.jpg`);
+                await uploadBytes(fotoRef, fotoFile);
+                const fotoUrl = await getDownloadURL(fotoRef);
+
+                setStatus("☁️ Mencatat data ke Database...");
+
+                // Tanggal lokal standar (menghindari timezone issue di browser)
+                const nowLocal = new Date();
+                const offset = nowLocal.getTimezoneOffset() * 60000;
+                const tgl = (new Date(nowLocal - offset)).toISOString().split('T')[0];
+
+                await addDoc(collection(db, "presensi"), {
+                    uid: currentUserData.uid,
+                    nik: currentUserData.nik,
+                    tanggal: tgl,
+                    waktu: serverTimestamp(), // Secure UTC Server timestamp
+                    status: status,
+                    keterangan: keterangan,
+                    lat: lat,
+                    lng: lng,
+                    foto_url: fotoUrl
+                });
+
+                alert("Presensi Anda (" + status + ") Berhasil Tersimpan!");
+                validateSystemStatus();
+                loadRecap(currentUserData.uid);
+
+            } catch (error) {
+                console.error(error);
+                alert("Kesalahan Jaringan. Gagal mengirim: " + error.message);
+                validateSystemStatus();
+            } finally {
+                document.getElementById('btn-hadir').disabled = false;
+                document.getElementById('btn-tidak-hadir').disabled = false;
+            }
+        }
+
+        // ==========================================
+        // LIVE CAMERA + GPS HADIR FLOW
+        // ==========================================
+        const modalKamera = document.getElementById('modal-kamera');
+        const camVideo = document.getElementById('cam-video');
+        const camCanvas = document.getElementById('cam-canvas');
+        let camStream = null;
+        let gpsPosition = null;
+        let gpsWatcher = null;
+
+        function stopCamera() {
+            if (camStream) {
+                camStream.getTracks().forEach(t => t.stop());
+                camStream = null;
+            }
+            if (gpsWatcher !== null) {
+                navigator.geolocation.clearWatch(gpsWatcher);
+                gpsWatcher = null;
+            }
+            gpsPosition = null;
+        }
+
+        async function openKameraHadir() {
+            if (!validateSystemStatus()) return;
+            gpsPosition = null;
+            document.getElementById('cam-gps-status').innerText = '� Mengambil GPS...';
+            modalKamera.classList.add('active');
+
+            // Start camera
+            try {
+                camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+                camVideo.srcObject = camStream;
+            } catch (err) {
+                alert('❌ Gagal membuka kamera: ' + err.message);
+                modalKamera.classList.remove('active');
+                return;
+            }
+
+            // Start GPS watch simultaneously
+            if ('geolocation' in navigator) {
+                gpsWatcher = navigator.geolocation.watchPosition(
+                    (pos) => {
+                        gpsPosition = pos;
+                        const jarak = checkJarak(pos.coords.latitude, pos.coords.longitude);
+                        const icon = jarak <= 50 ? '✅' : '⚠️';
+                        document.getElementById('cam-gps-status').innerText =
+                            `${icon} GPS: ${jarak <= 50 ? 'Dalam area BPS' : Math.round(jarak) + 'm dari BPS'} (Akurasi ±${Math.round(pos.coords.accuracy)}m)`;
+                    },
+                    () => { document.getElementById('cam-gps-status').innerText = '❌ GPS tidak tersedia'; },
+                    { enableHighAccuracy: true, maximumAge: 0 }
+                );
+            } else {
+                document.getElementById('cam-gps-status').innerText = '❌ GPS tidak didukung browser ini';
+            }
+        }
+
+        document.getElementById('btn-hadir').onclick = () => openKameraHadir();
+
+        document.getElementById('btn-tutup-kamera').onclick = () => {
+            stopCamera();
+            modalKamera.classList.remove('active');
+        };
+
+        document.getElementById('btn-capture-hadir').onclick = async () => {
+            if (!gpsPosition) {
+                return alert('⏳ GPS belum siap. Tunggu sebentar hingga lokasi terdeteksi.');
+            }
+            const lat = gpsPosition.coords.latitude;
+            const lng = gpsPosition.coords.longitude;
+            const jarak = checkJarak(lat, lng);
+
+            if (jarak > 50) {
+                return alert(`❌ Lokasi Tidak Valid!\nJarak Anda ${Math.round(jarak)}m dari BPS Kota Banjar.\nHarus berada dalam radius 50m.`);
+            }
+
+            // Capture frame from video to canvas
+            camCanvas.width = camVideo.videoWidth;
+            camCanvas.height = camVideo.videoHeight;
+            camCanvas.getContext('2d').drawImage(camVideo, 0, 0);
+
+            camCanvas.toBlob(async (blob) => {
+                stopCamera();
+                modalKamera.classList.remove('active');
+                await simpanPresensi(lat, lng, blob, 'Hadir');
+            }, 'image/jpeg', 0.85);
+        };
+
+        // Tidak Hadir Flow
+        const modalTh = document.getElementById('modal-tidak-hadir');
+        let fileBukti = null;
+
+        document.getElementById('btn-tidak-hadir').onclick = () => {
+            if (!validateSystemStatus()) return;
+            modalTh.classList.add('active');
+        };
+        document.getElementById('btn-batal-modal').onclick = () => {
+            modalTh.classList.remove('active');
+            fileBukti = null; document.getElementById('file-name').innerText = 'Belum ada file dipilih';
+            document.getElementById('kamera-bukti').value = '';
+            document.getElementById('form-keterangan').value = '';
+        };
+
+        document.getElementById('kamera-bukti').addEventListener('change', (e) => {
+            if (e.target.files[0]) {
+                fileBukti = e.target.files[0];
+                document.getElementById('file-name').innerText = "✅ " + fileBukti.name;
+            }
+        });
+
+        document.getElementById('btn-kirim-modal').onclick = () => {
+            const st = document.getElementById('form-status').value;
+            const ket = document.getElementById('form-keterangan').value;
+            if (!ket.trim()) return alert("Form Keterangan wajib diisi dengan jelas!");
+            if (!fileBukti) return alert("Foto Bukti (Misal: Surat Dokter) harus dilampirkan via kamera!");
+
+            modalTh.classList.remove('active');
+            setStatus("📌 Melakukan submit Laporan Tidak Hadir...", false);
+
+            navigator.geolocation.getCurrentPosition((pos) => {
+                const lat = pos.coords.latitude;
+                const lng = pos.coords.longitude;
+                // Tetap kirim record lokasi jika diizinkan (Tidak di limit jarak utk Izin/Sakit)
+                simpanPresensi(lat, lng, fileBukti, st, ket);
+            }, (e) => {
+                // JIka gagal ambil GPS, tetap kirim koordinat 0 khusus untuk flow ini
+                simpanPresensi(0, 0, fileBukti, st, ket);
+            });
+        }
+    </script>
+</body>
+
+</html>
