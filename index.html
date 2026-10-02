@@ -684,7 +684,23 @@
 
         // State variables
         let currentUserData = null;
-        let nationalHolidays = [];
+
+        // Hard-coded libur nasional
+        const LIBUR_NASIONAL = {
+            "2026-12-24": "Cuti Bersama Hari Raya Natal",
+            "2026-12-25": "Hari Raya Natal",
+            "2027-01-01": "Tahun Baru 2027 Masehi",
+            "2027-01-05": "Isra Mi'raj Nabi Muhammad SAW 1448 H",
+            "2027-02-05": "Cuti Bersama Tahun Baru Imlek 2578",
+            "2027-02-06": "Tahun Baru Imlek 2578 Kongzili",
+            "2027-03-08": "Hari Suci Nyepi (Tahun Baru Saka 1949)",
+            "2027-03-09": "Cuti Bersama Hari Raya Idul Fitri 1448 H",
+            "2027-03-10": "Hari Raya Idul Fitri 1448 H",
+            "2027-03-11": "Hari Raya Idul Fitri 1448 H",
+            "2027-03-12": "Cuti Bersama Hari Raya Idul Fitri 1448 H",
+            "2027-03-15": "Cuti Bersama Hari Raya Idul Fitri 1448 H"
+        };
+        let nationalHolidays = { ...LIBUR_NASIONAL };
 
         // UI Management
         const viewLogin = document.getElementById('view-login');
@@ -726,9 +742,10 @@
             const offset = now.getTimezoneOffset() * 60000;
             const todayStr = new Date(now - offset).toISOString().split('T')[0];
 
-            if (day === 0 || day === 6 || nationalHolidays.includes(todayStr)) {
+            if (day === 0 || day === 6 || nationalHolidays[todayStr]) {
                 statusCard.className = "status-card error";
-                statusCard.innerText = "🛌 Hari libur, tidak ada presensi (Sabtu/Minggu atau Libur Nasional).";
+                const liburKet = nationalHolidays[todayStr] ? ` — ${nationalHolidays[todayStr]}` : '';
+                statusCard.innerText = `🛌 Hari libur, tidak ada presensi (Sabtu/Minggu atau Libur Nasional)${liburKet}.`;
                 actionBtns.style.display = 'none';
                 return false;
             }
@@ -755,14 +772,13 @@
             if (user) {
                 document.getElementById('btn-login').classList.remove('loading');
                 try {
-                    // Muat status libur nasional jika ada
+                    // Merge libur dari Firebase ke hard-coded list
                     try {
                         const qLibur = await getDocs(collection(db, "libur_nasional"));
-                        nationalHolidays = [];
                         qLibur.forEach(d => {
-                            if (d.data().tanggal) nationalHolidays.push(d.data().tanggal);
+                            if (d.data().tanggal) nationalHolidays[d.data().tanggal] = d.data().keterangan || "Libur Nasional";
                         });
-                    } catch (e) { console.warn("Tidak ada tabel libur_nasional atau gagal:", e); }
+                    } catch (e) { /* abaikan, gunakan hard-coded */ }
 
                     const docSnap = await getDoc(doc(db, "users", user.uid));
                     if (docSnap.exists()) {
