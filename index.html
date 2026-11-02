@@ -384,12 +384,16 @@
                 </div>
             </div>
             <button class="btn btn-primary" id="btn-login"><span class="spinner" id="log-spin"></span>Masuk</button>
-            <p style="text-align:center; margin-top:20px; font-size:14px;">Belum punya akun? <a href="#"
+            <p style="text-align:center; margin-top:12px; font-size:13px;">
+                <a href="#" id="link-lupa-pass"
+                    style="color:var(--text-muted); text-decoration:none; font-weight:500;">Lupa kata sandi?</a>
+            </p>
+            <p style="text-align:center; margin-top:8px; font-size:14px;">Belum punya akun? <a href="#"
                     id="link-register" style="color:var(--primary); font-weight:600; text-decoration:none;">Daftar di
                     sini</a></p>
             <div style="display: flex; justify-content: center; gap: 20px; align-items: center; margin-top: 30px;">
-                <img src="bps.png" alt="BPS Logo" style="height: 45px; object-fit: contain;">
-                <img src="MagangHub.png" alt="MagangHub Logo" style="height: 30px; object-fit: contain;">
+                <img src="assets/bps.png" alt="BPS Logo" style="height: 45px; object-fit: contain;">
+                <img src="assets/MagangHub.png" alt="MagangHub Logo" style="height: 30px; object-fit: contain;">
             </div>
         </div>
 
@@ -474,7 +478,7 @@
                 <div style="display:flex; justify-content:center;">
                     <div
                         style="width:180px; height:180px; border-radius:16px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,0.08); position:relative; flex-shrink:0;">
-                        <img id="banner-img" src="reminder.jpg" alt="Reminder Presensi"
+                        <img id="banner-img" src="assets/reminder.jpg" alt="Reminder Presensi"
                             style="width:100%; height:100%; object-fit:cover; display:block;">
                         <div
                             style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent, rgba(0,0,0,0.65)); padding:14px 8px 8px;">
@@ -566,7 +570,7 @@
     <!-- MODAL: BERHASIL (SUCCESS POP-UP) -->
     <div class="modal" id="modal-berhasil">
         <div class="modal-content" style="text-align:center; max-width:280px; padding:25px;">
-            <img id="img-berhasil" src="berhasil.jpg" alt="Berhasil"
+            <img id="img-berhasil" src="assets/berhasil.jpg" alt="Berhasil"
                 style="width:120px; height:120px; border-radius:16px; object-fit:cover; margin:0 auto 15px; display:block; box-shadow:0 4px 15px rgba(92,184,92,0.3); border:4px solid white;">
             <h3 style="color:var(--success); font-size:20px; font-weight:800; margin-bottom:8px;">Berhasil!</h3>
             <p id="teks-berhasil" style="font-size:14px; color:var(--text-muted); margin-bottom:20px; line-height:1.4;">
@@ -581,7 +585,7 @@
     <!-- MODAL: GAGAL (FAILURE POP-UP) -->
     <div class="modal" id="modal-gagal">
         <div class="modal-content" style="text-align:center; max-width:280px; padding:25px;">
-            <img id="img-gagal" src="gagal.jpg" alt="Gagal"
+            <img id="img-gagal" src="assets/gagal.jpg" alt="Gagal"
                 style="width:120px; height:120px; border-radius:16px; object-fit:cover; margin:0 auto 15px; display:block; box-shadow:0 4px 15px rgba(218,30,40,0.3); border:4px solid white;">
             <h3 style="color:var(--danger); font-size:20px; font-weight:800; margin-bottom:8px;">Gagal!</h3>
             <p id="teks-gagal" style="font-size:14px; color:var(--text-muted); margin-bottom:20px; line-height:1.4;">
@@ -596,7 +600,7 @@
     <!-- MODAL: TUNGGU (WAIT POP-UP) -->
     <div class="modal" id="modal-tunggu">
         <div class="modal-content" style="text-align:center; max-width:280px; padding:25px;">
-            <img src="tunggu.jpg" alt="Tunggu"
+            <img src="assets/tunggu.jpg" alt="Tunggu"
                 style="width:120px; height:120px; border-radius:16px; object-fit:cover; margin:0 auto 15px; display:block; box-shadow:0 4px 15px rgba(243,156,18,0.3); border:4px solid white;">
             <h3 style="color:#f39c12; font-size:20px; font-weight:800; margin-bottom:8px;">Mohon Tunggu</h3>
             <p id="teks-tunggu" style="font-size:14px; color:var(--text-muted); margin-bottom:20px; line-height:1.4;">
@@ -611,7 +615,7 @@
     <!-- MODAL: KELUAR (LOGOUT POP-UP) -->
     <div class="modal" id="modal-keluar">
         <div class="modal-content" style="text-align:center; max-width:280px; padding:25px;">
-            <img src="keluar.jpg" alt="Keluar"
+            <img src="assets/keluar.jpg" alt="Keluar"
                 style="width:120px; height:120px; border-radius:16px; object-fit:cover; margin:0 auto 15px; display:block; box-shadow:0 4px 15px rgba(218,30,40,0.3); border:4px solid white;">
             <h3 style="color:var(--danger); font-size:20px; font-weight:800; margin-bottom:8px;">Keluar Akun?</h3>
             <p style="font-size:14px; color:var(--text-muted); margin-bottom:20px; line-height:1.4;">
@@ -660,10 +664,33 @@
 
     </div>
 
+    <!-- MODAL: LUPA PASSWORD -->
+    <div class="modal" id="modal-lupa-pass">
+        <div class="modal-content" style="text-align:center; max-width:300px; padding:28px;">
+            <h3 style="font-size:18px; font-weight:800; color:var(--primary); margin-bottom:8px;">Lupa Kata Sandi?</h3>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.5;">
+                Masukkan email akunmu. Kami akan mengirimkan link untuk mereset kata sandi.
+            </p>
+            <div class="form-group" style="text-align:left; margin-bottom:0;">
+                <label>Email Akun</label>
+                <input type="email" id="reset-email" placeholder="xyz@gmail.com">
+            </div>
+            <div id="reset-status" style="font-size:12px; min-height:18px; margin-top:8px; margin-bottom:4px;"></div>
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <button class="btn btn-outline" id="btn-batal-reset"
+                    style="flex:1; margin-top:0; border-radius:12px; padding:12px; font-size:14px;">Batal</button>
+                <button class="btn btn-primary" id="btn-kirim-reset"
+                    style="flex:1; margin-top:0; border-radius:12px; padding:12px; font-size:14px; display:flex; align-items:center; justify-content:center; gap:6px;">
+                    <span class="spinner" id="reset-spin"></span>Kirim Email
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Firebase SDK Modular (v10.8) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // Konfigurasi Firebase Kamu
@@ -719,6 +746,63 @@
 
         document.getElementById('link-register').onclick = (e) => { e.preventDefault(); switchView(viewRegister); };
         document.getElementById('link-login').onclick = (e) => { e.preventDefault(); switchView(viewLogin); };
+
+        // Lupa Password
+        document.getElementById('link-lupa-pass').onclick = (e) => {
+            e.preventDefault();
+            const emailVal = document.getElementById('log-email').value;
+            const resetInput = document.getElementById('reset-email');
+            if (emailVal) resetInput.value = emailVal; // pre-fill email dari form login jika ada
+            document.getElementById('reset-status').innerText = '';
+            document.getElementById('modal-lupa-pass').classList.add('active');
+        };
+
+        document.getElementById('btn-batal-reset').onclick = () => {
+            document.getElementById('modal-lupa-pass').classList.remove('active');
+            document.getElementById('reset-status').innerText = '';
+        };
+
+        document.getElementById('btn-kirim-reset').onclick = async () => {
+            const email = document.getElementById('reset-email').value.trim();
+            const statusEl = document.getElementById('reset-status');
+            const btn = document.getElementById('btn-kirim-reset');
+
+            if (!email) {
+                statusEl.style.color = 'var(--danger)';
+                statusEl.innerText = '⚠️ Harap masukkan alamat email terlebih dahulu.';
+                return;
+            }
+
+            btn.classList.add('loading');
+            btn.disabled = true;
+            statusEl.style.color = 'var(--text-muted)';
+            statusEl.innerText = '⏳ Mengirim email...';
+
+            try {
+                await sendPasswordResetEmail(auth, email);
+                statusEl.style.color = 'var(--success)';
+                statusEl.innerText = '✅ Email reset berhasil dikirim! Cek inbox atau folder spam kamu.';
+                btn.innerText = 'Terkirim ✓';
+                btn.style.background = 'var(--success)';
+                setTimeout(() => {
+                    document.getElementById('modal-lupa-pass').classList.remove('active');
+                    btn.classList.remove('loading');
+                    btn.disabled = false;
+                    btn.innerHTML = '<span class="spinner" id="reset-spin"></span>Kirim Email';
+                    btn.style.background = '';
+                    statusEl.innerText = '';
+                }, 3000);
+            } catch (error) {
+                btn.classList.remove('loading');
+                btn.disabled = false;
+                statusEl.style.color = 'var(--danger)';
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-email') {
+                    statusEl.innerText = '❌ Email tidak terdaftar atau tidak valid.';
+                } else {
+                    statusEl.innerText = '❌ Gagal mengirim: ' + error.message;
+                }
+            }
+        };
 
         // Core Requirement Validations
         function validateSystemStatus() {
@@ -914,7 +998,7 @@
                         status = 'Hadir (Pulang)';
                     } else {
                         const imgFail = document.getElementById('img-gagal');
-                        if (imgFail) imgFail.src = 'stop.jpg';
+                        if (imgFail) imgFail.src = 'assets/stop.jpg';
                         document.getElementById('teks-gagal').innerText = "Stop, belum saatnya!\nDatang: 06:00-07:30\nPulang: Mulai 15:30";
                         document.getElementById('modal-gagal').classList.add('active');
                         document.getElementById('btn-tutup-gagal').onclick = () => {
@@ -944,7 +1028,7 @@
 
                 if (isDuplicate) {
                     const imgFail = document.getElementById('img-gagal');
-                    if (imgFail) imgFail.src = 'gagal.jpg';
+                    if (imgFail) imgFail.src = 'assets/gagal.jpg';
                     document.getElementById('teks-gagal').innerText = "Gagal presensi, data ini sudah tercatat sebelumnya!";
                     document.getElementById('modal-gagal').classList.add('active');
 
@@ -971,14 +1055,14 @@
                 const imgElem = document.getElementById('img-berhasil');
                 if (status === 'Sakit') {
                     document.getElementById('teks-berhasil').innerText = "Presensi kamu (Sakit) Berhasil Tersimpan!\nSemoga lekas sembuh 😊";
-                    if (imgElem) imgElem.src = "berhasil.jpg";
+                    if (imgElem) imgElem.src = "assets/berhasil.jpg";
                 } else if (status === 'Izin') {
                     document.getElementById('teks-berhasil').innerText = "Presensi kamu (Izin) Berhasil Tersimpan!";
-                    if (imgElem) imgElem.src = "terima.jpg";
+                    if (imgElem) imgElem.src = "assets/terima.jpg";
                 } else {
                     const timeString = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`;
                     document.getElementById('teks-berhasil').innerText = `Presensi kamu (${status}) Berhasil Tersimpan pada pukul ${timeString}!`;
-                    if (imgElem) imgElem.src = "berhasil.jpg";
+                    if (imgElem) imgElem.src = "assets/berhasil.jpg";
                 }
 
                 document.getElementById('modal-berhasil').classList.add('active');
@@ -1084,7 +1168,7 @@
 
             if (jarak > 50) {
                 const imgFail = document.getElementById('img-gagal');
-                if (imgFail) imgFail.src = 'gagal.jpg';
+                if (imgFail) imgFail.src = 'assets/gagal.jpg';
                 document.getElementById('teks-gagal').innerText = "Gagal presensi, lokasimu terlalu jauh!";
                 document.getElementById('modal-gagal').classList.add('active');
 
