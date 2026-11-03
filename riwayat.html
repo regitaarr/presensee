@@ -547,7 +547,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // Konfigurasi Firebase kamu
         const firebaseConfig = {
@@ -799,7 +799,15 @@
                 });
                 // Muat juga dari koleksi attendances (data baru)
                 try {
-                    const qAtt = query(collection(db, 'attendances'), where('user_id', '==', uid));
+                    let userNik = null;
+                    try {
+                        const uSnap = await getDoc(doc(db, "users", uid));
+                        if (uSnap.exists()) userNik = uSnap.data().nik;
+                    } catch (eU) { }
+
+                    const qAtt = userNik
+                        ? query(collection(db, 'attendances'), where('nik', '==', userNik))
+                        : query(collection(db, 'attendances'), where('user_id', '==', uid));
                     const snapAtt = await getDocs(qAtt);
                     snapAtt.forEach((docSnap) => {
                         const d = docSnap.data();
@@ -814,7 +822,9 @@
 
                 // Muat juga dari koleksi leaves (izin/sakit baru)
                 try {
-                    const qLeaves = query(collection(db, 'leaves'), where('user_id', '==', uid));
+                    const qLeaves = userNik
+                        ? query(collection(db, 'leaves'), where('nik', '==', userNik))
+                        : query(collection(db, 'leaves'), where('user_id', '==', uid));
                     const snapLeaves = await getDocs(qLeaves);
                     snapLeaves.forEach((docSnap) => {
                         const d = docSnap.data();

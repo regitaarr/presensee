@@ -1616,9 +1616,10 @@
                 const tgl = new Date(now - offset).toISOString().split('T')[0];
 
                 try {
-                    const q = query(collection(db, 'attendances'),
-                        where('user_id', '==', uid),
-                        where('tanggal', '==', tgl));
+                    const userNik = (currentUserData && currentUserData.nik) ? currentUserData.nik : null;
+                    const q = userNik
+                        ? query(collection(db, 'attendances'), where('nik', '==', userNik), where('tanggal', '==', tgl))
+                        : query(collection(db, 'attendances'), where('user_id', '==', uid), where('tanggal', '==', tgl));
                     const snap = await getDocs(q);
 
                     snap.forEach(docSnap => {
@@ -1710,8 +1711,6 @@
 
                 const docData = {
                     id_attendance: id_attendance,
-                    user_id: currentUserData.uid,
-                    uid: currentUserData.uid,
                     nik: currentUserData.nik,
                     nama: currentUserData.nama || '',
                     tanggal: tgl,
@@ -2333,8 +2332,6 @@
 
                 await setDoc(leaveRef, {
                     id_leave: id_leave,
-                    user_id: currentUserData.uid,
-                    uid: currentUserData.uid,
                     nik: currentUserData.nik || '',
                     nama: currentUserData.nama || '',
                     leave_type: type,
