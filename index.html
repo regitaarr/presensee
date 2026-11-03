@@ -625,7 +625,29 @@
             display: inline-block;
         }
 
-        @media (max-width: 480px) {
+        /* Dashboard Grid Layout (Responsive HP & Desktop) */
+        .dashboard-layout {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            min-height: 0;
+            overflow-y: auto;
+        }
+
+        .dashboard-col-left {
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .dashboard-col-right {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        /* Responsive Breakpoints: Mobile (HP) */
+        @media (max-width: 768px) {
             body {
                 padding: 0;
                 align-items: flex-start;
@@ -636,6 +658,7 @@
             .phone-container {
                 border-radius: 0;
                 max-width: 100%;
+                width: 100%;
                 min-height: 100dvh;
                 max-height: 100dvh;
                 box-shadow: none;
@@ -647,7 +670,60 @@
             }
             #view-dashboard.content,
             #view-register.content {
-                padding-bottom: 30px;
+                padding-bottom: 24px;
+            }
+        }
+
+        /* Responsive Breakpoints: Tablet & Desktop */
+        @media (min-width: 769px) {
+            body {
+                padding: 30px 20px;
+            }
+            .phone-container {
+                max-width: 1040px;
+                width: 94%;
+                min-height: 640px;
+                max-height: 90vh;
+                border-radius: var(--radius-2xl);
+            }
+            .dashboard-layout {
+                display: grid;
+                grid-template-columns: 390px 1fr;
+                min-height: 100%;
+                overflow: hidden;
+            }
+            .dashboard-col-left {
+                background: rgba(247, 246, 249, 0.7);
+                border-right: 1.5px solid var(--border-color);
+                overflow-y: auto;
+                padding-bottom: 20px;
+            }
+            .dashboard-col-right {
+                overflow-y: auto;
+                padding: 24px 28px;
+            }
+            .header {
+                margin: 14px 14px 10px;
+            }
+            #view-login {
+                max-width: 440px;
+                margin: auto;
+                padding: 36px 32px;
+                width: 100%;
+            }
+            #view-register {
+                max-width: 760px;
+                margin: auto;
+                padding: 28px 36px;
+                width: 100%;
+            }
+            .register-grid-desktop {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0 16px;
+            }
+            .register-full-width {
+                grid-column: span 2;
             }
         }
     </style>
@@ -698,44 +774,48 @@
         <div id="view-register" class="view content">
             <h2 style="margin-bottom: 20px; text-align:center;">Daftar Akun Baru</h2>
             <div style="overflow-y:auto; flex-grow:1; margin-bottom:10px; padding-right:10px;">
-                <div class="form-group"><label>NIK</label><input type="number" id="reg-nik"
-                        placeholder="XXXXXXXXXXXXXXXX"></div>
-                <div class="form-group"><label>Nama Lengkap</label><input type="text" id="reg-nama"
-                        placeholder="Namamu"></div>
-                <div class="form-group"><label>Nomor HP</label><input type="tel" id="reg-hp" placeholder="08XXXXXXXXXX">
-                </div>
-                <div class="form-group"><label>Perusahaan</label><input type="text" id="reg-perusahaan"
-                        value="BPS Kota Banjar" readonly style="background:#f9f9f9; cursor:not-allowed;"></div>
-                <div class="form-group"><label>Posisi</label>
-                    <select id="reg-posisi">
-                        <option value="" disabled selected>Pilih posisi magang</option>
-                        <option value="Asisten Publisitas dan Kehumasan">Asisten Publisitas dan Kehumasan</option>
-                        <option value="Asisten Statistisi">Asisten Statistisi</option>
-                        <option value="Asisten Pengelolaan BMN">Asisten Pengelolaan BMN</option>
-                        <option value="Asisten Arsiparis">Asisten Arsiparis</option>
-                        <option value="Asisten Pengelola Keuangan">Asisten Pengelola Keuangan</option>
-                        <option value="Asisten Pranata Komputer">Asisten Pranata Komputer</option>
-                    </select>
-                </div>
-                <hr style="margin:20px 0; border:0; border-top:1px solid #ddd;">
-                <div class="form-group"><label>Email</label><input type="email" id="reg-email"
-                        placeholder="xyz@gmail.com"></div>
-                <div class="form-group"><label>Kata Sandi</label>
-                    <div style="position:relative;">
-                        <input type="password" id="reg-pass" placeholder="Minimal 6 karakter"
-                            style="padding-right:45px;">
-                        <span
-                            onclick="var i=document.getElementById('reg-pass'); if(i.type==='password'){i.type='text';this.innerText='Tutup';}else{i.type='password';this.innerText='Lihat';}"
-                            style="position:absolute; right:14px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:12px; font-weight:600; color:var(--primary); user-select:none;">Lihat</span>
+                <div class="register-grid-desktop">
+                    <div class="form-group"><label>NIK</label><input type="number" id="reg-nik"
+                            placeholder="XXXXXXXXXXXXXXXX"></div>
+                    <div class="form-group"><label>Nama Lengkap</label><input type="text" id="reg-nama"
+                            placeholder="Namamu"></div>
+                    <div class="form-group"><label>Nomor HP</label><input type="tel" id="reg-hp" placeholder="08XXXXXXXXXX">
+                    </div>
+                    <div class="form-group"><label>Perusahaan</label><input type="text" id="reg-perusahaan"
+                            value="BPS Kota Banjar" readonly style="background:#f9f9f9; cursor:not-allowed;"></div>
+                    <div class="form-group register-full-width"><label>Posisi</label>
+                        <select id="reg-posisi">
+                            <option value="" disabled selected>Pilih posisi magang</option>
+                            <option value="Asisten Publisitas dan Kehumasan">Asisten Publisitas dan Kehumasan</option>
+                            <option value="Asisten Statistisi">Asisten Statistisi</option>
+                            <option value="Asisten Pengelolaan BMN">Asisten Pengelolaan BMN</option>
+                            <option value="Asisten Arsiparis">Asisten Arsiparis</option>
+                            <option value="Asisten Pengelola Keuangan">Asisten Pengelola Keuangan</option>
+                            <option value="Asisten Pranata Komputer">Asisten Pranata Komputer</option>
+                        </select>
                     </div>
                 </div>
-                <div class="form-group"><label>Konfirmasi Kata Sandi</label>
-                    <div style="position:relative;">
-                        <input type="password" id="reg-pass-conf" placeholder="Ulangi kata sandi"
-                            style="padding-right:45px;">
-                        <span
-                            onclick="var i=document.getElementById('reg-pass-conf'); if(i.type==='password'){i.type='text';this.innerText='Tutup';}else{i.type='password';this.innerText='Lihat';}"
-                            style="position:absolute; right:14px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:12px; font-weight:600; color:var(--primary); user-select:none;">Lihat</span>
+                <hr style="margin:16px 0; border:0; border-top:1px solid #ddd;">
+                <div class="register-grid-desktop">
+                    <div class="form-group register-full-width"><label>Email</label><input type="email" id="reg-email"
+                            placeholder="xyz@gmail.com"></div>
+                    <div class="form-group"><label>Kata Sandi</label>
+                        <div style="position:relative;">
+                            <input type="password" id="reg-pass" placeholder="Minimal 6 karakter"
+                                style="padding-right:45px;">
+                            <span
+                                onclick="var i=document.getElementById('reg-pass'); if(i.type==='password'){i.type='text';this.innerText='Tutup';}else{i.type='password';this.innerText='Lihat';}"
+                                style="position:absolute; right:14px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:12px; font-weight:600; color:var(--primary); user-select:none;">Lihat</span>
+                        </div>
+                    </div>
+                    <div class="form-group"><label>Konfirmasi Kata Sandi</label>
+                        <div style="position:relative;">
+                            <input type="password" id="reg-pass-conf" placeholder="Ulangi kata sandi"
+                                style="padding-right:45px;">
+                            <span
+                                onclick="var i=document.getElementById('reg-pass-conf'); if(i.type==='password'){i.type='text';this.innerText='Tutup';}else{i.type='password';this.innerText='Lihat';}"
+                                style="position:absolute; right:14px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:12px; font-weight:600; color:var(--primary); user-select:none;">Lihat</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -748,96 +828,100 @@
         </div>
 
         <!-- VIEW: DASHBOARD -->
-        <div id="view-dashboard" class="view" style="flex-grow:1;">
-            <!-- Hero Dynamic Island Header -->
-            <div class="header">
-                <div class="header-top-tag">
-                    <span class="live-dot" style="background:#ffffff; box-shadow:0 0 0 2px rgba(255,255,255,0.4);"></span>
-                    <span>BPS KOTA BANJAR &bull; WFO</span>
-                </div>
-                <div class="clock-display" id="clock">00:00:00</div>
-                <p class="header-date" id="header-date">Selasa, 03 November 2026</p>
-                <div id="user-chip">
-                    <div id="user-avatar">?</div>
-                    <span id="user-info">Memuat Akun...</span>
-                </div>
-            </div>
-
-            <div class="content">
-
-                <!-- Live Status Banner -->
-                <div id="status-card" class="status-card">
-                    <span class="status-dot dot-warning"></span> Memuat status presensi...
-                </div>
-
-                <!-- Bento Quick Info Row (Shift & Lokasi) -->
-                <div class="bento-grid">
-                    <div class="bento-card">
-                        <div class="bento-badge">Shift Harian</div>
-                        <div class="bento-main">06:00 - 16:00</div>
-                        <div class="bento-desc">Senin - Jumat &bull; WFO</div>
-                    </div>
-                    <div class="bento-card">
-                        <div class="bento-badge">Zona Kantor</div>
-                        <div class="bento-main">Radius 50m</div>
-                        <div class="bento-desc"><span class="live-dot"></span> BPS Banjar</div>
-                    </div>
-                </div>
-
-                <!-- Daily Progress Journey (Not Plain!) -->
-                <div class="journey-card">
-                    <div class="journey-header">
-                        <span class="journey-title">Alur Presensi Hari Ini</span>
-                        <span id="journey-status-pill" style="font-size:10px; font-weight:800; padding:3px 8px; border-radius:999px; background:var(--clean-light); color:var(--text-muted); text-transform:uppercase;">Aktif</span>
-                    </div>
-                    <div class="journey-steps">
-                        <div class="journey-step" id="step-masuk">
-                            <div class="journey-step-tag">
-                                <span class="status-dot dot-muted" id="dot-step-masuk"></span>
-                                <span>1. Masuk</span>
-                            </div>
-                            <div class="journey-step-time" id="time-step-masuk">Belum Absen</div>
+        <div id="view-dashboard" class="view" style="flex-grow:1; height:100%; overflow:hidden;">
+            <div class="dashboard-layout">
+                <!-- Kolom Kiri (Desktop) / Atas (HP) -->
+                <div class="dashboard-col-left">
+                    <div class="header">
+                        <div class="header-top-tag">
+                            <span class="live-dot" style="background:#ffffff; box-shadow:0 0 0 2px rgba(255,255,255,0.4);"></span>
+                            <span>BPS KOTA BANJAR &bull; WFO</span>
                         </div>
-                        <div class="journey-step" id="step-pulang">
-                            <div class="journey-step-tag">
-                                <span class="status-dot dot-muted" id="dot-step-pulang"></span>
-                                <span>2. Pulang</span>
-                            </div>
-                            <div class="journey-step-time" id="time-step-pulang">Belum Absen</div>
+                        <div class="clock-display" id="clock">00:00:00</div>
+                        <p class="header-date" id="header-date">Selasa, 03 November 2026</p>
+                        <div id="user-chip">
+                            <div id="user-avatar">?</div>
+                            <span id="user-info">Memuat Akun...</span>
                         </div>
                     </div>
-                </div>
 
-                <!-- Dynamic Action Area (Buttons) -->
-                <div id="action-buttons" style="display:block;">
-                </div>
-
-                <!-- Reminder Banner -->
-                <div style="display:flex; justify-content:center; margin: 4px 0 6px;">
-                    <div
-                        style="width:180px; height:180px; border-radius:18px; overflow:hidden; box-shadow:0 6px 18px rgba(30, 27, 36, 0.1); position:relative; flex-shrink:0; border:2px solid var(--border-color); background:#ffffff;">
-                        <img id="banner-img" src="assets/reminder.jpg" alt="Reminder Presensi"
-                            style="width:100%; height:100%; object-fit:cover; display:block;">
+                    <!-- Reminder Banner (Tepat di bawah card waktu realtime & nama) -->
+                    <div style="display:flex; justify-content:center; margin: 8px 14px 10px;">
                         <div
-                            style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent 0%, rgba(0, 0, 0, 0.72) 100%); padding:18px 8px 8px;">
-                            <p id="banner-text"
-                                style="color:white; font-size:11.5px; font-weight:700; margin:0; text-align:center; text-shadow:0 1px 3px rgba(0,0,0,0.6);">
-                                🔔 Jangan lupa presensi ya guys!
-                            </p>
+                            style="width:100%; max-width:280px; height:180px; border-radius:18px; overflow:hidden; box-shadow:0 6px 18px rgba(30, 27, 36, 0.1); position:relative; flex-shrink:0; border:2px solid var(--border-color); background:#ffffff;">
+                            <img id="banner-img" src="assets/reminder.jpg" alt="Reminder Presensi"
+                                style="width:100%; height:100%; object-fit:cover; display:block;">
+                            <div
+                                style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent 0%, rgba(0, 0, 0, 0.72) 100%); padding:18px 8px 8px;">
+                                <p id="banner-text"
+                                    style="color:white; font-size:11.5px; font-weight:700; margin:0; text-align:center; text-shadow:0 1px 3px rgba(0,0,0,0.6);">
+                                    🔔 Jangan lupa presensi ya guys!
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bento Quick Info Row (Shift & Lokasi) -->
+                    <div class="bento-grid" style="margin: 0 14px 14px;">
+                        <div class="bento-card">
+                            <div class="bento-badge">Shift Harian</div>
+                            <div class="bento-main">06:00 - 16:00</div>
+                            <div class="bento-desc">Senin - Jumat &bull; WFO</div>
+                        </div>
+                        <div class="bento-card">
+                            <div class="bento-badge">Zona Kantor</div>
+                            <div class="bento-main">Radius 50m</div>
+                            <div class="bento-desc"><span class="live-dot"></span> BPS Banjar</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Navigation Actions (Bento Style) -->
-                <div style="margin-top:6px; display:flex; flex-direction:column; gap:10px; margin-bottom:12px;">
-                    <a href="riwayat.html" class="btn btn-outline-primary" style="font-weight:700;">
-                        Lihat Riwayat &amp; Rekap Kehadiran
-                    </a>
-                    <button class="btn btn-outline-danger" id="btn-logout" style="font-weight:700; padding:13px 18px;">
-                        Keluar dari Akun
-                    </button>
+                <!-- Kolom Kanan (Desktop) / Bawah (HP) -->
+                <div class="dashboard-col-right content">
+                    <!-- Live Status Banner -->
+                    <div id="status-card" class="status-card">
+                        <span class="status-dot dot-warning"></span> Memuat status presensi...
+                    </div>
+
+                    <!-- Daily Progress Journey (Not Plain!) -->
+                    <div class="journey-card">
+                        <div class="journey-header">
+                            <span class="journey-title">Alur Presensi Hari Ini</span>
+                            <span id="journey-status-pill" style="font-size:10px; font-weight:800; padding:3px 8px; border-radius:999px; background:var(--clean-light); color:var(--text-muted); text-transform:uppercase;">Aktif</span>
+                        </div>
+                        <div class="journey-steps">
+                            <div class="journey-step" id="step-masuk">
+                                <div class="journey-step-tag">
+                                    <span class="status-dot dot-muted" id="dot-step-masuk"></span>
+                                    <span>1. Masuk</span>
+                                </div>
+                                <div class="journey-step-time" id="time-step-masuk">Belum Absen</div>
+                            </div>
+                            <div class="journey-step" id="step-pulang">
+                                <div class="journey-step-tag">
+                                    <span class="status-dot dot-muted" id="dot-step-pulang"></span>
+                                    <span>2. Pulang</span>
+                                </div>
+                                <div class="journey-step-time" id="time-step-pulang">Belum Absen</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Action Area (Buttons) -->
+                    <div id="action-buttons" style="display:block;">
+                    </div>
+
+                    <!-- Navigation Actions (Bento Style) -->
+                    <div style="margin-top:auto; display:flex; flex-direction:column; gap:10px; padding-top:14px; margin-bottom:12px;">
+                        <a href="riwayat.html" class="btn btn-outline-primary" style="font-weight:700;">
+                            Lihat Riwayat &amp; Rekap Kehadiran
+                        </a>
+                        <button class="btn btn-outline-danger" id="btn-logout" style="font-weight:700; padding:13px 18px;">
+                            Keluar dari Akun
+                        </button>
+                    </div>
+                    <div id="recap-list" style="display:none;"></div>
                 </div>
-                <div id="recap-list" style="display:none;"></div>
             </div>
         </div>
     </div>

@@ -262,7 +262,8 @@
                 inset 0 1px 1px rgba(255, 255, 255, 0.5);
         }
 
-        @media (max-width: 480px) {
+        /* Responsive Breakpoints: Mobile (HP) */
+        @media (max-width: 768px) {
             body {
                 padding: 0;
                 align-items: flex-start;
@@ -273,13 +274,41 @@
             .phone-container {
                 border-radius: 0;
                 max-width: 100%;
+                width: 100%;
                 min-height: 100dvh;
                 max-height: 100dvh;
                 box-shadow: none;
                 flex-grow: 1;
             }
             #view-riwayat.content {
-                padding-bottom: 30px;
+                padding-bottom: 24px;
+            }
+        }
+
+        /* Responsive Breakpoints: Tablet & Desktop */
+        @media (min-width: 769px) {
+            body {
+                padding: 30px 20px;
+            }
+            .phone-container {
+                max-width: 920px;
+                width: 94%;
+                min-height: 600px;
+                max-height: 90vh;
+                border-radius: var(--radius-2xl);
+            }
+            .riwayat-card {
+                padding: 26px 32px;
+            }
+            .summary-card {
+                padding: 18px 12px;
+            }
+            .sum-num {
+                font-size: 30px;
+            }
+            #calendar-grid {
+                max-height: 380px;
+                row-gap: 14px;
             }
         }
     </style>
