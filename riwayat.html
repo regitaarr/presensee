@@ -307,8 +307,8 @@
                 font-size: 30px;
             }
             #calendar-grid {
-                max-height: 380px;
-                row-gap: 14px;
+                row-gap: 10px;
+                column-gap: 6px;
             }
         }
 
@@ -425,26 +425,6 @@
             <div class="riwayat-card">
                 <h3 style="font-size:18px; font-weight:700; color:var(--slate-900); margin:0 0 16px; text-align:center;">Riwayat Kehadiran</h3>
 
-                <!-- Clean Summary Cards (No Emojis) -->
-                <div id="summary-cards" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom: 18px;">
-                    <div class="summary-card" id="card-telat">
-                        <div class="sum-label">Terlambat</div>
-                        <div class="sum-num" id="count-telat" style="color:var(--sunshine);">0</div>
-                        <div class="sum-unit">Hari</div>
-                    </div>
-                    <div class="summary-card" id="card-cepat">
-                        <div class="sum-label">Pulang Cepat</div>
-                        <div class="sum-num" id="count-cepat" style="color:var(--vermillion);">0</div>
-                        <div class="sum-unit">Hari</div>
-                    </div>
-                    <div class="summary-card" id="card-izin">
-                        <div class="sum-label">Izin &amp; Sakit</div>
-                        <div class="sum-num" id="count-izin" style="color:var(--fresh);">0</div>
-                        <div class="sum-unit">Hari</div>
-                    </div>
-                </div>
-                    
-
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                     <button id="btn-prev-period"
                         style="border:none; background:#f0f4f9; width:44px; height:44px; border-radius:12px; cursor:pointer; font-weight:bold; font-size:18px; color:#555; transition:0.2s; display:flex; align-items:center; justify-content:center;">
@@ -472,7 +452,7 @@
                         <div>Min</div>
                     </div>
                     <div id="calendar-grid"
-                        style="display:grid; grid-template-columns:repeat(7, 1fr); text-align:center; row-gap:10px; max-height: 280px; overflow-y: auto; overflow-x: hidden; padding-right: 5px; align-content: flex-start;">
+                        style="display:grid; grid-template-columns:repeat(7, 1fr); text-align:center; row-gap:6px; column-gap:4px; width:100%;">
                         <div style="grid-column: span 7; color:#999; padding:20px; font-size:12px;">Memuat kalender...</div>
                     </div>
                 </div>
@@ -500,6 +480,38 @@
                     <div style="display:flex; align-items:center; gap:4px;"><span
                             style="color:#c0392b; font-size:12px;">■</span> Libur Nasional</div>
                 </div>
+
+                <!-- REKAP KEHADIRAN (Ditaruh di Bawah Riwayat Kehadiran) -->
+                <div style="margin-top:24px; padding-top:18px; border-top:1.5px dashed var(--border-color);">
+                    <h4 style="font-size:14px; font-weight:800; color:var(--text-dark); margin:0 0 12px; display:flex; align-items:center; gap:8px;">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        <span>Rekap Kehadiran</span>
+                    </h4>
+
+                    <div id="summary-cards" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+                        <div class="summary-card" id="card-telat">
+                            <div class="sum-label">Terlambat</div>
+                            <div class="sum-num" id="count-telat" style="color:var(--sunshine);">0</div>
+                            <div class="sum-unit">Hari</div>
+                        </div>
+                        <div class="summary-card" id="card-cepat">
+                            <div class="sum-label">Pulang Cepat</div>
+                            <div class="sum-num" id="count-cepat" style="color:var(--vermillion);">0</div>
+                            <div class="sum-unit">Hari</div>
+                        </div>
+                        <div class="summary-card" id="card-izin">
+                            <div class="sum-label">Izin &amp; Sakit</div>
+                            <div class="sum-num" id="count-izin" style="color:var(--fresh);">0</div>
+                            <div class="sum-unit">Hari</div>
+                        </div>
+                    </div>
+                </div>
+
 
                             </div>
         </div>
@@ -686,7 +698,7 @@
 
             // Empty blocks before Day 1
             for (let i = 0; i < padStart; i++) {
-                html += `<div style="background:#f9fafb; border-bottom:1px solid #f0f0f0;"></div>`;
+                html += `<div style="min-height:52px; border-radius:10px; opacity:0.15; background:var(--clean-light);"></div>`;
             }
 
             let periodHolidays = [];
@@ -729,16 +741,16 @@
 
                 const todayStr = (new Date()).toISOString().split('T')[0];
                 const isToday = (todayStr === tglStr);
-                const circleStyles = isToday ? `background: #4ABDAC; color: #ffffff; font-weight: 700; border-radius:50%; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center;` : `color:#555; height:24px; display:inline-flex; align-items:center; justify-content:center;`;
+                const circleStyles = isToday ? `background: var(--fresh); color: #ffffff; font-weight: 800; border-radius:50%; width:28px; height:28px; display:inline-flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(74, 189, 172, 0.4);` : `color:var(--text-dark); width:28px; height:28px; display:inline-flex; align-items:center; justify-content:center; font-weight:700; font-size:13px;`;
 
-                let bgCell = "";
-                if (isNatHoliday) bgCell = "background:#fdecea;"; // merah muda untuk libur nasional
-                else if (isPureWeekend) bgCell = "background:#f0f0f0;"; // abu untuk weekend
+                let bgCell = "background:#ffffff; border-radius:10px; border:1px solid #f0edf5;";
+                if (isNatHoliday) bgCell = "background:#fdecea; border-radius:10px; border:1px solid #fadbd8;"; // merah muda untuk libur nasional
+                else if (isPureWeekend) bgCell = "background:var(--clean-light); border-radius:10px; border:1px solid var(--border-color);"; // abu untuk weekend
 
                 html += `
-                <div style="${bgCell} padding:4px 0; display:flex; flex-direction:column; align-items:center; gap:8px; border-bottom:1px solid #f0f0f0;">
-                    <span style="font-size:13px; padding-top:2px; ${circleStyles}">${dayNum}</span>
-                    ${iconHtml}
+                <div style="${bgCell} padding:6px 2px 7px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; min-height:52px; transition:all 0.2s;">
+                    <span style="${circleStyles}">${dayNum}</span>
+                    <div style="min-height:14px; display:flex; align-items:center; justify-content:center;">${iconHtml}</div>
                 </div>`;
             }
 
@@ -748,7 +760,7 @@
             if (remainder !== 0) {
                 let padEnd = 7 - remainder;
                 for (let i = 0; i < padEnd; i++) {
-                    html += `<div style="background:#f9fafb; border-bottom:1px solid #f0f0f0;"></div>`;
+                    html += `<div style="min-height:52px; border-radius:10px; opacity:0.15; background:var(--clean-light);"></div>`;
                 }
             }
 
