@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Koleksi users - hanya bisa baca/tulis data sendiri
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Koleksi attendances - hanya bisa baca/tulis data sendiri (field user_id)
+    match /attendances/{docId} {
+      allow read, write: if request.auth != null && request.resource.data.user_id == request.auth.uid;
+      allow read: if request.auth != null && resource.data.user_id == request.auth.uid;
+    }
+
+    // Koleksi leaves - hanya bisa baca/tulis data sendiri (field user_id)
+    match /leaves/{docId} {
+      allow read, write: if request.auth != null && request.resource.data.user_id == request.auth.uid;
+      allow read: if request.auth != null && resource.data.user_id == request.auth.uid;
+    }
+
+    // Koleksi presensi (lama) - backward compat
+    match /presensi/{docId} {
+      allow read, write: if request.auth != null;
+    }
+
+    // Libur nasional - semua yang login bisa baca
+    match /libur_nasional/{docId} {
+      allow read: if request.auth != null;
+    }
+  }
+}

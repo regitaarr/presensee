@@ -748,7 +748,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, limit, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
         // Konfigurasi Firebase
         const firebaseConfig = {
@@ -1239,17 +1238,30 @@
                         if (avatarEl) avatarEl.innerText = currentUserData.nama.charAt(0).toUpperCase();
                         switchView(viewDashboard);
 
-                        const isOk = validateSystemStatus();
-                        if (isOk) {
-                            await checkTodayAttendance(user.uid);
-                            loadMonthlyStats(user.uid);
-                        } else {
-                            // Still load stats even on non-working days
-                            loadMonthlyStats(user.uid);
+                        // Jalankan state UI & stats dalam try-catch TERPISAH
+                        // agar error dari koleksi baru (attendances/leaves) tidak mengganggu login
+                        try {
+                            const isOk = validateSystemStatus();
+                            if (isOk) {
+                                await checkTodayAttendance(user.uid);
+                            }
+                        } catch (eState) {
+                            console.warn('checkTodayAttendance/validateSystem error:', eState.message);
+                        }
+                        try {
+                            await loadMonthlyStats(user.uid);
+                        } catch (eStats) {
+                            console.warn('loadMonthlyStats error:', eStats.message);
+                            // Tampilkan 0 jika koleksi belum ada atau rules belum dibuat
+                            ['count-telat', 'count-cepat', 'count-izin'].forEach(id => {
+                                const el = document.getElementById(id);
+                                if (el) el.innerText = '0';
+                            });
                         }
                     }
                 } catch (e) {
-                    alert("Akun ditemukan, namun profil detail tidak bisa dimuat dari Database.");
+                    console.error('Login/profil error:', e);
+                    alert('Akun ditemukan, namun profil detail tidak bisa dimuat dari Database.\nError: ' + e.message);
                     signOut(auth);
                 }
             } else {
@@ -1579,6 +1591,34 @@
             await submitLeave();
         };
 
+        function convertFileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (evt) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        let width = img.width;
+                        let height = img.height;
+                        const MAX_WIDTH = 600;
+                        if (width > MAX_WIDTH) {
+                            height = Math.round((height * MAX_WIDTH) / width);
+                            width = MAX_WIDTH;
+                        }
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        resolve(canvas.toDataURL('image/jpeg', 0.6));
+                    };
+                    img.onerror = () => resolve(evt.target.result); // fallback jika gagal render ke img
+                    img.src = evt.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
         async function submitLeave() {
             const type = document.getElementById('izin-type').value;
             const startDate = document.getElementById('izin-start').value;
@@ -1597,11 +1637,7 @@
                 let proof_url = '';
 
                 if (izinBuktiFile) {
-                    const storage = getStorage();
-                    const timestamp = Date.now();
-                    const storageRef = ref(storage, `leaves/${currentUserData.uid}/${timestamp}_${izinBuktiFile.name}`);
-                    await uploadBytes(storageRef, izinBuktiFile);
-                    proof_url = await getDownloadURL(storageRef);
+                    proof_url = await convertFileToBase64(izinBuktiFile);
                 }
 
                 await addDoc(collection(db, 'leaves'), {
