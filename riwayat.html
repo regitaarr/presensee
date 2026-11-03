@@ -803,6 +803,7 @@
                     const snapAtt = await getDocs(qAtt);
                     snapAtt.forEach((docSnap) => {
                         const d = docSnap.data();
+                        d.id_attendance = d.id_attendance || docSnap.id;
                         let tgl = d.tanggal;
                         if (tgl) {
                             if (!dataMap[tgl]) dataMap[tgl] = [];
@@ -817,6 +818,7 @@
                     const snapLeaves = await getDocs(qLeaves);
                     snapLeaves.forEach((docSnap) => {
                         const d = docSnap.data();
+                        d.id_leave = d.id_leave || docSnap.id;
                         let tgl = d.start_date;
                         if (tgl) {
                             if (!dataMap[tgl]) dataMap[tgl] = [];

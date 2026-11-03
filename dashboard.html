@@ -1705,8 +1705,13 @@
             }
 
             try {
+                const attRef = doc(collection(db, 'attendances'));
+                const id_attendance = attRef.id;
+
                 const docData = {
+                    id_attendance: id_attendance,
                     user_id: currentUserData.uid,
+                    uid: currentUserData.uid,
                     nik: currentUserData.nik,
                     nama: currentUserData.nama || '',
                     tanggal: tgl,
@@ -1727,7 +1732,7 @@
                     docData.check_out_time = serverTimestamp();
                 }
 
-                await addDoc(collection(db, 'attendances'), docData);
+                await setDoc(attRef, docData);
 
                 // Update UI state after success
                 await checkTodayAttendance(currentUserData.uid);
@@ -2323,8 +2328,13 @@
                     proof_url = await convertFileToBase64(izinBuktiFile);
                 }
 
-                await addDoc(collection(db, 'leaves'), {
+                const leaveRef = doc(collection(db, 'leaves'));
+                const id_leave = leaveRef.id;
+
+                await setDoc(leaveRef, {
+                    id_leave: id_leave,
                     user_id: currentUserData.uid,
+                    uid: currentUserData.uid,
                     nik: currentUserData.nik || '',
                     nama: currentUserData.nama || '',
                     leave_type: type,

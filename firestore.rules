@@ -7,16 +7,28 @@ service cloud.firestore {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
 
-    // Koleksi attendances - hanya bisa baca/tulis data sendiri (field user_id)
-    match /attendances/{docId} {
-      allow read, write: if request.auth != null && request.resource.data.user_id == request.auth.uid;
-      allow read: if request.auth != null && resource.data.user_id == request.auth.uid;
+    // Koleksi attendances - document id adalah id_attendance
+    match /attendances/{id_attendance} {
+      allow read, write: if request.auth != null && (
+        request.resource.data.user_id == request.auth.uid ||
+        request.resource.data.uid == request.auth.uid
+      );
+      allow read: if request.auth != null && (
+        resource.data.user_id == request.auth.uid ||
+        resource.data.uid == request.auth.uid
+      );
     }
 
-    // Koleksi leaves - hanya bisa baca/tulis data sendiri (field user_id)
-    match /leaves/{docId} {
-      allow read, write: if request.auth != null && request.resource.data.user_id == request.auth.uid;
-      allow read: if request.auth != null && resource.data.user_id == request.auth.uid;
+    // Koleksi leaves - document id adalah id_leave
+    match /leaves/{id_leave} {
+      allow read, write: if request.auth != null && (
+        request.resource.data.user_id == request.auth.uid ||
+        request.resource.data.uid == request.auth.uid
+      );
+      allow read: if request.auth != null && (
+        resource.data.user_id == request.auth.uid ||
+        resource.data.uid == request.auth.uid
+      );
     }
 
     // Koleksi presensi (lama) - backward compat
