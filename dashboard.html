@@ -927,9 +927,10 @@
             }
         }
 
-        #cam-video.mirrored {
-            transform: scaleX(-1) !important;
-            -webkit-transform: scaleX(-1) !important;
+        #cam-video,
+        #cam-preview {
+            transform: scaleX(1) !important;
+            -webkit-transform: scaleX(1) !important;
         }
     </style>
 </head>
@@ -1065,28 +1066,24 @@
             <div
                 style="background:linear-gradient(135deg,var(--fresh),var(--fresh-dark)); padding:14px 18px; display:flex; align-items:center; justify-content:space-between;">
                 <span style="color:white; font-weight:700; font-size:15px;">Kamera Presensi</span>
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <button type="button" id="btn-toggle-mirror" title="Toggle Mode Mirror"
-                        style="background:rgba(255,255,255,0.22); border:none; color:white; border-radius:8px; padding:5px 10px; font-size:11.5px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:5px;">
-                        <span id="label-mirror">Tanpa Mirror</span>
-                    </button>
-                    <button id="btn-tutup-kamera"
-                        style="background:rgba(255,255,255,0.2); border:none; color:white; border-radius:50%; width:30px; height:30px; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center;">✕</button>
-                </div>
+                <button id="btn-tutup-kamera"
+                    style="background:rgba(255,255,255,0.2); border:none; color:white; border-radius:50%; width:30px; height:30px; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center;">✕</button>
             </div>
-            <!-- Live Video -->
-            <div style="position:relative; background:#000;">
+            <!-- Live Video / Snapshot Preview -->
+            <div style="position:relative; background:#000; min-height:220px; display:flex; align-items:center; justify-content:center;">
                 <video id="cam-video" autoplay playsinline muted
-                    style="width:100%; display:block; max-height:280px; object-fit:cover; transform:none !important; -webkit-transform:none !important;"></video>
+                    style="width:100%; display:block; max-height:280px; object-fit:cover; transform:scaleX(1) !important; -webkit-transform:scaleX(1) !important;"></video>
+                <img id="cam-preview" alt="Snapshot Foto Presensi"
+                    style="width:100%; display:none; max-height:280px; object-fit:cover; transform:scaleX(1) !important; -webkit-transform:scaleX(1) !important;">
                 <canvas id="cam-canvas" style="display:none;"></canvas>
                 <!-- GPS Overlay -->
                 <div id="cam-gps-status"
                     style="position:absolute; bottom:10px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.6); color:white; font-size:11px; padding:4px 12px; border-radius:20px; white-space:nowrap;">
                     Mendeteksi lokasi GPS...</div>
             </div>
-            <!-- Capture Button -->
-            <div style="padding:16px; display:flex; flex-direction:column; gap:10px;">
-                <button id="btn-capture-hadir" class="btn btn-absen-green"
+            <!-- Action 1: Tombol Ambil Foto (Snapshot) -->
+            <div id="cam-action-initial" style="padding:16px; display:flex; flex-direction:column; gap:10px;">
+                <button id="btn-take-snapshot" class="btn btn-absen-green"
                     style="width:100%; padding:15px; font-weight:800; font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"
                         stroke-linecap="round" stroke-linejoin="round">
@@ -1094,10 +1091,29 @@
                         </path>
                         <circle cx="12" cy="13" r="4"></circle>
                     </svg>
-                    <span>Ambil Foto &amp; Kirim Presensi</span>
+                    <span>Ambil Foto (Snapshot)</span>
                 </button>
-                <p style="font-size:11px; color:#999; text-align:center;">GPS & foto diambil bersamaan saat klik
-                    tombol</p>
+                <p style="font-size:11px; color:#999; text-align:center; margin:0;">Posisikan wajahmu dengan jelas &bull; GPS aktif otomatis</p>
+            </div>
+            <!-- Action 2: Konfirmasi / Kirim Presensi & Foto Ulang setelah Snapshot -->
+            <div id="cam-action-preview" style="padding:16px; display:none; flex-direction:column; gap:10px;">
+                <button id="btn-submit-presensi" class="btn btn-absen-green"
+                    style="width:100%; padding:15px; font-weight:800; font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 6L9 17l-5-5"></path>
+                    </svg>
+                    <span>Kirim Presensi Sekarang</span>
+                </button>
+                <button id="btn-retake-snapshot" class="btn"
+                    style="width:100%; padding:12px; font-weight:700; font-size:14px; cursor:pointer; background:#f0f4f9; color:#444; border:1px solid #d0d7de; display:flex; align-items:center; justify-content:center; gap:8px;">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="1 4 1 10 7 10"></polyline>
+                        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                    </svg>
+                    <span>Foto Ulang (Ambil Lagi)</span>
+                </button>
             </div>
         </div>
     </div>
@@ -1853,31 +1869,16 @@
         });
 
         // =========================================
-        // GEOLOCATION & CAMERA LOGIC
+        // GEOLOCATION & CAMERA LOGIC (WEBCAM & SNAPSHOT)
         // =========================================
         const modalKamera = document.getElementById('modal-kamera');
         const camVideo = document.getElementById('cam-video');
+        const camPreview = document.getElementById('cam-preview');
         const camCanvas = document.getElementById('cam-canvas');
         let camStream = null;
         let gpsPosition = null;
         let gpsWatcher = null;
-        let isCameraMirrored = false; // Default: JANGAN MIRROR (Tanpa Mirror)
-
-        function updateMirrorState() {
-            const label = document.getElementById('label-mirror');
-            if (isCameraMirrored) {
-                camVideo.classList.add('mirrored');
-                if (label) label.innerText = '🪞 Mirror';
-            } else {
-                camVideo.classList.remove('mirrored');
-                if (label) label.innerText = '📷 Tanpa Mirror';
-            }
-        }
-
-        document.getElementById('btn-toggle-mirror')?.addEventListener('click', () => {
-            isCameraMirrored = !isCameraMirrored;
-            updateMirrorState();
-        });
+        let currentSnapshotBase64 = null;
 
         function stopCamera() {
             if (camStream) {
@@ -1889,6 +1890,20 @@
                 gpsWatcher = null;
             }
             gpsPosition = null;
+            currentSnapshotBase64 = null;
+        }
+
+        function resetCameraUI() {
+            currentSnapshotBase64 = null;
+            if (camVideo) camVideo.style.display = 'block';
+            if (camPreview) {
+                camPreview.style.display = 'none';
+                camPreview.src = '';
+            }
+            const actInitial = document.getElementById('cam-action-initial');
+            const actPreview = document.getElementById('cam-action-preview');
+            if (actInitial) actInitial.style.display = 'flex';
+            if (actPreview) actPreview.style.display = 'none';
         }
 
         function openKameraAbsen(mode) {
@@ -1935,10 +1950,11 @@
         async function openKameraHadir() {
             if (!validateSystemStatus()) return;
             gpsPosition = null;
+            resetCameraUI();
             document.getElementById('cam-gps-status').innerText = 'Mendeteksi lokasi GPS...';
             modalKamera.classList.add('active');
 
-            // Start camera
+            // Start webcam
             try {
                 camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
                 camVideo.srcObject = camStream;
@@ -1968,10 +1984,71 @@
 
         document.getElementById('btn-tutup-kamera').onclick = () => {
             stopCamera();
+            resetCameraUI();
             modalKamera.classList.remove('active');
         };
 
-        document.getElementById('btn-capture-hadir').onclick = async () => {
+        // 1. Ambil Foto (Snapshot) dari Video Webcam
+        function takeSnapshot() {
+            if (!camVideo || !camCanvas) return;
+
+            const MAX_WIDTH = 640;
+            let width = camVideo.videoWidth || 640;
+            let height = camVideo.videoHeight || 480;
+
+            if (width > MAX_WIDTH) {
+                height = Math.round((height * MAX_WIDTH) / width);
+                width = MAX_WIDTH;
+            }
+
+            camCanvas.width = width;
+            camCanvas.height = height;
+            const ctx = camCanvas.getContext('2d');
+            
+            // Tangkap frame video ke canvas tanpa mirror, persis sama dengan apa yang terlihat di video
+            ctx.drawImage(camVideo, 0, 0, width, height);
+
+            currentSnapshotBase64 = camCanvas.toDataURL('image/jpeg', 0.65);
+
+            // Tampilkan preview hasil snapshot
+            if (camPreview) {
+                camPreview.src = currentSnapshotBase64;
+                camPreview.style.display = 'block';
+            }
+            if (camVideo) camVideo.style.display = 'none';
+
+            // Ganti tombol menjadi Kirim & Foto Ulang
+            const actInitial = document.getElementById('cam-action-initial');
+            const actPreview = document.getElementById('cam-action-preview');
+            if (actInitial) actInitial.style.display = 'none';
+            if (actPreview) actPreview.style.display = 'flex';
+        }
+
+        // Tombol Snapshot
+        document.getElementById('btn-take-snapshot')?.addEventListener('click', takeSnapshot);
+
+        // Tombol Foto Ulang (Retake Snapshot)
+        document.getElementById('btn-retake-snapshot')?.addEventListener('click', () => {
+            currentSnapshotBase64 = null;
+            if (camPreview) {
+                camPreview.style.display = 'none';
+                camPreview.src = '';
+            }
+            if (camVideo) camVideo.style.display = 'block';
+
+            const actInitial = document.getElementById('cam-action-initial');
+            const actPreview = document.getElementById('cam-action-preview');
+            if (actInitial) actInitial.style.display = 'flex';
+            if (actPreview) actPreview.style.display = 'none';
+        });
+
+        // Tombol Kirim Presensi Sekarang (setelah snapshot diambil)
+        async function submitPresensiWithSnapshot() {
+            if (!currentSnapshotBase64) {
+                showTungguModal('Ambil Foto Terlebih Dahulu', 'Silakan klik tombol "Ambil Foto (Snapshot)" terlebih dahulu.');
+                return;
+            }
+
             if (!gpsPosition) {
                 showTungguModal('Menunggu Lokasi GPS', 'Mohon tunggu sebentar hingga sinyal GPS kamu terdeteksi akurat.');
                 return;
@@ -1986,32 +2063,14 @@
                 return;
             }
 
-            // Capture frame from video to canvas, max 600px width
-            const MAX_WIDTH = 600;
-            let width = camVideo.videoWidth;
-            let height = camVideo.videoHeight;
-
-            if (width > MAX_WIDTH) {
-                height = Math.round((height * MAX_WIDTH) / width);
-                width = MAX_WIDTH;
-            }
-
-            camCanvas.width = width;
-            camCanvas.height = height;
-            const ctx = camCanvas.getContext('2d');
-            if (isCameraMirrored) {
-                ctx.translate(width, 0);
-                ctx.scale(-1, 1);
-            }
-            ctx.drawImage(camVideo, 0, 0, width, height);
-
-            // Konversi canvas ke Base64 (60% quality)
-            const fotoBase64 = camCanvas.toDataURL('image/jpeg', 0.6);
-
+            const fotoBase64 = currentSnapshotBase64;
             stopCamera();
+            resetCameraUI();
             modalKamera.classList.remove('active');
             await simpanAttendance(lat, lng, currentCameraMode, fotoBase64);
-        };
+        }
+
+        document.getElementById('btn-submit-presensi')?.addEventListener('click', submitPresensiWithSnapshot);
 
         // =========================================
         // TIDAK HADIR FLOW (backward compatible)
