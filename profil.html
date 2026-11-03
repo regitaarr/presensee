@@ -311,7 +311,7 @@
             word-break: break-all;
         }
 
-        
+
         /* Form controls for modals */
         .form-group {
             display: flex;
@@ -400,6 +400,21 @@
         .btn:active {
             transform: translateY(2px);
             box-shadow: none !important;
+        }
+
+        .btn-header-green {
+            background: linear-gradient(135deg, #1b5b52 0%, #4ABDAC 100%);
+            color: #ffffff;
+            box-shadow:
+                0 8px 20px -4px rgba(74, 189, 172, 0.45),
+                0 4px 0 #164a42,
+                inset 0 1px 1px rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .btn-header-green:hover {
+            background: linear-gradient(135deg, #164a42 0%, #3ca092 100%);
+            color: #ffffff;
         }
 
         .btn-danger {
@@ -692,10 +707,11 @@
                         </div>
                     </div>
 
-                    <!-- BUTTON KELUAR DI TARUH DI BAWAH DATA PESERTA -->
+                    <!-- BUTTONS: GANTI KATA SANDI (HIJAU HEADER) & KELUAR (MERAH) -->
                     <div style="margin-top:6px; margin-bottom:8px; display:flex; flex-direction:column; gap:8px;">
-                        <button type="button" class="btn btn-outline" id="btn-trigger-ganti-pass" style="background:#ffffff; color:var(--text-dark); border:1.5px solid var(--border-color); font-weight:700;">
-                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <button type="button" class="btn btn-header-green" id="btn-trigger-ganti-pass">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+                                stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                                 <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                             </svg>
@@ -747,14 +763,17 @@
             </a>
         </nav>
 
-        
+
         <!-- MODAL: GANTI KATA SANDI -->
         <div class="modal" id="modal-ganti-pass">
-            <div class="modal-content" style="max-width:380px; padding:0; overflow:hidden; border-radius:var(--radius-xl); box-shadow:0 25px 50px -12px rgba(30,27,36,0.35);">
+            <div class="modal-content"
+                style="max-width:380px; padding:0; overflow:hidden; border-radius:var(--radius-xl); box-shadow:0 25px 50px -12px rgba(30,27,36,0.35);">
                 <!-- Modal Header -->
-                <div style="background:linear-gradient(135deg, var(--fresh-dark) 0%, var(--fresh) 100%); padding:16px 20px; display:flex; align-items:center; justify-content:space-between;">
+                <div
+                    style="background:linear-gradient(135deg, var(--fresh-dark) 0%, var(--fresh) 100%); padding:16px 20px; display:flex; align-items:center; justify-content:space-between;">
                     <div style="display:flex; align-items:center; gap:8px;">
-                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="white" stroke-width="2.2"
+                            stroke-linecap="round" stroke-linejoin="round">
                             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                         </svg>
@@ -767,43 +786,54 @@
                 <!-- Modal Body -->
                 <div style="padding:20px; display:flex; flex-direction:column; gap:12px;">
                     <div class="form-group" style="margin-bottom:0;">
-                        <label style="font-weight:700; color:var(--text-muted); font-size:12px;">Kata Sandi Saat Ini</label>
+                        <label style="font-weight:700; color:var(--text-muted); font-size:12px;">Kata Sandi Saat
+                            Ini</label>
                         <div style="position:relative;">
-                            <input type="password" id="pass-lama" placeholder="Masukkan kata sandi lama" style="padding-right:48px;">
+                            <input type="password" id="pass-lama" placeholder="Masukkan kata sandi lama"
+                                style="padding-right:48px;">
                             <span id="toggle-pass-lama"
                                 style="position:absolute; right:12px; top:12px; font-size:12px; font-weight:bold; color:var(--text-muted); cursor:pointer;">Lihat</span>
                         </div>
                     </div>
 
                     <div class="form-group" style="margin-bottom:0;">
-                        <label style="font-weight:700; color:var(--text-muted); font-size:12px;">Kata Sandi Baru (Min. 6 Karakter)</label>
+                        <label style="font-weight:700; color:var(--text-muted); font-size:12px;">Kata Sandi Baru (Min. 6
+                            Karakter)</label>
                         <div style="position:relative;">
-                            <input type="password" id="pass-baru" placeholder="Minimal 6 karakter" style="padding-right:48px;">
+                            <input type="password" id="pass-baru" placeholder="Minimal 6 karakter"
+                                style="padding-right:48px;">
                             <span id="toggle-pass-baru"
                                 style="position:absolute; right:12px; top:12px; font-size:12px; font-weight:bold; color:var(--text-muted); cursor:pointer;">Lihat</span>
                         </div>
                     </div>
 
                     <div class="form-group" style="margin-bottom:0;">
-                        <label style="font-weight:700; color:var(--text-muted); font-size:12px;">Konfirmasi Kata Sandi Baru</label>
+                        <label style="font-weight:700; color:var(--text-muted); font-size:12px;">Konfirmasi Kata Sandi
+                            Baru</label>
                         <div style="position:relative;">
-                            <input type="password" id="pass-baru-conf" placeholder="Ulangi kata sandi baru" style="padding-right:48px;">
+                            <input type="password" id="pass-baru-conf" placeholder="Ulangi kata sandi baru"
+                                style="padding-right:48px;">
                             <span id="toggle-pass-baru-conf"
                                 style="position:absolute; right:12px; top:12px; font-size:12px; font-weight:bold; color:var(--text-muted); cursor:pointer;">Lihat</span>
                         </div>
                     </div>
 
-                    <div id="status-ganti-pass" style="font-size:12px; min-height:16px; margin-top:2px; font-weight:600;"></div>
+                    <div id="status-ganti-pass"
+                        style="font-size:12px; min-height:16px; margin-top:2px; font-weight:600;"></div>
 
                     <div style="display:flex; gap:10px; margin-top:4px;">
-                        <button class="btn btn-outline" id="btn-batal-ganti-pass" style="flex:1; padding:12px; margin-top:0;">Batal</button>
-                        <button class="btn btn-primary" id="btn-simpan-ganti-pass" style="flex:1.4; padding:12px; margin-top:0; display:flex; align-items:center; justify-content:center; gap:6px;">
+                        <button class="btn btn-outline" id="btn-batal-ganti-pass"
+                            style="flex:1; padding:12px; margin-top:0;">Batal</button>
+                        <button class="btn btn-primary" id="btn-simpan-ganti-pass"
+                            style="flex:1.4; padding:12px; margin-top:0; display:flex; align-items:center; justify-content:center; gap:6px;">
                             <span class="spinner" id="spin-ganti-pass"></span>Simpan Sandi
                         </button>
                     </div>
 
                     <div style="text-align:center; margin-top:4px;">
-                        <a href="#" id="link-kirim-reset-email" style="font-size:11.5px; color:var(--fresh-dark); font-weight:700; text-decoration:none;">Lupa kata sandi lama? Kirim link reset ke email</a>
+                        <a href="#" id="link-kirim-reset-email"
+                            style="font-size:11.5px; color:var(--fresh-dark); font-weight:700; text-decoration:none;">Lupa
+                            kata sandi lama? Kirim link reset ke email</a>
                     </div>
                 </div>
             </div>
@@ -904,7 +934,7 @@
             }
         });
 
-        
+
         // =========================================
         // GANTI KATA SANDI LOGIC
         // =========================================
