@@ -949,9 +949,9 @@
                         </div>
                         <div class="clock-display" id="clock">00:00:00</div>
                         <p class="header-date" id="header-date">Selasa, 03 November 2026</p>
-                        <div id="user-chip" onclick="window.location.href='profil.html';">
+                        <div id="user-chip" onclick="window.location.href='profil.html';" title="Lihat Profil">
                             <div id="user-avatar">?</div>
-                            <span id="user-info">Memuat Akun...</span>
+                            <span id="user-info">Selamat Datang</span>
                         </div>
                     </div>
 
@@ -1317,11 +1317,32 @@
         };
         let nationalHolidays = { ...LIBUR_NASIONAL };
 
+        function getGreetingText() {
+            const hour = new Date().getHours();
+            if (hour >= 4 && hour < 11) return 'Selamat Pagi';
+            if (hour >= 11 && hour < 15) return 'Selamat Siang';
+            if (hour >= 15 && hour < 18) return 'Selamat Sore';
+            return 'Selamat Malam';
+        }
+
+        function updateUserGreeting() {
+            const infoEl = document.getElementById('user-info');
+            if (!infoEl) return;
+            const greeting = getGreetingText();
+            if (currentUserData && currentUserData.nama) {
+                const firstName = currentUserData.nama.trim().split(/\s+/)[0];
+                infoEl.innerText = `${greeting}, ${firstName}`;
+            } else {
+                infoEl.innerText = greeting;
+            }
+        }
+
         function updateClock() {
             const now = new Date();
             document.getElementById('clock').innerText = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(/\./g, ':');
             const dateEl = document.getElementById('header-date');
             if (dateEl) dateEl.innerText = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+            updateUserGreeting();
         }
         updateClock();
         setInterval(updateClock, 1000);
@@ -1456,15 +1477,19 @@
                 statusCard.innerHTML = '<span class="status-dot dot-success"></span> Sudah Absen Masuk' + (checkInTimeStr ? ` &bull; ${checkInTimeStr} WIB` : '');
 
                 let html = '';
+                const existingEarly = document.getElementById('input-early-reason')?.value || '';
 
-                if (totalMin >= 14 * 60 && totalMin < 16 * 60) {
+                // Jika sebelum jam pulang normal (16:00), tampilkan kolom keterangan pulang lebih awal
+                if (totalMin < 16 * 60) {
                     html += `
-                    <div class="form-group" id="early-reason-group" style="margin-top:6px;">
-                        <label style="color:#b45309; font-weight:700;">Alasan Pulang Cepat (Wajib Diisi):</label>
-                        <textarea id="input-early-reason" rows="2" placeholder="Tulis alasan pulang sebelum pukul 16:00..."></textarea>
+                    <div class="form-group" id="early-reason-group" style="margin-top:6px; margin-bottom:12px;">
+                        <label style="color:#b45309; font-weight:700; font-size:12px; display:flex; align-items:center; gap:6px;">
+                            <span>⚠️ Keterangan Pulang Lebih Awal (Wajib Diisi):</span>
+                        </label>
+                        <textarea id="input-early-reason" rows="2" placeholder="Tulis alasan pulang sebelum pukul 16:00..." style="border-color:#f59e0b;">${existingEarly}</textarea>
                     </div>
                     <button id="btn-absen-pulang" class="btn btn-absen-green" style="font-size:15px; padding:16px;">
-                        Absen Pulang (Pulang Cepat)
+                        Absen Pulang (Pulang Lebih Awal)
                     </button>`;
                 } else {
                     html += `<button id="btn-absen-pulang" class="btn btn-absen-green" style="font-size:15px; padding:16px;">
@@ -1487,6 +1512,7 @@
 
             // State 1: Belum Absen Masuk -> Tombol Absen (Hijau Header) & Tombol Izin (Orange) SELALU ADA
             let html = '';
+            const existingLate = document.getElementById('input-late-reason')?.value || '';
 
             if (totalMin <= 7 * 60 + 30) {
                 // 06:00 - 07:30 (Absen Normal)
@@ -1505,7 +1531,7 @@
                 html = `
                 <div class="form-group" id="late-reason-group">
                     <label style="color:#b45309; font-weight:700;">Alasan Keterlambatan (Wajib Diisi):</label>
-                    <textarea id="input-late-reason" rows="2" placeholder="Tuliskan alasan keterlambatan kamu di sini..."></textarea>
+                    <textarea id="input-late-reason" rows="2" placeholder="Tuliskan alasan keterlambatan kamu di sini...">${existingLate}</textarea>
                 </div>
                 <button id="btn-hadir-pagi" class="btn btn-absen-green" style="font-size:15px; padding:16px;">
                     Absen Masuk (Terlambat)
@@ -1529,7 +1555,7 @@
                 html = `
                 <div class="form-group" id="late-reason-group">
                     <label style="color:#b45309; font-weight:700;">Alasan Keterlambatan (Wajib Diisi):</label>
-                    <textarea id="input-late-reason" rows="2" placeholder="Tuliskan alasan keterlambatan kamu di sini..."></textarea>
+                    <textarea id="input-late-reason" rows="2" placeholder="Tuliskan alasan keterlambatan kamu di sini...">${existingLate}</textarea>
                 </div>
                 <button id="btn-hadir-pagi" class="btn btn-absen-green" style="font-size:15px; padding:16px;">
                     Absen Masuk (Terlambat)
@@ -1806,8 +1832,7 @@
                 currentUserData = userData;
                 currentUserData.uid = user.uid;
 
-                const infoEl = document.getElementById('user-info');
-                if (infoEl) infoEl.innerText = `${currentUserData.nama || 'Peserta'} · ${currentUserData.posisi || 'Magang'}`;
+                updateUserGreeting();
                 const avatarEl = document.getElementById('user-avatar');
                 if (avatarEl) avatarEl.innerText = (currentUserData.nama || 'P').charAt(0).toUpperCase();
 
@@ -1875,7 +1900,7 @@
                     if (!reason) {
                         showStopModal(
                             'Kamu Terlambat!',
-                            'Kamu terlambat (lewat dari pukul 07:30). Harap isi kolom "Keterangan Telat" terlebih dahulu sebelum membuka kamera!',
+                            'Kamu terlambat (lewat dari pukul 07:30). Harap isi kolom "Keterangan Telat" terlebih dahulu sebelum melakukan presensi!',
                             false,
                             () => {
                                 document.getElementById('input-late-reason')?.focus();
@@ -1893,7 +1918,7 @@
                     if (!reason) {
                         showStopModal(
                             'Pulang Lebih Awal!',
-                            'Kamu pulang lebih awal (sebelum pukul 16:00). Harap isi kolom "Keterangan Pulang Cepat" terlebih dahulu sebelum membuka kamera!',
+                            'Kamu pulang lebih awal (sebelum pukul 16:00). Harap isi kolom "Keterangan Pulang Cepat" terlebih dahulu sebelum melakukan presensi!',
                             false,
                             () => {
                                 document.getElementById('input-early-reason')?.focus();
