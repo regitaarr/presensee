@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Presensee - Profil Akun</title>
+    <title>Presensee MagangHub - Profil Akun</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -98,41 +98,24 @@
             max-height: 94vh;
         }
 
-        /* Scrollable content container */
-        .content {
-            padding: 16px 18px 24px;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-            overflow-y: auto;
-            background: transparent;
-            gap: 14px;
-        }
-
-        .content::-webkit-scrollbar {
-            width: 4px;
-        }
-        .content::-webkit-scrollbar-thumb {
-            background: var(--clean);
-            border-radius: 4px;
-        }
-
-        /* Hero Profile Card */
-        .profile-hero {
-            background: linear-gradient(135deg, var(--fresh-dark) 0%, var(--fresh) 100%);
-            border-radius: var(--radius-xl);
-            padding: 24px 20px 22px;
+        /* Dynamic Island Hero Header - Identik dengan Dashboard */
+        .header {
+            margin: 14px 14px 6px;
+            padding: 22px 20px 20px;
             text-align: center;
-            color: #ffffff;
+            background: linear-gradient(135deg, #1b5b52 0%, #4ABDAC 100%);
+            border-radius: var(--radius-xl);
             position: relative;
-            box-shadow: 
+            color: #ffffff;
+            box-shadow:
                 0 16px 36px -10px rgba(74, 189, 172, 0.45),
                 inset 0 1px 1px rgba(255, 255, 255, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.3);
             overflow: hidden;
+            flex-shrink: 0;
         }
 
-        .profile-hero::before {
+        .header::before {
             content: '';
             position: absolute;
             top: -50%;
@@ -143,28 +126,37 @@
             pointer-events: none;
         }
 
-        .hero-top-badge {
+        .header-top-tag {
             display: inline-flex;
             align-items: center;
             gap: 6px;
             background: rgba(0, 0, 0, 0.16);
             backdrop-filter: blur(8px);
-            padding: 4px 14px;
+            padding: 4px 12px;
             border-radius: 999px;
             font-size: 10px;
             font-weight: 800;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
             color: rgba(255, 255, 255, 0.95);
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             position: relative;
             z-index: 1;
         }
 
+        .live-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--fresh);
+            display: inline-block;
+            box-shadow: 0 0 0 2px rgba(74, 189, 172, 0.35);
+        }
+
         .avatar-wrap {
             position: relative;
-            width: 84px;
-            height: 84px;
+            width: 80px;
+            height: 80px;
             margin: 0 auto 12px;
             z-index: 1;
         }
@@ -177,7 +169,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 34px;
+            font-size: 32px;
             font-weight: 800;
             color: #ffffff;
             box-shadow: 0 8px 24px rgba(252, 74, 26, 0.38);
@@ -186,8 +178,8 @@
 
         .avatar-online-dot {
             position: absolute;
-            bottom: 3px;
-            right: 3px;
+            bottom: 2px;
+            right: 2px;
             width: 18px;
             height: 18px;
             border-radius: 50%;
@@ -197,10 +189,10 @@
         }
 
         .user-full-name {
-            font-size: 20px;
+            font-size: 19px;
             font-weight: 800;
             letter-spacing: -0.02em;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             color: #ffffff;
             position: relative;
             z-index: 1;
@@ -222,14 +214,33 @@
             z-index: 1;
         }
 
-        /* Bento Info Grid */
+        /* Scrollable content container */
+        .content {
+            padding: 10px 14px 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            overflow-y: auto;
+            background: transparent;
+            gap: 12px;
+        }
+
+        .content::-webkit-scrollbar {
+            width: 4px;
+        }
+        .content::-webkit-scrollbar-thumb {
+            background: var(--clean);
+            border-radius: 4px;
+        }
+
+        /* Bento Section Title */
         .bento-section-title {
-            font-size: 12px;
+            font-size: 11.5px;
             font-weight: 800;
             letter-spacing: 0.04em;
             text-transform: uppercase;
             color: var(--text-muted);
-            margin: 6px 0 2px;
+            margin: 4px 0 2px;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -239,18 +250,18 @@
             background: #ffffff;
             border-radius: var(--radius-xl);
             border: 1.5px solid var(--border-color);
-            padding: 16px;
+            padding: 14px;
             box-shadow: 0 4px 16px rgba(30, 27, 36, 0.04);
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 9px;
         }
 
         .bento-tile {
             background: var(--clean-light);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
-            padding: 12px 14px;
+            padding: 11px 13px;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -265,9 +276,9 @@
         }
 
         .tile-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 12px;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -291,19 +302,19 @@
 
         .tile-value {
             display: block;
-            font-size: 13.5px;
+            font-size: 13px;
             font-weight: 700;
             color: var(--text-dark);
             word-break: break-all;
         }
 
-        /* Chunky 3D Tactile Buttons */
+        /* Chunky Tactile Buttons */
         .btn {
             width: 100%;
-            padding: 15px 20px;
+            padding: 14px 20px;
             border: none;
             border-radius: var(--radius-lg);
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 800;
             cursor: pointer;
             transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -434,27 +445,53 @@
             border: 2px solid rgba(255, 255, 255, 0.9);
         }
 
-        /* Desktop & Tablet Breakpoints */
+        /* Responsive Breakpoints: Smartphone (Identik dengan Dashboard: Tidak Melayang!) */
+        @media (max-width: 768px) {
+            body {
+                padding: 0;
+                align-items: flex-start;
+                min-height: 100dvh;
+                height: 100dvh;
+                overflow: hidden;
+            }
+
+            .phone-container {
+                border-radius: 0;
+                max-width: 100%;
+                width: 100%;
+                min-height: 100dvh;
+                max-height: 100dvh;
+                box-shadow: none;
+                flex-grow: 1;
+            }
+
+            .header {
+                margin: 10px 10px 4px;
+                border-radius: 20px;
+            }
+
+            .content {
+                padding: 10px 14px 24px;
+            }
+        }
+
+        /* Responsive Breakpoints: Tablet & Desktop */
         @media (min-width: 769px) {
             body {
                 padding: 30px 20px;
             }
 
             .phone-container {
-                max-width: 820px;
-                width: 90%;
+                max-width: 980px;
+                width: 94%;
                 min-height: 640px;
                 max-height: 90vh;
                 border-radius: var(--radius-2xl);
             }
 
-            .content {
-                padding: 24px 28px 28px;
-            }
-
             .profile-desktop-grid {
                 display: grid;
-                grid-template-columns: 320px 1fr;
+                grid-template-columns: 360px 1fr;
                 gap: 20px;
                 align-items: start;
             }
@@ -466,18 +503,18 @@
 
     <div class="phone-container">
 
-        <!-- CONTENT -->
+        <!-- CONTENT CONTAINER (Scrollable) -->
         <div class="content">
 
-            <!-- Responsive Wrapper for Desktop (Dual Pane) & Mobile (Single Column) -->
+            <!-- Responsive Wrapper: Dual Column on Desktop, Stack on Mobile -->
             <div class="profile-desktop-grid">
                 
-                <!-- Left Pane / Mobile Top: Hero Profile Card -->
+                <!-- Left Pane / Mobile Top: Profile Hero Card & Status Keanggotaan -->
                 <div>
-                    <div class="profile-hero">
-                        <div class="hero-top-badge">
-                            <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#aee3db;"></span>
-                            Informasi Akun
+                    <div class="header">
+                        <div class="header-top-tag">
+                            <span class="live-dot" style="background:#ffffff; box-shadow:0 0 0 2px rgba(255,255,255,0.4);"></span>
+                            <span>BPS KOTA BANJAR</span>
                         </div>
                         <div class="avatar-wrap">
                             <div class="avatar-circle" id="prof-avatar">?</div>
@@ -490,9 +527,9 @@
                     </div>
 
                     <!-- Status Verification Bento Card -->
-                    <div style="background:#ffffff; border:1.5px solid var(--border-color); border-radius:var(--radius-xl); padding:14px 16px; margin-top:14px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 4px 16px rgba(30,27,36,0.03);">
+                    <div style="background:#ffffff; border:1.5px solid var(--border-color); border-radius:var(--radius-xl); padding:13px 16px; margin: 10px 14px 4px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 4px 16px rgba(30,27,36,0.03);">
                         <div style="display:flex; align-items:center; gap:12px;">
-                            <div style="width:38px; height:38px; border-radius:12px; background:var(--fresh-light); display:flex; align-items:center; justify-content:center; color:var(--fresh-dark); flex-shrink:0;">
+                            <div style="width:36px; height:36px; border-radius:12px; background:var(--fresh-light); display:flex; align-items:center; justify-content:center; color:var(--fresh-dark); flex-shrink:0;">
                                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                     <polyline points="22 4 12 14.01 9 11.01"></polyline>
@@ -505,22 +542,10 @@
                         </div>
                         <span style="font-size:10px; font-weight:800; background:var(--fresh-light); color:var(--fresh-dark); padding:5px 10px; border-radius:8px; border:1px solid var(--fresh-border);">RESMI</span>
                     </div>
-
-                    <!-- Logout Button (Quick Action on Left Pane for Desktop, Bottom on Mobile) -->
-                    <div style="margin-top:14px;">
-                        <button type="button" class="btn btn-danger" id="btn-trigger-logout">
-                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                                <polyline points="16 17 21 12 16 7"></polyline>
-                                <line x1="21" y1="12" x2="9" y2="12"></line>
-                            </svg>
-                            <span>Keluar dari Akun</span>
-                        </button>
-                    </div>
                 </div>
 
-                <!-- Right Pane / Mobile Bottom: Detailed Account Information -->
-                <div>
+                <!-- Right Pane / Mobile Bottom: Detailed Account Information & Logout Button at Bottom -->
+                <div style="display:flex; flex-direction:column; gap:12px; margin: 4px 14px 0;">
                     <div class="bento-section-title">
                         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                         <span>Data Lengkap Peserta</span>
@@ -582,6 +607,19 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- BUTTON KELUAR DI TARUH DI BAWAH DATA PESERTA -->
+                    <div style="margin-top:6px; margin-bottom:8px;">
+                        <button type="button" class="btn btn-danger" id="btn-trigger-logout">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            <span>Keluar dari Akun</span>
+                        </button>
+                    </div>
+
                 </div>
 
             </div>
@@ -703,7 +741,7 @@
                     console.warn(e);
                 }
             } else {
-                window.location.href = "index.html"; // Redirect ke beranda jika belum login
+                window.location.href = "index.html"; // Redirect ke login jika belum login
             }
         });
 
