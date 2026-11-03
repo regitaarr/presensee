@@ -312,7 +312,44 @@
             }
         }
 
-        /* Modern Bottom Navigation Bar (3 Menus) */
+        /* Modal Styles */
+        .modal {
+            position: absolute;
+            inset: 0;
+            background: rgba(30, 27, 36, 0.65);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 14px;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-content {
+            background: #ffffff;
+            width: 100%;
+            border-radius: var(--radius-xl);
+            box-shadow: 0 30px 60px -15px rgba(30, 27, 36, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.9);
+        }
+
+        /* Modern Bottom Navigation Bar (4 Menus: Dashboard, Riwayat, Profil, Keluar) */
         .bottom-nav {
             display: flex;
             align-items: center;
@@ -320,7 +357,7 @@
             background: rgba(255, 255, 255, 0.96);
             backdrop-filter: blur(16px);
             border-top: 1.5px solid var(--border-color);
-            padding: 8px 12px 10px;
+            padding: 8px 6px 10px;
             flex-shrink: 0;
             z-index: 10;
         }
@@ -336,7 +373,8 @@
             background: none;
             border: none;
             cursor: pointer;
-            padding: 6px 20px;
+            padding: 6px 8px;
+            flex: 1;
             border-radius: var(--radius-md);
             transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
             font-size: 11px;
@@ -465,7 +503,7 @@
                             </div>
         </div>
 
-        <!-- BOTTOM NAVIGATION BAR (3 Menus: Dashboard, Riwayat, Keluar) -->
+        <!-- BOTTOM NAVIGATION BAR (4 Menus: Dashboard, Riwayat, Profil, Keluar) -->
         <nav class="bottom-nav">
             <a href="index.html" class="bottom-nav-item" id="nav-dashboard">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -483,6 +521,13 @@
                 </svg>
                 <span>Riwayat</span>
             </a>
+            <button type="button" class="bottom-nav-item" id="nav-profil-riwayat">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span>Profil</span>
+            </button>
             <button type="button" class="bottom-nav-item nav-logout" id="btn-logout-riwayat">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
@@ -492,13 +537,124 @@
                 <span>Keluar</span>
             </button>
         </nav>
+
+        <!-- MODAL: KELUAR DI RIWAYAT -->
+        <div class="modal" id="modal-keluar-riwayat" style="z-index:200;">
+            <div class="modal-content" style="text-align:center; max-width:320px; padding:24px 20px;">
+                <img id="img-keluar-riwayat" src="assets/keluar.jpg" alt="Keluar"
+                    style="width:140px; height:140px; object-fit:cover; margin:0 auto 14px; display:block; border-radius:18px; box-shadow:0 8px 24px rgba(252,74,26,0.2); border:2px solid var(--vermillion-border);">
+                <h3 style="font-size:18px; font-weight:800; color:var(--text-dark); margin-bottom:6px;">Konfirmasi Keluar</h3>
+                <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.45;">Apakah kamu yakin ingin keluar dari akun ini?</p>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn btn-outline" id="btn-batal-keluar-riwayat" style="flex:1;">Batal</button>
+                    <button class="btn btn-danger" id="btn-konfirm-keluar-riwayat" style="flex:1;">Ya, Keluar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL: PROFIL DI RIWAYAT -->
+        <div class="modal" id="modal-profil-riwayat">
+            <div class="modal-content" style="max-height:90vh; max-width:420px; padding:0; overflow:hidden; border-radius:var(--radius-xl); box-shadow:0 25px 50px -12px rgba(30,27,36,0.35);">
+                <!-- Header Modal Profil -->
+                <div style="background:linear-gradient(135deg, var(--fresh-dark) 0%, var(--fresh) 100%); padding:22px 20px 24px; position:relative; text-align:center; color:white;">
+                    <button id="btn-tutup-profil-riwayat"
+                        style="position:absolute; top:14px; right:14px; background:rgba(255,255,255,0.22); border:none; color:white; border-radius:50%; width:32px; height:32px; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s ease;">✕</button>
+                    <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(0,0,0,0.18); backdrop-filter:blur(8px); padding:4px 12px; border-radius:999px; font-size:10px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:12px;">
+                        <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#aee3db;"></span>
+                        Informasi Akun
+                    </div>
+                    <div style="position:relative; width:72px; height:72px; margin:0 auto 10px;">
+                        <div id="prof-avatar-riwayat" style="width:100%; height:100%; border-radius:50%; background:linear-gradient(135deg, var(--sunshine), var(--vermillion)); display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:800; color:white; box-shadow:0 6px 18px rgba(252,74,26,0.35); border:3px solid white;">?</div>
+                        <span style="position:absolute; bottom:2px; right:2px; width:16px; height:16px; border-radius:50%; background:#10b981; border:2.5px solid white;" title="Aktif"></span>
+                    </div>
+                    <h3 id="prof-nama-riwayat" style="font-size:18px; font-weight:800; margin-bottom:4px; letter-spacing:-0.02em; color:#ffffff;">-</h3>
+                    <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.2); padding:3px 12px; border-radius:999px; font-size:11px; font-weight:700;">
+                        <span id="prof-posisi-riwayat">Magang</span>
+                    </div>
+                </div>
+
+                <!-- Body: Bento Account Info -->
+                <div style="padding:16px 18px 20px; max-height:calc(90vh - 210px); overflow-y:auto; display:flex; flex-direction:column; gap:10px; background:#faf9fb;">
+                    <!-- Status Card -->
+                    <div style="background:white; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:10px 14px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <div style="width:34px; height:34px; border-radius:10px; background:var(--fresh-light); display:flex; align-items:center; justify-content:center; color:var(--fresh-dark); flex-shrink:0;">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            </div>
+                            <div>
+                                <p style="font-size:11px; font-weight:600; color:var(--text-muted); margin:0;">Status Akun</p>
+                                <p style="font-size:13px; font-weight:800; color:var(--fresh-dark); margin:0;">Aktif &amp; Terverifikasi</p>
+                            </div>
+                        </div>
+                        <span style="font-size:10px; font-weight:800; background:var(--fresh-light); color:var(--fresh-dark); padding:4px 8px; border-radius:6px; border:1px solid var(--fresh-border);">RESMI</span>
+                    </div>
+
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                        <div style="background:white; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:10px 14px; display:flex; align-items:center; gap:12px;">
+                            <div style="width:34px; height:34px; border-radius:10px; background:var(--clean-light); display:flex; align-items:center; justify-content:center; color:var(--text-muted); flex-shrink:0;">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"></rect><circle cx="9" cy="10" r="2"></circle><line x1="15" y1="8" x2="17" y2="8"></line><line x1="15" y1="12" x2="17" y2="12"></line><line x1="7" y1="16" x2="17" y2="16"></line></svg>
+                            </div>
+                            <div style="flex:1; min-width:0;">
+                                <span style="display:block; font-size:10px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:0.04em;">Nomor Induk Kependudukan (NIK)</span>
+                                <span id="prof-nik-riwayat" style="display:block; font-size:13px; font-weight:700; color:var(--text-dark); word-break:break-all;">-</span>
+                            </div>
+                        </div>
+
+                        <div style="background:white; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:10px 14px; display:flex; align-items:center; gap:12px;">
+                            <div style="width:34px; height:34px; border-radius:10px; background:var(--clean-light); display:flex; align-items:center; justify-content:center; color:var(--text-muted); flex-shrink:0;">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            </div>
+                            <div style="flex:1; min-width:0;">
+                                <span style="display:block; font-size:10px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:0.04em;">Email Terdaftar</span>
+                                <span id="prof-email-riwayat" style="display:block; font-size:13px; font-weight:700; color:var(--text-dark); word-break:break-all;">-</span>
+                            </div>
+                        </div>
+
+                        <div style="background:white; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:10px 14px; display:flex; align-items:center; gap:12px;">
+                            <div style="width:34px; height:34px; border-radius:10px; background:var(--clean-light); display:flex; align-items:center; justify-content:center; color:var(--text-muted); flex-shrink:0;">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                            </div>
+                            <div style="flex:1; min-width:0;">
+                                <span style="display:block; font-size:10px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:0.04em;">Nomor Telepon / WhatsApp</span>
+                                <span id="prof-hp-riwayat" style="display:block; font-size:13px; font-weight:700; color:var(--text-dark);">-</span>
+                            </div>
+                        </div>
+
+                        <div style="background:white; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:10px 14px; display:flex; align-items:center; gap:12px;">
+                            <div style="width:34px; height:34px; border-radius:10px; background:var(--clean-light); display:flex; align-items:center; justify-content:center; color:var(--text-muted); flex-shrink:0;">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"></path><path d="M5 21V7l8-4v18"></path><path d="M19 21V11l-6-4"></path><path d="M9 9h1"></path><path d="M9 13h1"></path><path d="M9 17h1"></path></svg>
+                            </div>
+                            <div style="flex:1; min-width:0;">
+                                <span style="display:block; font-size:10px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:0.04em;">Instansi Penempatan</span>
+                                <span id="prof-perusahaan-riwayat" style="display:block; font-size:13px; font-weight:700; color:var(--text-dark);">BPS Kota Banjar</span>
+                            </div>
+                        </div>
+
+                        <div style="background:white; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:10px 14px; display:flex; align-items:center; gap:12px;">
+                            <div style="width:34px; height:34px; border-radius:10px; background:var(--sunshine-light); display:flex; align-items:center; justify-content:center; color:var(--sunshine-hover); flex-shrink:0;">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                            </div>
+                            <div style="flex:1; min-width:0;">
+                                <span style="display:block; font-size:10px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:0.04em;">Periode Magang</span>
+                                <span id="prof-periode-riwayat" style="display:block; font-size:13px; font-weight:700; color:var(--text-dark);">21 Sep 2026 - 20 Mar 2027</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; gap:10px; margin-top:6px;">
+                        <button class="btn btn-primary" id="btn-tutup-profil-riwayat-bottom" style="flex:1; padding:12px; font-size:13px;">Tutup</button>
+                        <button class="btn btn-outline" id="btn-logout-from-profile-riwayat" style="flex:1; padding:12px; font-size:13px; color:var(--vermillion); border-color:var(--vermillion-border);">Keluar Akun</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Firebase SDK Modular (v10.8) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // Konfigurasi Firebase kamu
         const firebaseConfig = {
@@ -513,19 +669,72 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        document.getElementById('btn-logout-riwayat')?.addEventListener('click', () => {
-            if (confirm('Apakah kamu yakin ingin keluar dari akun ini?')) {
-                signOut(auth).then(() => {
-                    window.location.href = "index.html";
-                });
-            }
-        });
-
         const auth = getAuth(app);
         const db = getFirestore(app);
 
         // State variables
+        let currentUserData = null;
         let globalDataMap = {};
+
+        // Profile Modal Logic
+        function updateProfileModalData() {
+            if (!currentUserData) return;
+            const nama = currentUserData.nama || 'Peserta';
+            const profNama = document.getElementById('prof-nama-riwayat');
+            if (profNama) profNama.innerText = nama;
+            const profAv = document.getElementById('prof-avatar-riwayat');
+            if (profAv) profAv.innerText = nama.charAt(0).toUpperCase();
+            const profPos = document.getElementById('prof-posisi-riwayat');
+            if (profPos) profPos.innerText = currentUserData.posisi || 'Asisten Pranata Komputer';
+            const profNik = document.getElementById('prof-nik-riwayat');
+            if (profNik) profNik.innerText = currentUserData.nik || '-';
+            const profEmail = document.getElementById('prof-email-riwayat');
+            if (profEmail) profEmail.innerText = currentUserData.email || '-';
+            const profHp = document.getElementById('prof-hp-riwayat');
+            if (profHp) profHp.innerText = currentUserData.no_hp || '-';
+            const profPerus = document.getElementById('prof-perusahaan-riwayat');
+            if (profPerus) profPerus.innerText = currentUserData.perusahaan || 'BPS Kota Banjar';
+            const profPeriode = document.getElementById('prof-periode-riwayat');
+            if (profPeriode) profPeriode.innerText = '21 Sep 2026 - 20 Mar 2027';
+        }
+
+        function openProfileModal() {
+            updateProfileModalData();
+            document.getElementById('modal-profil-riwayat')?.classList.add('active');
+        }
+
+        function closeProfileModal() {
+            document.getElementById('modal-profil-riwayat')?.classList.remove('active');
+        }
+
+        document.getElementById('nav-profil-riwayat')?.addEventListener('click', openProfileModal);
+        document.getElementById('btn-tutup-profil-riwayat')?.addEventListener('click', closeProfileModal);
+        document.getElementById('btn-tutup-profil-riwayat-bottom')?.addEventListener('click', closeProfileModal);
+        document.getElementById('btn-logout-from-profile-riwayat')?.addEventListener('click', () => {
+            closeProfileModal();
+            document.getElementById('modal-keluar-riwayat')?.classList.add('active');
+        });
+
+        const modalProfRiwayat = document.getElementById('modal-profil-riwayat');
+        if (modalProfRiwayat) {
+            modalProfRiwayat.addEventListener('click', (e) => {
+                if (e.target === modalProfRiwayat) closeProfileModal();
+            });
+        }
+
+        // Logout Modal Logic
+        document.getElementById('btn-logout-riwayat')?.addEventListener('click', () => {
+            document.getElementById('modal-keluar-riwayat')?.classList.add('active');
+        });
+        document.getElementById('btn-batal-keluar-riwayat')?.addEventListener('click', () => {
+            document.getElementById('modal-keluar-riwayat')?.classList.remove('active');
+        });
+        document.getElementById('btn-konfirm-keluar-riwayat')?.addEventListener('click', () => {
+            document.getElementById('modal-keluar-riwayat')?.classList.remove('active');
+            signOut(auth).then(() => {
+                window.location.href = "index.html";
+            });
+        });
 
         // Hard-coded libur nasional sebagai fallback utama
         const LIBUR_NASIONAL = {
@@ -560,6 +769,28 @@
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 try {
+                    // Muat data profil user dari Firestore
+                    let userData = null;
+                    try {
+                        const docSnap = await getDoc(doc(db, "users", user.uid));
+                        if (docSnap.exists()) userData = docSnap.data();
+                    } catch (eDoc) {
+                        console.warn('Gagal membaca users doc:', eDoc);
+                    }
+
+                    if (!userData) {
+                        userData = {
+                            nama: user.displayName || user.email.split('@')[0],
+                            posisi: 'Asisten Pranata Komputer',
+                            perusahaan: 'BPS Kota Banjar',
+                            email: user.email,
+                            nik: '-'
+                        };
+                    }
+                    currentUserData = userData;
+                    currentUserData.uid = user.uid;
+                    updateProfileModalData();
+
                     // Merge dengan data Firebase (jika ada)
                     try {
                         const qLibur = await getDocs(collection(db, "libur_nasional"));
