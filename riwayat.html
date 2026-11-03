@@ -13,29 +13,45 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
         :root {
-            --primary: #0284c7;
-            --primary-hover: #0369a1;
-            --primary-light: #f0f9ff;
-            --slate-900: #0f172a;
-            --slate-800: #1e293b;
-            --slate-700: #334155;
-            --slate-600: #475569;
-            --slate-500: #64748b;
-            --slate-400: #94a3b8;
-            --slate-300: #cbd5e1;
-            --slate-200: #e2e8f0;
-            --slate-100: #f1f5f9;
-            --slate-50: #f8fafc;
-            --success: #10b981;
-            --success-light: #ecfdf5;
-            --warning: #f59e0b;
-            --warning-light: #fffbeb;
-            --danger: #ef4444;
-            --danger-light: #fef2f2;
+            /* Palette: Fresh, Vermillion, Sunshine, Clean */
+            --fresh: #4ABDAC;
+            --fresh-hover: #3ca092;
+            --fresh-dark: #32877b;
+            --fresh-light: #eef9f8;
+            --fresh-border: #aee3db;
+
+            --vermillion: #FC4A1A;
+            --vermillion-hover: #e33b0d;
+            --vermillion-light: #fff2ef;
+            --vermillion-border: #ffb8a5;
+
+            --sunshine: #F7B733;
+            --sunshine-hover: #e3a21b;
+            --sunshine-light: #fef8ec;
+            --sunshine-border: #fce3a7;
+
+            --clean: #DFDCE3;
+            --clean-dark: #c2bdcb;
+            --clean-light: #f7f6f9;
+
+            --primary: var(--fresh);
+            --primary-hover: var(--fresh-hover);
+            --primary-light: var(--fresh-light);
+
+            --accent: var(--vermillion);
+            --warning: var(--sunshine);
+            --danger: var(--vermillion);
+
+            --text-dark: #232029;
+            --text-main: #36323f;
+            --text-muted: #6e697a;
+            --text-light: #9f9aa8;
+            --border-color: #d8d4df;
+
             --radius-md: 12px;
             --radius-lg: 16px;
             --radius-xl: 20px;
-            --radius-2xl: 28px;
+            --radius-2xl: 26px;
         }
 
         * {
@@ -47,16 +63,17 @@
         }
 
         body {
-            background-color: #f1f5f9;
+            background-color: var(--clean);
             background-image: 
-                radial-gradient(at 0% 0%, rgba(2, 132, 199, 0.08) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.05) 0px, transparent 50%);
+                radial-gradient(at 0% 0%, rgba(74, 189, 172, 0.28) 0px, transparent 55%),
+                radial-gradient(at 100% 100%, rgba(247, 183, 51, 0.22) 0px, transparent 55%),
+                radial-gradient(at 50% 100%, rgba(252, 74, 26, 0.12) 0px, transparent 60%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 24px 16px;
-            color: var(--slate-900);
+            color: var(--text-dark);
             -webkit-font-smoothing: antialiased;
         }
 
@@ -66,8 +83,8 @@
             background: #ffffff;
             border-radius: var(--radius-2xl);
             box-shadow: 
-                0 25px 50px -12px rgba(15, 23, 42, 0.1),
-                0 0 0 1px rgba(15, 23, 42, 0.06);
+                0 25px 50px -12px rgba(35, 32, 41, 0.16),
+                0 0 0 1px rgba(223, 220, 227, 0.8);
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -89,7 +106,7 @@
             width: 4px;
         }
         .content::-webkit-scrollbar-thumb {
-            background: var(--slate-200);
+            background: var(--clean);
             border-radius: 4px;
         }
 
@@ -97,54 +114,54 @@
             background: #ffffff;
             border-radius: var(--radius-xl);
             padding: 20px;
-            border: 1px solid var(--slate-200);
-            box-shadow: 0 4px 20px -5px rgba(15, 23, 42, 0.05);
+            border: 1.5px solid var(--border-color);
+            box-shadow: 0 4px 20px -5px rgba(35, 32, 41, 0.06);
         }
 
-        /* Modern Summary Cards */
+        /* Modern Palette Summary Cards */
         .summary-card {
-            background: var(--slate-50);
+            background: var(--clean-light);
             border-radius: var(--radius-md);
-            padding: 12px 8px;
+            padding: 12px 6px;
             text-align: center;
-            border: 1px solid var(--slate-200);
+            border: 1.5px solid var(--border-color);
             transition: all 0.2s ease;
         }
         .summary-card:hover {
             background: #ffffff;
-            border-color: var(--slate-300);
+            border-color: var(--fresh);
+            transform: translateY(-1px);
         }
         .sum-label {
             font-size: 11px;
             font-weight: 600;
-            color: var(--slate-500);
+            color: var(--text-muted);
             margin-bottom: 4px;
         }
         .sum-num {
             font-size: 22px;
             font-weight: 800;
-            color: var(--slate-900);
             font-variant-numeric: tabular-nums;
             line-height: 1.1;
         }
         .sum-unit {
             font-size: 10px;
-            color: var(--slate-400);
-            font-weight: 500;
+            color: var(--text-light);
+            font-weight: 600;
             margin-top: 2px;
         }
 
         /* Period Navigator */
         .nav-btn {
-            border: 1px solid var(--slate-200);
-            background: var(--slate-50);
+            border: 1.5px solid var(--border-color);
+            background: var(--clean-light);
             width: 38px;
             height: 38px;
             border-radius: var(--radius-md);
             cursor: pointer;
             font-weight: 700;
             font-size: 15px;
-            color: var(--slate-700);
+            color: var(--text-dark);
             transition: 0.2s;
             display: flex;
             align-items: center;
@@ -152,8 +169,8 @@
         }
         .nav-btn:hover {
             background: #ffffff;
-            border-color: var(--primary);
-            color: var(--primary);
+            border-color: var(--fresh);
+            color: var(--fresh);
         }
 
         /* Calendar */
@@ -163,11 +180,11 @@
             text-align: center;
             font-size: 11px;
             font-weight: 700;
-            color: var(--slate-400);
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.04em;
             padding-bottom: 8px;
-            border-bottom: 1px solid var(--slate-100);
+            border-bottom: 1.5px solid var(--border-color);
             margin-bottom: 8px;
         }
 
@@ -189,12 +206,13 @@
         }
         .btn-outline {
             background: #ffffff;
-            color: var(--slate-700);
-            border: 1.5px solid var(--slate-200);
+            color: var(--text-main);
+            border: 1.5px solid var(--border-color);
         }
         .btn-outline:hover {
-            background: var(--slate-50);
-            border-color: var(--slate-300);
+            background: var(--clean-light);
+            border-color: var(--fresh);
+            color: var(--fresh-dark);
         }
 
         @media (max-width: 480px) {
@@ -233,17 +251,17 @@
                 <div id="summary-cards" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom: 18px;">
                     <div class="summary-card" id="card-telat">
                         <div class="sum-label">Terlambat</div>
-                        <div class="sum-num" id="count-telat" style="color:#d97706;">0</div>
+                        <div class="sum-num" id="count-telat" style="color:var(--sunshine);">0</div>
                         <div class="sum-unit">Hari</div>
                     </div>
                     <div class="summary-card" id="card-cepat">
                         <div class="sum-label">Pulang Cepat</div>
-                        <div class="sum-num" id="count-cepat" style="color:#ea580c;">0</div>
+                        <div class="sum-num" id="count-cepat" style="color:var(--vermillion);">0</div>
                         <div class="sum-unit">Hari</div>
                     </div>
                     <div class="summary-card" id="card-izin">
                         <div class="sum-label">Izin &amp; Sakit</div>
-                        <div class="sum-num" id="count-izin" style="color:var(--primary);">0</div>
+                        <div class="sum-num" id="count-izin" style="color:var(--fresh);">0</div>
                         <div class="sum-unit">Hari</div>
                     </div>
                 </div>
@@ -511,7 +529,7 @@
 
                 const todayStr = (new Date()).toISOString().split('T')[0];
                 const isToday = (todayStr === tglStr);
-                const circleStyles = isToday ? `border: 1px solid #1a237e; color:#1a237e; border-radius:50%; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center;` : `color:#555; height:24px; display:inline-flex; align-items:center; justify-content:center;`;
+                const circleStyles = isToday ? `background: #4ABDAC; color: #ffffff; font-weight: 700; border-radius:50%; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center;` : `color:#555; height:24px; display:inline-flex; align-items:center; justify-content:center;`;
 
                 let bgCell = "";
                 if (isNatHoliday) bgCell = "background:#fdecea;"; // merah muda untuk libur nasional
