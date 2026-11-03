@@ -473,6 +473,9 @@
                             style="color:#27ae60; font-weight:900; font-size:12px;">–</span> Izin/Sakit disetujui
                     </div>
                     <div style="display:flex; align-items:center; gap:4px;"><span
+                            style="color:#f39c12; font-size:12px;">⏳</span> Menunggu persetujuan
+                    </div>
+                    <div style="display:flex; align-items:center; gap:4px;"><span
                             style="color:#e74c3c; font-size:12px;">●</span> Tidak Hadir</div>
                     <div style="display:flex; align-items:center; gap:4px;"><span
                             style="color:#95a5a6; font-size:12px;">○</span> Belum Diisi</div>
@@ -641,7 +644,7 @@
             return `${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
         }
 
-                function updateSummaryForPeriod(startDate, endDate) {
+        function updateSummaryForPeriod(startDate, endDate) {
             let telat = 0, cepat = 0, izinSakit = 0;
             const startStr = startDate.toISOString().split('T')[0];
             const endStr = endDate.toISOString().split('T')[0];
@@ -649,17 +652,23 @@
             Object.keys(globalDataMap).forEach(tgl => {
                 if (tgl >= startStr && tgl <= endStr) {
                     const list = globalDataMap[tgl];
+                    let hasLate = false, hasEarly = false, hasApprovedLeave = false;
                     list.forEach(item => {
                         if (item.is_late || (item.status && item.status.toLowerCase().includes('telat')) || item.late_reason) {
-                            telat++;
+                            hasLate = true;
                         }
                         if (item.is_early_leave || (item.status && item.status.toLowerCase().includes('cepat')) || item.early_leave_reason) {
-                            cepat++;
+                            hasEarly = true;
                         }
-                        if (item.status === 'Izin' || item.status === 'Sakit' || item.leave_type) {
-                            izinSakit++;
+                        if (item.isApprovedLeave) {
+                            hasApprovedLeave = true;
+                        } else if ((item.status === 'Izin' || item.status === 'Sakit') && !item.leave_status && item.isPendingLeave !== true) {
+                            hasApprovedLeave = true;
                         }
                     });
+                    if (hasLate) telat++;
+                    if (hasEarly) cepat++;
+                    if (hasApprovedLeave) izinSakit++;
                 }
             });
 
@@ -726,16 +735,23 @@
                     iconHtml = `<span style="color:#2c3e50; font-size:11px;">■</span>`;
                 } else if (globalDataMap[tglStr] && globalDataMap[tglStr].length > 0) {
                     let hasHadir = globalDataMap[tglStr].some(d => (d.status && d.status.includes('Hadir') && !d.status.includes('Tidak Hadir')) || d.status === 'check_in' || d.status === 'check_out');
-                    let hasIzinSakit = globalDataMap[tglStr].some(d => d.status === 'Izin' || d.status === 'Sakit' || d.leave_type);
+                    let hasIzinSakitApproved = globalDataMap[tglStr].some(d => 
+                        d.isApprovedLeave || 
+                        ((d.status === 'Izin' || d.status === 'Sakit') && !d.leave_status && d.isPendingLeave !== true)
+                    );
+                    let hasIzinSakitPending = globalDataMap[tglStr].some(d => d.isPendingLeave);
+
                     if (hasHadir) {
-                        iconHtml = `<span style="color:#2ecc71; font-size:11px;">✔</span>`;
-                    } else if (hasIzinSakit) {
-                        iconHtml = `<span style="color:#27ae60; font-weight:900; font-size:11px;">–</span>`;
+                        iconHtml = `<span style="color:#2ecc71; font-size:11px;" title="Hadir disetujui">✔</span>`;
+                    } else if (hasIzinSakitApproved) {
+                        iconHtml = `<span style="color:#27ae60; font-weight:900; font-size:11px;" title="Izin/Sakit disetujui (Approved)">–</span>`;
+                    } else if (hasIzinSakitPending) {
+                        iconHtml = `<span style="color:#f39c12; font-size:11px;" title="Izin/Sakit menunggu persetujuan admin">⏳</span>`;
                     } else {
-                        iconHtml = `<span style="color:#e74c3c; font-size:11px;">●</span>`;
+                        iconHtml = `<span style="color:#e74c3c; font-size:11px;" title="Tidak Hadir">●</span>`;
                     }
                 } else {
-                    iconHtml = `<span style="color:#95a5a6; font-size:11px;">○</span>`;
+                    iconHtml = `<span style="color:#95a5a6; font-size:11px;" title="Belum Diisi">○</span>`;
                 }
 
                 const todayStr = (new Date()).toISOString().split('T')[0];
@@ -829,10 +845,36 @@
                     snapLeaves.forEach((docSnap) => {
                         const d = docSnap.data();
                         d.id_leave = d.id_leave || docSnap.id;
-                        let tgl = d.start_date;
-                        if (tgl) {
-                            if (!dataMap[tgl]) dataMap[tgl] = [];
-                            dataMap[tgl].push({ ...d, status: d.leave_type === 'sakit' ? 'Sakit' : 'Izin' });
+
+                        const rawStatus = (d.status || '').toLowerCase().trim();
+                        const isApproved = (rawStatus === 'approved' || rawStatus === 'disetujui' || rawStatus === 'acc');
+                        const isPending = (rawStatus === 'pending' || rawStatus === 'menunggu' || !rawStatus);
+
+                        const leaveItem = {
+                            ...d,
+                            leave_status: d.status,
+                            isApprovedLeave: isApproved,
+                            isPendingLeave: isPending,
+                            status: isApproved 
+                                ? (d.leave_type === 'sakit' ? 'Sakit' : 'Izin')
+                                : (d.leave_type === 'sakit' ? 'Sakit (Menunggu Persetujuan)' : 'Izin (Menunggu Persetujuan)')
+                        };
+
+                        const sDateStr = d.start_date;
+                        const eDateStr = d.end_date || d.start_date;
+
+                        if (sDateStr) {
+                            const cur = new Date(sDateStr + 'T00:00:00');
+                            const end = new Date(eDateStr + 'T00:00:00');
+                            let count = 0;
+                            while (cur <= end && count < 60) {
+                                const offset = cur.getTimezoneOffset() * 60000;
+                                const tgl = new Date(cur.getTime() - offset).toISOString().split('T')[0];
+                                if (!dataMap[tgl]) dataMap[tgl] = [];
+                                dataMap[tgl].push(leaveItem);
+                                cur.setDate(cur.getDate() + 1);
+                                count++;
+                            }
                         }
                     });
                 } catch (eLeaves) { console.warn('leaves query in riwayat:', eLeaves); }
