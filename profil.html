@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Presensee - Profil Akun</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Palette: Fresh, Vermillion, Sunshine, Clean */
+            --fresh: #4ABDAC;
+            --fresh-hover: #3ca092;
+            --fresh-dark: #206d62;
+            --fresh-light: #eef9f8;
+            --fresh-border: #aee3db;
+
+            --vermillion: #FC4A1A;
+            --vermillion-hover: #e33b0d;
+            --vermillion-light: #fff2ef;
+            --vermillion-border: #ffb8a5;
+
+            --sunshine: #F7B733;
+            --sunshine-hover: #e3a21b;
+            --sunshine-light: #fef8ec;
+            --sunshine-border: #fce3a7;
+
+            --clean: #DFDCE3;
+            --clean-dark: #c2bdcb;
+            --clean-light: #f7f6f9;
+
+            --primary: var(--fresh);
+            --primary-hover: var(--fresh-hover);
+            --primary-light: var(--fresh-light);
+
+            --accent: var(--vermillion);
+            --warning: var(--sunshine);
+            --danger: var(--vermillion);
+
+            --text-dark: #1e1b24;
+            --text-main: #36323f;
+            --text-muted: #6e697a;
+            --text-light: #9f9aa8;
+            --border-color: #dcd8e3;
+
+            --radius-sm: 10px;
+            --radius-md: 14px;
+            --radius-lg: 18px;
+            --radius-xl: 24px;
+            --radius-2xl: 32px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Ambient Liquid Mesh Gradient */
+        body {
+            background-color: #d5d1dc;
+            background-image: 
+                radial-gradient(at 8% 8%, rgba(74, 189, 172, 0.45) 0px, transparent 48%),
+                radial-gradient(at 92% 92%, rgba(247, 183, 51, 0.38) 0px, transparent 46%),
+                radial-gradient(at 88% 12%, rgba(252, 74, 26, 0.22) 0px, transparent 42%),
+                radial-gradient(at 12% 88%, rgba(74, 189, 172, 0.32) 0px, transparent 46%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Modern Bento / Floating Frame */
+        .phone-container {
+            width: 100%;
+            max-width: 430px;
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(24px);
+            border-radius: var(--radius-2xl);
+            box-shadow: 
+                0 32px 64px -16px rgba(30, 27, 36, 0.22),
+                0 0 0 2px rgba(255, 255, 255, 0.85),
+                0 0 0 3px rgba(223, 220, 227, 0.7);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            min-height: 660px;
+            max-height: 94vh;
+        }
+
+        /* Scrollable content container */
+        .content {
+            padding: 16px 18px 24px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            overflow-y: auto;
+            background: transparent;
+            gap: 14px;
+        }
+
+        .content::-webkit-scrollbar {
+            width: 4px;
+        }
+        .content::-webkit-scrollbar-thumb {
+            background: var(--clean);
+            border-radius: 4px;
+        }
+
+        /* Hero Profile Card */
+        .profile-hero {
+            background: linear-gradient(135deg, var(--fresh-dark) 0%, var(--fresh) 100%);
+            border-radius: var(--radius-xl);
+            padding: 24px 20px 22px;
+            text-align: center;
+            color: #ffffff;
+            position: relative;
+            box-shadow: 
+                0 16px 36px -10px rgba(74, 189, 172, 0.45),
+                inset 0 1px 1px rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+        }
+
+        .profile-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.22), transparent 55%);
+            pointer-events: none;
+        }
+
+        .hero-top-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.16);
+            backdrop-filter: blur(8px);
+            padding: 4px 14px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 14px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .avatar-wrap {
+            position: relative;
+            width: 84px;
+            height: 84px;
+            margin: 0 auto 12px;
+            z-index: 1;
+        }
+
+        .avatar-circle {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--sunshine), var(--vermillion));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 34px;
+            font-weight: 800;
+            color: #ffffff;
+            box-shadow: 0 8px 24px rgba(252, 74, 26, 0.38);
+            border: 3.5px solid #ffffff;
+        }
+
+        .avatar-online-dot {
+            position: absolute;
+            bottom: 3px;
+            right: 3px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #10b981;
+            border: 3px solid #ffffff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        .user-full-name {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 4px;
+            color: #ffffff;
+            position: relative;
+            z-index: 1;
+        }
+
+        .user-posisi-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.22);
+            backdrop-filter: blur(8px);
+            padding: 4px 14px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Bento Info Grid */
+        .bento-section-title {
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin: 6px 0 2px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .bento-card {
+            background: #ffffff;
+            border-radius: var(--radius-xl);
+            border: 1.5px solid var(--border-color);
+            padding: 16px;
+            box-shadow: 0 4px 16px rgba(30, 27, 36, 0.04);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .bento-tile {
+            background: var(--clean-light);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .bento-tile:hover {
+            background: #ffffff;
+            border-color: var(--fresh-border);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(74, 189, 172, 0.1);
+        }
+
+        .tile-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .tile-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .tile-label {
+            display: block;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 2px;
+        }
+
+        .tile-value {
+            display: block;
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--text-dark);
+            word-break: break-all;
+        }
+
+        /* Chunky 3D Tactile Buttons */
+        .btn {
+            width: 100%;
+            padding: 15px 20px;
+            border: none;
+            border-radius: var(--radius-lg);
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            letter-spacing: -0.01em;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow: none !important;
+        }
+
+        .btn-danger {
+            background: linear-gradient(180deg, #fd6840 0%, #FC4A1A 100%);
+            color: #ffffff;
+            box-shadow: 
+                0 8px 20px -4px rgba(252, 74, 26, 0.5),
+                0 4px 0 #c42d05,
+                inset 0 1px 1px rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-outline {
+            background: #ffffff;
+            color: var(--text-main);
+            border: 2px solid var(--border-color);
+            box-shadow: 0 4px 0 var(--border-color);
+        }
+
+        /* Modern Bottom Navigation Bar (3 Menus: Dashboard, Riwayat, Profil) */
+        .bottom-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(16px);
+            border-top: 1.5px solid var(--border-color);
+            padding: 8px 12px 10px;
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            color: var(--text-muted);
+            text-decoration: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px 16px;
+            flex: 1;
+            max-width: 120px;
+            border-radius: var(--radius-md);
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            outline: none;
+        }
+
+        .bottom-nav-item svg {
+            width: 22px;
+            height: 22px;
+            transition: all 0.2s ease;
+        }
+
+        .bottom-nav-item:hover {
+            color: var(--fresh-dark);
+            transform: translateY(-2px);
+        }
+
+        .bottom-nav-item.active {
+            color: var(--fresh-dark);
+            background: var(--fresh-light);
+        }
+
+        .bottom-nav-item.active svg {
+            stroke: var(--fresh-dark);
+            stroke-width: 2.5;
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: absolute;
+            inset: 0;
+            background: rgba(30, 27, 36, 0.65);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            padding: 14px;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-content {
+            background: #ffffff;
+            width: 100%;
+            border-radius: var(--radius-xl);
+            box-shadow: 0 30px 60px -15px rgba(30, 27, 36, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.9);
+        }
+
+        /* Desktop & Tablet Breakpoints */
+        @media (min-width: 769px) {
+            body {
+                padding: 30px 20px;
+            }
+
+            .phone-container {
+                max-width: 820px;
+                width: 90%;
+                min-height: 640px;
+                max-height: 90vh;
+                border-radius: var(--radius-2xl);
+            }
+
+            .content {
+                padding: 24px 28px 28px;
+            }
+
+            .profile-desktop-grid {
+                display: grid;
+                grid-template-columns: 320px 1fr;
+                gap: 20px;
+                align-items: start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="phone-container">
+
+        <!-- CONTENT -->
+        <div class="content">
+
+            <!-- Responsive Wrapper for Desktop (Dual Pane) & Mobile (Single Column) -->
+            <div class="profile-desktop-grid">
+                
+                <!-- Left Pane / Mobile Top: Hero Profile Card -->
+                <div>
+                    <div class="profile-hero">
+                        <div class="hero-top-badge">
+                            <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#aee3db;"></span>
+                            Informasi Akun
+                        </div>
+                        <div class="avatar-wrap">
+                            <div class="avatar-circle" id="prof-avatar">?</div>
+                            <span class="avatar-online-dot" title="Aktif"></span>
+                        </div>
+                        <h2 class="user-full-name" id="prof-nama">Memuat Akun...</h2>
+                        <div class="user-posisi-pill">
+                            <span id="prof-posisi">Magang</span>
+                        </div>
+                    </div>
+
+                    <!-- Status Verification Bento Card -->
+                    <div style="background:#ffffff; border:1.5px solid var(--border-color); border-radius:var(--radius-xl); padding:14px 16px; margin-top:14px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 4px 16px rgba(30,27,36,0.03);">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div style="width:38px; height:38px; border-radius:12px; background:var(--fresh-light); display:flex; align-items:center; justify-content:center; color:var(--fresh-dark); flex-shrink:0;">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                            </div>
+                            <div>
+                                <p style="font-size:11px; font-weight:600; color:var(--text-muted); margin:0;">Status Keanggotaan</p>
+                                <p style="font-size:13px; font-weight:800; color:var(--fresh-dark); margin:0;">Magang Aktif &amp; Sah</p>
+                            </div>
+                        </div>
+                        <span style="font-size:10px; font-weight:800; background:var(--fresh-light); color:var(--fresh-dark); padding:5px 10px; border-radius:8px; border:1px solid var(--fresh-border);">RESMI</span>
+                    </div>
+
+                    <!-- Logout Button (Quick Action on Left Pane for Desktop, Bottom on Mobile) -->
+                    <div style="margin-top:14px;">
+                        <button type="button" class="btn btn-danger" id="btn-trigger-logout">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            <span>Keluar dari Akun</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Pane / Mobile Bottom: Detailed Account Information -->
+                <div>
+                    <div class="bento-section-title">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        <span>Data Lengkap Peserta</span>
+                    </div>
+
+                    <div class="bento-card">
+                        <!-- NIK -->
+                        <div class="bento-tile">
+                            <div class="tile-icon" style="background:var(--clean-light); color:var(--text-muted);">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"></rect><circle cx="9" cy="10" r="2"></circle><line x1="15" y1="8" x2="17" y2="8"></line><line x1="15" y1="12" x2="17" y2="12"></line><line x1="7" y1="16" x2="17" y2="16"></line></svg>
+                            </div>
+                            <div class="tile-content">
+                                <span class="tile-label">Nomor Induk Kependudukan (NIK)</span>
+                                <span class="tile-value" id="prof-nik">-</span>
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="bento-tile">
+                            <div class="tile-icon" style="background:var(--clean-light); color:var(--text-muted);">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            </div>
+                            <div class="tile-content">
+                                <span class="tile-label">Alamat Email</span>
+                                <span class="tile-value" id="prof-email">-</span>
+                            </div>
+                        </div>
+
+                        <!-- WhatsApp / HP -->
+                        <div class="bento-tile">
+                            <div class="tile-icon" style="background:var(--clean-light); color:var(--text-muted);">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                            </div>
+                            <div class="tile-content">
+                                <span class="tile-label">Nomor Telepon / WhatsApp</span>
+                                <span class="tile-value" id="prof-hp">-</span>
+                            </div>
+                        </div>
+
+                        <!-- Instansi / Penempatan -->
+                        <div class="bento-tile">
+                            <div class="tile-icon" style="background:var(--clean-light); color:var(--text-muted);">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"></path><path d="M5 21V7l8-4v18"></path><path d="M19 21V11l-6-4"></path><path d="M9 9h1"></path><path d="M9 13h1"></path><path d="M9 17h1"></path></svg>
+                            </div>
+                            <div class="tile-content">
+                                <span class="tile-label">Instansi Penempatan</span>
+                                <span class="tile-value" id="prof-perusahaan">BPS Kota Banjar</span>
+                            </div>
+                        </div>
+
+                        <!-- Periode Magang -->
+                        <div class="bento-tile">
+                            <div class="tile-icon" style="background:var(--sunshine-light); color:var(--sunshine-hover);">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                            </div>
+                            <div class="tile-content">
+                                <span class="tile-label">Periode Magang</span>
+                                <span class="tile-value" id="prof-periode">21 Sep 2026 - 20 Mar 2027</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- BOTTOM NAVIGATION BAR (3 Menus: Dashboard, Riwayat, Profil) -->
+        <nav class="bottom-nav">
+            <a href="index.html" class="bottom-nav-item" id="nav-dashboard">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                <span>Dashboard</span>
+            </a>
+            <a href="riwayat.html" class="bottom-nav-item" id="nav-riwayat">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span>Riwayat</span>
+            </a>
+            <a href="#" class="bottom-nav-item active" id="nav-profil" onclick="return false;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span>Profil</span>
+            </a>
+        </nav>
+
+        <!-- MODAL: KELUAR DI PROFIL -->
+        <div class="modal" id="modal-keluar">
+            <div class="modal-content" style="text-align:center; max-width:320px; padding:24px 20px;">
+                <img id="img-keluar" src="assets/keluar.jpg" alt="Keluar"
+                    style="width:140px; height:140px; object-fit:cover; margin:0 auto 14px; display:block; border-radius:18px; box-shadow:0 8px 24px rgba(252,74,26,0.2); border:2px solid var(--vermillion-border);">
+                <h3 style="font-size:18px; font-weight:800; color:var(--text-dark); margin-bottom:6px;">Konfirmasi Keluar</h3>
+                <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.45;">Apakah kamu yakin ingin keluar dari akun ini?</p>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn btn-outline" id="btn-batal-keluar" style="flex:1;">Batal</button>
+                    <button class="btn btn-danger" id="btn-konfirm-keluar" style="flex:1;">Ya, Keluar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK Modular (v10.8) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Konfigurasi Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDe394Hog3cODzHBWgC00jtQybKq_Ul4l4",
+            authDomain: "presensee-d653b.firebaseapp.com",
+            databaseURL: "https://presensee-d653b-default-rtdb.firebaseio.com",
+            projectId: "presensee-d653b",
+            storageBucket: "presensee-d653b.firebasestorage.app",
+            messagingSenderId: "983111308568",
+            appId: "1:983111308568:web:de94c7403005a596083a6d",
+            measurementId: "G-9WBWFBFGYQ"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // State variables
+        let currentUserData = null;
+
+        function renderProfileData() {
+            if (!currentUserData) return;
+            const nama = currentUserData.nama || 'Peserta';
+            const profNama = document.getElementById('prof-nama');
+            if (profNama) profNama.innerText = nama;
+            const profAv = document.getElementById('prof-avatar');
+            if (profAv) profAv.innerText = nama.charAt(0).toUpperCase();
+            const profPos = document.getElementById('prof-posisi');
+            if (profPos) profPos.innerText = currentUserData.posisi || 'Asisten Pranata Komputer';
+            const profNik = document.getElementById('prof-nik');
+            if (profNik) profNik.innerText = currentUserData.nik || '-';
+            const profEmail = document.getElementById('prof-email');
+            if (profEmail) profEmail.innerText = currentUserData.email || '-';
+            const profHp = document.getElementById('prof-hp');
+            if (profHp) profHp.innerText = currentUserData.no_hp || '-';
+            const profPerus = document.getElementById('prof-perusahaan');
+            if (profPerus) profPerus.innerText = currentUserData.perusahaan || 'BPS Kota Banjar';
+            const profPeriode = document.getElementById('prof-periode');
+            if (profPeriode) profPeriode.innerText = '21 Sep 2026 - 20 Mar 2027';
+        }
+
+        // Auth Listeners
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                try {
+                    let userData = null;
+                    try {
+                        const docSnap = await getDoc(doc(db, "users", user.uid));
+                        if (docSnap.exists()) userData = docSnap.data();
+                    } catch (eDoc) {
+                        console.warn('Gagal membaca users doc:', eDoc);
+                    }
+
+                    if (!userData) {
+                        userData = {
+                            nama: user.displayName || user.email.split('@')[0],
+                            posisi: 'Asisten Pranata Komputer',
+                            perusahaan: 'BPS Kota Banjar',
+                            email: user.email,
+                            nik: '-'
+                        };
+                    }
+                    currentUserData = userData;
+                    currentUserData.uid = user.uid;
+                    renderProfileData();
+                } catch (e) {
+                    console.warn(e);
+                }
+            } else {
+                window.location.href = "index.html"; // Redirect ke beranda jika belum login
+            }
+        });
+
+        // Logout Modal Logic
+        const modalKeluar = document.getElementById('modal-keluar');
+        document.getElementById('btn-trigger-logout')?.addEventListener('click', () => {
+            modalKeluar?.classList.add('active');
+        });
+        document.getElementById('btn-batal-keluar')?.addEventListener('click', () => {
+            modalKeluar?.classList.remove('active');
+        });
+        document.getElementById('btn-konfirm-keluar')?.addEventListener('click', () => {
+            modalKeluar?.classList.remove('active');
+            signOut(auth).then(() => {
+                window.location.href = "index.html";
+            });
+        });
+        if (modalKeluar) {
+            modalKeluar.addEventListener('click', (e) => {
+                if (e.target === modalKeluar) modalKeluar.classList.remove('active');
+            });
+        }
+    </script>
+</body>
+
+</html>
