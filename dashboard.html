@@ -1616,14 +1616,16 @@
                 const tgl = new Date(now - offset).toISOString().split('T')[0];
 
                 try {
-                    const userNik = (currentUserData && currentUserData.nik) ? currentUserData.nik : null;
+                    const userNik = (currentUserData && currentUserData.nik && currentUserData.nik !== '-') ? currentUserData.nik : null;
                     const q = userNik
                         ? query(collection(db, 'attendances'), where('nik', '==', userNik), where('tanggal', '==', tgl))
-                        : query(collection(db, 'attendances'), where('user_id', '==', uid), where('tanggal', '==', tgl));
+                        : query(collection(db, 'attendances'), where('tanggal', '==', tgl));
                     const snap = await getDocs(q);
 
                     snap.forEach(docSnap => {
                         const d = docSnap.data();
+                        const matchUser = !userNik || d.nik === userNik || (currentUserData && currentUserData.nama && d.nama === currentUserData.nama);
+                        if (!matchUser) return;
                         if (d.status === 'check_in') {
                             hasCheckIn = true;
                             if (d.check_in_time && d.check_in_time.toDate) {

@@ -66,7 +66,7 @@
         /* Ambient Liquid Mesh Gradient */
         body {
             background-color: #d5d1dc;
-            background-image: 
+            background-image:
                 radial-gradient(at 8% 8%, rgba(74, 189, 172, 0.45) 0px, transparent 48%),
                 radial-gradient(at 92% 92%, rgba(247, 183, 51, 0.38) 0px, transparent 46%),
                 radial-gradient(at 88% 12%, rgba(252, 74, 26, 0.22) 0px, transparent 42%),
@@ -88,7 +88,7 @@
             background: rgba(255, 255, 255, 0.94);
             backdrop-filter: blur(24px);
             border-radius: var(--radius-2xl);
-            box-shadow: 
+            box-shadow:
                 0 32px 64px -16px rgba(30, 27, 36, 0.22),
                 0 0 0 2px rgba(255, 255, 255, 0.85),
                 0 0 0 3px rgba(223, 220, 227, 0.7);
@@ -113,6 +113,7 @@
         .content::-webkit-scrollbar {
             width: 4px;
         }
+
         .content::-webkit-scrollbar-thumb {
             background: var(--clean);
             border-radius: 4px;
@@ -139,11 +140,13 @@
             align-items: center;
             gap: 2px;
         }
+
         .summary-card:hover {
             background: #ffffff;
             transform: translateY(-2px);
             box-shadow: 0 6px 16px rgba(30, 27, 36, 0.06);
         }
+
         .sum-label {
             font-size: 10px;
             font-weight: 800;
@@ -151,6 +154,7 @@
             text-transform: uppercase;
             color: var(--text-muted);
         }
+
         .sum-num {
             font-family: 'JetBrains Mono', monospace;
             font-size: 24px;
@@ -158,6 +162,7 @@
             font-variant-numeric: tabular-nums;
             line-height: 1.1;
         }
+
         .sum-unit {
             font-size: 10px;
             color: var(--text-light);
@@ -193,11 +198,13 @@
             align-items: center;
             justify-content: center;
         }
+
         .nav-btn:hover {
             background: var(--fresh);
             color: #ffffff;
             transform: translateY(-1px);
         }
+
         .nav-btn:active {
             transform: translateY(1px);
         }
@@ -248,7 +255,7 @@
         .btn-danger {
             background: linear-gradient(180deg, #fd6840 0%, #FC4A1A 100%);
             color: #ffffff;
-            box-shadow: 
+            box-shadow:
                 0 8px 20px -4px rgba(252, 74, 26, 0.5),
                 0 4px 0 #c42d05,
                 inset 0 1px 1px rgba(255, 255, 255, 0.5);
@@ -257,7 +264,7 @@
         .btn-primary {
             background: linear-gradient(180deg, #5ec3b5 0%, #4ABDAC 100%);
             color: #ffffff;
-            box-shadow: 
+            box-shadow:
                 0 8px 20px -4px rgba(74, 189, 172, 0.5),
                 0 4px 0 #2e8376,
                 inset 0 1px 1px rgba(255, 255, 255, 0.5);
@@ -272,6 +279,7 @@
                 height: 100dvh;
                 overflow: hidden;
             }
+
             .phone-container {
                 border-radius: 0;
                 max-width: 100%;
@@ -281,6 +289,7 @@
                 box-shadow: none;
                 flex-grow: 1;
             }
+
             #view-riwayat.content {
                 padding-bottom: 24px;
             }
@@ -291,6 +300,7 @@
             body {
                 padding: 30px 20px;
             }
+
             .phone-container {
                 max-width: 920px;
                 width: 94%;
@@ -298,15 +308,19 @@
                 max-height: 90vh;
                 border-radius: var(--radius-2xl);
             }
+
             .riwayat-card {
                 padding: 26px 32px;
             }
+
             .summary-card {
                 padding: 18px 12px;
             }
+
             .sum-num {
                 font-size: 30px;
             }
+
             #calendar-grid {
                 row-gap: 10px;
                 column-gap: 6px;
@@ -336,6 +350,7 @@
                 opacity: 0;
                 transform: scale(0.96);
             }
+
             to {
                 opacity: 1;
                 transform: scale(1);
@@ -424,7 +439,9 @@
         <!-- RIWAYAT VIEW -->
         <div id="view-riwayat" class="view active content">
             <div class="riwayat-card">
-                <h3 style="font-size:18px; font-weight:700; color:var(--slate-900); margin:0 0 16px; text-align:center;">Riwayat Kehadiran</h3>
+                <h3
+                    style="font-size:18px; font-weight:700; color:var(--slate-900); margin:0 0 16px; text-align:center;">
+                    Riwayat Kehadiran</h3>
 
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                     <button id="btn-prev-period"
@@ -454,13 +471,15 @@
                     </div>
                     <div id="calendar-grid"
                         style="display:grid; grid-template-columns:repeat(7, 1fr); text-align:center; row-gap:6px; column-gap:4px; width:100%;">
-                        <div style="grid-column: span 7; color:#999; padding:20px; font-size:12px;">Memuat kalender...</div>
+                        <div style="grid-column: span 7; color:#999; padding:20px; font-size:12px;">Memuat kalender...
+                        </div>
                     </div>
                 </div>
 
                 <div id="holiday-list-container"
                     style="display:none; margin-top:15px; background:#fffbf7; border:1px solid #ffe3b3; border-radius:10px; padding:12px;">
-                    <div style="font-size:12px; font-weight:800; color:#d35400; margin-bottom:5px;">Daftar Libur Nasional:</div>
+                    <div style="font-size:12px; font-weight:800; color:#d35400; margin-bottom:5px;">Daftar Libur
+                        Nasional:</div>
                     <div id="holiday-list-ul"
                         style="font-size:11.5px; color:#555; display:flex; flex-direction:column; gap:4px;"></div>
                 </div>
@@ -468,7 +487,7 @@
                 <div
                     style="display:flex; flex-wrap:wrap; gap:12px; margin-top:20px; font-size:11px; font-weight:600; color:#333;">
                     <div style="display:flex; align-items:center; gap:4px;"><span
-                            style="color:#2ecc71; font-size:12px;">✔</span> Hadir disetujui</div>
+                            style="color:#2ecc71; font-size:12px;">✔</span> Hadir </div>
                     <div style="display:flex; align-items:center; gap:4px;"><span
                             style="color:#27ae60; font-weight:900; font-size:12px;">–</span> Izin/Sakit disetujui
                     </div>
@@ -488,8 +507,10 @@
 
             <!-- REKAP KEHADIRAN (Card Terpisah) -->
             <div class="riwayat-card">
-                <h4 style="font-size:14px; font-weight:800; color:var(--text-dark); margin:0 0 12px; display:flex; align-items:center; gap:8px;">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <h4
+                    style="font-size:14px; font-weight:800; color:var(--text-dark); margin:0 0 12px; display:flex; align-items:center; gap:8px;">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="7" height="7"></rect>
                         <rect x="14" y="3" width="7" height="7"></rect>
                         <rect x="14" y="14" width="7" height="7"></rect>
@@ -521,14 +542,16 @@
         <!-- BOTTOM NAVIGATION BAR (3 Menus: Dashboard, Riwayat, Profil) -->
         <nav class="bottom-nav">
             <a href="dashboard.html" class="bottom-nav-item" id="nav-dashboard">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                    stroke-linejoin="round">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                     <polyline points="9 22 9 12 15 12 15 22"></polyline>
                 </svg>
                 <span>Dashboard</span>
             </a>
             <a href="#" class="bottom-nav-item active" id="nav-riwayat" onclick="return false;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                    stroke-linejoin="round">
                     <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                     <line x1="16" y1="2" x2="16" y2="6"></line>
                     <line x1="8" y1="2" x2="8" y2="6"></line>
@@ -537,7 +560,8 @@
                 <span>Riwayat</span>
             </a>
             <a href="profil.html" class="bottom-nav-item" id="nav-profil-riwayat">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                    stroke-linejoin="round">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                     <circle cx="12" cy="7" r="4"></circle>
                 </svg>
@@ -644,6 +668,67 @@
             return `${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
         }
 
+        function toDateStr(val) {
+            if (!val) return '';
+            if (typeof val === 'string') {
+                const s = val.trim();
+                if (s.includes('T')) return s.split('T')[0];
+                if (s.includes(' ')) return s.split(' ')[0];
+                return s;
+            }
+            if (val.toDate && typeof val.toDate === 'function') {
+                const dt = val.toDate();
+                const y = dt.getFullYear();
+                const m = String(dt.getMonth() + 1).padStart(2, '0');
+                const d = String(dt.getDate()).padStart(2, '0');
+                return `${y}-${m}-${d}`;
+            }
+            if (val instanceof Date) {
+                const y = val.getFullYear();
+                const m = String(val.getMonth() + 1).padStart(2, '0');
+                const d = String(val.getDate()).padStart(2, '0');
+                return `${y}-${m}-${d}`;
+            }
+            if (typeof val === 'number') {
+                const dt = new Date(val);
+                const y = dt.getFullYear();
+                const m = String(dt.getMonth() + 1).padStart(2, '0');
+                const d = String(dt.getDate()).padStart(2, '0');
+                return `${y}-${m}-${d}`;
+            }
+            return '';
+        }
+
+        function isLeaveApproved(d) {
+            if (d.is_approved === true || d.isApproved === true || d.acc === true || d.approved === true) return true;
+            
+            const candidates = [d.status, d.leave_status, d.persetujuan, d.approval, d.acc, d.keterangan_admin, d.status_pengajuan];
+            for (const val of candidates) {
+                if (val === true || val === 1) return true;
+                if (typeof val === 'string') {
+                    const s = val.toLowerCase().trim();
+                    if (!s) continue;
+                    if (s.includes('reject') || s.includes('tolak')) return false;
+                    if (s.includes('pend') || s.includes('tunggu')) return false;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function isLeavePending(d) {
+            if (isLeaveApproved(d)) return false;
+            const candidates = [d.status, d.leave_status, d.persetujuan, d.approval, d.status_pengajuan];
+            for (const val of candidates) {
+                if (typeof val === 'string') {
+                    const s = val.toLowerCase().trim();
+                    if (s.includes('reject') || s.includes('tolak')) return false;
+                    if (s.includes('pend') || s.includes('tunggu') || !s) return true;
+                }
+            }
+            return true;
+        }
+
         function updateSummaryForPeriod(startDate, endDate) {
             let telat = 0, cepat = 0, izinSakit = 0;
             const startStr = startDate.toISOString().split('T')[0];
@@ -654,15 +739,15 @@
                     const list = globalDataMap[tgl];
                     let hasLate = false, hasEarly = false, hasApprovedLeave = false;
                     list.forEach(item => {
-                        if (item.is_late || (item.status && item.status.toLowerCase().includes('telat')) || item.late_reason) {
+                        if (item.is_late || (item.status && String(item.status).toLowerCase().includes('telat')) || item.late_reason) {
                             hasLate = true;
                         }
-                        if (item.is_early_leave || (item.status && item.status.toLowerCase().includes('cepat')) || item.early_leave_reason) {
+                        if (item.is_early_leave || (item.status && String(item.status).toLowerCase().includes('cepat')) || item.early_leave_reason) {
                             hasEarly = true;
                         }
-                        if (item.isApprovedLeave) {
+                        if (item.isApprovedLeave === true) {
                             hasApprovedLeave = true;
-                        } else if ((item.status === 'Izin' || item.status === 'Sakit') && !item.leave_status && item.isPendingLeave !== true) {
+                        } else if ((item.status === 'Izin' || item.status === 'Sakit') && item.isPendingLeave !== true) {
                             hasApprovedLeave = true;
                         }
                     });
@@ -734,12 +819,12 @@
                 } else if (isPureWeekend) {
                     iconHtml = `<span style="color:#2c3e50; font-size:11px;">■</span>`;
                 } else if (globalDataMap[tglStr] && globalDataMap[tglStr].length > 0) {
-                    let hasHadir = globalDataMap[tglStr].some(d => (d.status && d.status.includes('Hadir') && !d.status.includes('Tidak Hadir')) || d.status === 'check_in' || d.status === 'check_out');
+                    let hasHadir = globalDataMap[tglStr].some(d => (d.status && String(d.status).includes('Hadir') && !String(d.status).includes('Tidak Hadir')) || d.status === 'check_in' || d.status === 'check_out');
                     let hasIzinSakitApproved = globalDataMap[tglStr].some(d => 
-                        d.isApprovedLeave || 
-                        ((d.status === 'Izin' || d.status === 'Sakit') && !d.leave_status && d.isPendingLeave !== true)
+                        d.isApprovedLeave === true || 
+                        ((d.status === 'Izin' || d.status === 'Sakit') && d.isPendingLeave !== true)
                     );
-                    let hasIzinSakitPending = globalDataMap[tglStr].some(d => d.isPendingLeave);
+                    let hasIzinSakitPending = globalDataMap[tglStr].some(d => d.isPendingLeave === true);
 
                     if (hasHadir) {
                         iconHtml = `<span style="color:#2ecc71; font-size:11px;" title="Hadir disetujui">✔</span>`;
@@ -798,37 +883,54 @@
         // Rekapitulasi Initialization
         async function loadRecap(uid) {
             try {
-                const q = query(
-                    collection(db, "presensi"),
-                    where("uid", "==", uid)
-                );
-                const querySnapshot = await getDocs(q);
+                // Ambil data profil user (nik, nama) untuk pencocokan multi-kriteria
+                let userNik = null, userName = null;
+                try {
+                    const uSnap = await getDoc(doc(db, "users", uid));
+                    if (uSnap.exists()) {
+                        const uData = uSnap.data();
+                        if (uData.nik) userNik = String(uData.nik).trim();
+                        if (uData.nama) userName = String(uData.nama).trim();
+                    }
+                } catch (eU) {
+                    console.warn('Gagal membaca users doc di riwayat:', eU);
+                }
 
                 let dataMap = {};
-                querySnapshot.forEach((doc) => {
-                    const d = doc.data();
-                    let tgl = d.tanggal;
-                    if (!dataMap[tgl]) {
-                        dataMap[tgl] = [];
-                    }
-                    dataMap[tgl].push(d);
-                });
-                // Muat juga dari koleksi attendances (data baru)
-                try {
-                    let userNik = null;
-                    try {
-                        const uSnap = await getDoc(doc(db, "users", uid));
-                        if (uSnap.exists()) userNik = uSnap.data().nik;
-                    } catch (eU) { }
 
-                    const qAtt = userNik
-                        ? query(collection(db, 'attendances'), where('nik', '==', userNik))
-                        : query(collection(db, 'attendances'), where('user_id', '==', uid));
-                    const snapAtt = await getDocs(qAtt);
-                    snapAtt.forEach((docSnap) => {
+                // 1. Muat dari koleksi presensi (legacy)
+                try {
+                    const qOld = query(collection(db, "presensi"), where("uid", "==", uid));
+                    const snapOld = await getDocs(qOld);
+                    snapOld.forEach((docSnap) => {
                         const d = docSnap.data();
-                        d.id_attendance = d.id_attendance || docSnap.id;
-                        let tgl = d.tanggal;
+                        let tgl = toDateStr(d.tanggal || d.tgl);
+                        if (tgl) {
+                            if (!dataMap[tgl]) dataMap[tgl] = [];
+                            dataMap[tgl].push(d);
+                        }
+                    });
+                } catch (eOld) { console.warn('presensi query in riwayat:', eOld); }
+
+                // 2. Muat dari koleksi attendances (berdasarkan id_attendance & nik/nama)
+                try {
+                    const attMap = new Map();
+                    const snapAllAtt = await getDocs(collection(db, 'attendances'));
+                    snapAllAtt.forEach(docSnap => {
+                        const d = docSnap.data();
+                        const docId = d.id_attendance || docSnap.id;
+                        const matchesUser =
+                            (!userNik && !userName) ||
+                            (userNik && d.nik && String(d.nik).trim() === userNik) ||
+                            (userName && d.nama && String(d.nama).trim().toLowerCase() === userName.toLowerCase()) ||
+                            (!d.nik && !d.nama);
+                        if (matchesUser) {
+                            attMap.set(docId, { id_attendance: docId, ...d });
+                        }
+                    });
+
+                    attMap.forEach((d) => {
+                        const tgl = toDateStr(d.tanggal || d.tgl);
                         if (tgl) {
                             if (!dataMap[tgl]) dataMap[tgl] = [];
                             dataMap[tgl].push(d);
@@ -836,44 +938,63 @@
                     });
                 } catch (eAtt) { console.warn('attendances query in riwayat:', eAtt); }
 
-                // Muat juga dari koleksi leaves (izin/sakit baru)
+                // 3. Muat dari koleksi leaves (berdasarkan id_leave & nik/nama)
                 try {
-                    const qLeaves = userNik
-                        ? query(collection(db, 'leaves'), where('nik', '==', userNik))
-                        : query(collection(db, 'leaves'), where('user_id', '==', uid));
-                    const snapLeaves = await getDocs(qLeaves);
-                    snapLeaves.forEach((docSnap) => {
+                    const leavesMap = new Map();
+                    const snapAllLeaves = await getDocs(collection(db, 'leaves'));
+                    snapAllLeaves.forEach(docSnap => {
                         const d = docSnap.data();
-                        d.id_leave = d.id_leave || docSnap.id;
+                        const docId = d.id_leave || docSnap.id;
+                        const matchesUser =
+                            (!userNik && !userName) ||
+                            (userNik && d.nik && String(d.nik).trim() === userNik) ||
+                            (userName && d.nama && String(d.nama).trim().toLowerCase() === userName.toLowerCase()) ||
+                            (!d.nik && !d.nama);
+                        if (matchesUser) {
+                            leavesMap.set(docId, { id_leave: docId, ...d });
+                        }
+                    });
 
-                        const rawStatus = (d.status || '').toLowerCase().trim();
-                        const isApproved = (rawStatus === 'approved' || rawStatus === 'disetujui' || rawStatus === 'acc');
-                        const isPending = (rawStatus === 'pending' || rawStatus === 'menunggu' || !rawStatus);
+                    leavesMap.forEach((d) => {
+                        const isApproved = isLeaveApproved(d);
+                        const isPending = isLeavePending(d);
 
                         const leaveItem = {
                             ...d,
                             leave_status: d.status,
                             isApprovedLeave: isApproved,
                             isPendingLeave: isPending,
-                            status: isApproved 
+                            status: isApproved
                                 ? (d.leave_type === 'sakit' ? 'Sakit' : 'Izin')
                                 : (d.leave_type === 'sakit' ? 'Sakit (Menunggu Persetujuan)' : 'Izin (Menunggu Persetujuan)')
                         };
 
-                        const sDateStr = d.start_date;
-                        const eDateStr = d.end_date || d.start_date;
+                        const sStr = toDateStr(d.start_date || d.startDate || d.tanggal_mulai || d.tanggal || d.tgl);
+                        const eStr = toDateStr(d.end_date || d.endDate || d.tanggal_selesai || sStr) || sStr;
 
-                        if (sDateStr) {
-                            const cur = new Date(sDateStr + 'T00:00:00');
-                            const end = new Date(eDateStr + 'T00:00:00');
-                            let count = 0;
-                            while (cur <= end && count < 60) {
-                                const offset = cur.getTimezoneOffset() * 60000;
-                                const tgl = new Date(cur.getTime() - offset).toISOString().split('T')[0];
-                                if (!dataMap[tgl]) dataMap[tgl] = [];
-                                dataMap[tgl].push(leaveItem);
-                                cur.setDate(cur.getDate() + 1);
-                                count++;
+                        if (sStr) {
+                            const sParts = sStr.split('-').map(Number);
+                            const eParts = eStr.split('-').map(Number);
+
+                            if (sParts.length === 3 && !isNaN(sParts[0])) {
+                                let curDate = new Date(sParts[0], sParts[1] - 1, sParts[2], 12, 0, 0);
+                                let targetEnd = (eParts.length === 3 && !isNaN(eParts[0]))
+                                    ? new Date(eParts[0], eParts[1] - 1, eParts[2], 12, 0, 0)
+                                    : curDate;
+
+                                let safety = 0;
+                                while (curDate <= targetEnd && safety < 60) {
+                                    const y = curDate.getFullYear();
+                                    const m = String(curDate.getMonth() + 1).padStart(2, '0');
+                                    const day = String(curDate.getDate()).padStart(2, '0');
+                                    const tglKey = `${y}-${m}-${day}`;
+
+                                    if (!dataMap[tglKey]) dataMap[tglKey] = [];
+                                    dataMap[tglKey].push(leaveItem);
+
+                                    curDate.setDate(curDate.getDate() + 1);
+                                    safety++;
+                                }
                             }
                         }
                     });

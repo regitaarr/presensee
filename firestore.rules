@@ -7,12 +7,12 @@ service cloud.firestore {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
 
-    // Koleksi attendances - document id adalah id_attendance (tanpa field user_id)
+    // Koleksi attendances - document id adalah id_attendance
     match /attendances/{id_attendance} {
       allow read, write: if request.auth != null;
     }
 
-    // Koleksi leaves - document id adalah id_leave (tanpa field user_id)
+    // Koleksi leaves - document id adalah id_leave
     match /leaves/{id_leave} {
       allow read, write: if request.auth != null;
     }
