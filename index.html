@@ -492,17 +492,17 @@
                 <div id="summary-cards" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
                     <div class="summary-card" id="card-telat">
                         <div class="sum-icon">⏰</div>
-                        <div class="sum-num" id="count-telat">-</div>
+                        <div class="sum-num" id="count-telat">0</div>
                         <div class="sum-label">Telat</div>
                     </div>
                     <div class="summary-card" id="card-cepat">
                         <div class="sum-icon">🏃</div>
-                        <div class="sum-num" id="count-cepat">-</div>
+                        <div class="sum-num" id="count-cepat">0</div>
                         <div class="sum-label">Pulang Cepat</div>
                     </div>
                     <div class="summary-card" id="card-izin">
                         <div class="sum-icon">📋</div>
-                        <div class="sum-num" id="count-izin">-</div>
+                        <div class="sum-num" id="count-izin">0</div>
                         <div class="sum-label">Izin/Sakit</div>
                     </div>
                 </div>
@@ -940,7 +940,9 @@
             const statusCard = document.getElementById('status-card');
             const actionArea = document.getElementById('action-buttons');
 
-            // Weekend check
+            if (!statusCard || !actionArea) return;
+
+            // Weekend check (Sabtu = 6, Minggu = 0)
             if (day === 0 || day === 6) {
                 statusCard.className = "status-card error";
                 statusCard.innerText = "🛌 Hari libur akhir pekan, tidak ada presensi.";
@@ -950,90 +952,108 @@
 
             actionArea.style.display = 'block';
 
-            // State: All done
+            // State 3: Hari ini selesai (Sudah absen masuk & pulang)
             if (hasCheckOut) {
                 statusCard.className = "status-card";
                 statusCard.innerHTML = "✅ <b>Presensi Hari Ini Selesai</b>";
                 actionArea.innerHTML = `<div class="status-card" style="background:linear-gradient(135deg,#e6f9e6,#d4f5d4); border-color:#5cb85c; text-align:center; padding:20px;">
                     <div style="font-size:30px;">🎉</div>
-                    <b style="color:var(--success);">Presensi Hari Ini Selesai!</b>
+                    <b style="color:var(--success); font-size:16px;">Presensi Hari Ini Selesai!</b>
                     <p style="font-size:13px; color:var(--text-muted); margin-top:4px;">Sampai jumpa besok 👋</p>
                 </div>`;
                 return;
             }
 
-            // State 2: Has check_in
+            // State 2: Sudah absen masuk -> Tampilkan Absen Pulang & Izin Darurat
             if (hasCheckIn) {
                 statusCard.className = "status-card";
                 statusCard.innerHTML = "✅ <b>Sudah Absen Masuk</b>" + (checkInTimeStr ? ` pukul ${checkInTimeStr}` : '');
 
-                let html = `<div class="status-card" style="background:linear-gradient(135deg,#e6f9e6,#d4f5d4); border-color:#5cb85c;">
+                let html = `<div class="status-card" style="background:linear-gradient(135deg,#e6f9e6,#d4f5d4); border-color:#5cb85c; margin-bottom:10px;">
                     ✅ <b>Sudah Absen Masuk</b>${checkInTimeStr ? ' pukul ' + checkInTimeStr : ''}
                 </div>`;
 
                 if (totalMin >= 14 * 60) {
-                    // Show early leave reason textarea if 14:00–15:59
+                    // 14:00–15:59 (Pulang cepat, wajib keterangan)
                     if (totalMin < 16 * 60) {
-                        html += `<div class="form-group" id="early-reason-group" style="margin-top:12px;">
-                            <label style="color:var(--warning); font-weight:700;">⚠️ Keterangan Pulang Cepat (Wajib)</label>
-                            <textarea id="input-early-reason" rows="2" placeholder="Jelaskan alasan pulang sebelum jam 16:00..."></textarea>
-                        </div>`;
+                        html += `<div class="form-group" id="early-reason-group" style="margin-top:10px;">
+                            <label style="color:var(--warning); font-weight:700;">⚠️ Keterangan Pulang Cepat (Wajib):</label>
+                            <textarea id="input-early-reason" rows="2" placeholder="Jelaskan alasan pulang sebelum pukul 16:00..."></textarea>
+                        </div>
+                        <button id="btn-absen-pulang" class="btn btn-primary" style="background:linear-gradient(135deg,var(--bps-orange),#e06b0a); font-size:15px; padding:16px;">
+                            🏠 Absen Pulang (Pulang Cepat)
+                        </button>`;
+                    } else {
+                        // >= 16:00 (Normal pulang)
+                        html += `<button id="btn-absen-pulang" class="btn btn-primary" style="background:linear-gradient(135deg,var(--bps-blue),#1482B8); font-size:15px; padding:16px;">
+                            🏠 Absen Pulang
+                        </button>`;
                     }
-                    html += `<button id="btn-absen-pulang" class="btn btn-primary" style="background:linear-gradient(135deg,var(--bps-blue),#1482B8); margin-top:10px;">🏠 Absen Pulang</button>`;
                 } else {
                     const minsLeft = (14 * 60) - totalMin;
                     const hLeft = Math.floor(minsLeft / 60), mLeft = minsLeft % 60;
-                    html += `<button disabled class="btn" style="background:#ccc; cursor:not-allowed; margin-top:10px;">🏠 Absen Pulang (tersedia ${hLeft > 0 ? hLeft + 'j ' : ''}${mLeft}m lagi)</button>`;
+                    html += `<button disabled class="btn" style="background:#ccc; cursor:not-allowed; margin-top:5px;">🏠 Absen Pulang (tersedia ${hLeft > 0 ? hLeft + 'j ' : ''}${mLeft}m lagi / pk 14:00)</button>`;
                 }
 
-                html += `<button id="btn-izin-darurat" class="btn" style="background:linear-gradient(135deg,var(--bps-orange),#e06b0a); margin-top:10px;">🚨 Ajukan Izin Darurat (Pulang Mendadak)</button>`;
+                html += `<button id="btn-izin-darurat" class="btn btn-outline" style="border:1.5px solid var(--bps-orange); color:var(--bps-orange); font-weight:700; margin-top:10px;">
+                    🚨 Ajukan Izin Darurat (Pulang Mendadak)
+                </button>`;
                 html += `<p style="font-size:11px; color:#999; text-align:center; margin-top:8px;">📍 Geofencing 50m aktif · BPS Kota Banjar</p>`;
 
                 actionArea.innerHTML = html;
 
-                // Re-attach events
                 const btnPulang = document.getElementById('btn-absen-pulang');
                 if (btnPulang) btnPulang.onclick = () => openKameraAbsen('check_out');
                 document.getElementById('btn-izin-darurat')?.addEventListener('click', () => openLeaveModal('izin_darurat'));
                 return;
             }
 
-            // State 1: No check_in yet
-            statusCard.className = "status-card";
-            statusCard.innerHTML = "⏳ <b>Belum Absen Pagi</b>";
-
+            // State 1: Belum Absen Masuk
             let html = '';
 
             if (totalMin < 6 * 60) {
-                // Before 06:00
-                html = `<button disabled class="btn" style="background:#ccc; cursor:not-allowed;">📸 Absen Pagi (mulai pukul 06:00)</button>`;
-                html += `<button id="btn-ajukan-izin" class="btn btn-outline" style="margin-top:6px;">📋 Ajukan Izin/Sakit</button>`;
+                // Sebelum 06:00
+                statusCard.className = "status-card";
+                statusCard.innerHTML = "⏳ <b>Belum Waktu Absen Masuk</b> (Dibuka pukul 06:00 WIB)";
+                html = `<button disabled class="btn" style="background:#ccc; cursor:not-allowed;">📸 Absen Pagi (Mulai pukul 06:00)</button>`;
+                html += `<button id="btn-ajukan-izin" class="btn btn-outline" style="margin-top:8px;">📋 Ajukan Izin/Sakit</button>`;
             } else if (totalMin <= 7 * 60 + 30) {
-                // 06:00 – 07:30 normal
+                // 06:00 – 07:30 (Absen Normal)
+                statusCard.className = "status-card";
+                statusCard.innerHTML = "🟢 <b>Waktu Absen Pagi Normal</b> (06:00 - 07:30)";
                 html = `<button id="btn-hadir-pagi" class="btn btn-success" style="font-size:16px; padding:18px;">📸 Absen Pagi</button>`;
-                html += `<button id="btn-ajukan-izin" class="btn btn-outline" style="margin-top:6px;">📋 Ajukan Izin/Sakit</button>`;
-            } else if (totalMin <= 8 * 60) {
-                // 07:31 – 08:00 late, need reason
-                html = `<div class="status-card" style="background:linear-gradient(135deg,#fff8e1,#fff3cd); border-color:var(--warning); margin-bottom:8px;">
-                    ⏰ <b style="color:var(--warning);">Kamu Terlambat!</b> Mohon isi keterangan.
-                </div>
+                html += `<button id="btn-ajukan-izin" class="btn btn-outline" style="margin-top:8px;">📋 Ajukan Izin/Sakit</button>`;
+            } else if (totalMin < 14 * 60) {
+                // 07:31 – 13:59 (Absen Telat - WAJIB Keterangan)
+                const isVeryLate = totalMin > 8 * 60;
+                statusCard.className = "status-card";
+                statusCard.innerHTML = isVeryLate
+                    ? "⚠️ <b>Kamu Terlambat</b> (Lewat dari 07:30). Wajib isi keterangan."
+                    : "⏰ <b>Absen Telat</b> (07:31 - 08:00). Wajib isi keterangan.";
+
+                html = `
                 <div class="form-group" id="late-reason-group">
-                    <label style="color:var(--warning); font-weight:700;">⚠️ Keterangan Telat (Wajib)</label>
-                    <textarea id="input-late-reason" rows="2" placeholder="Jelaskan alasan keterlambatan kamu..."></textarea>
+                    <label style="color:var(--warning); font-weight:700;">⚠️ Keterangan Telat (Wajib Diisi):</label>
+                    <textarea id="input-late-reason" rows="2" placeholder="Tuliskan alasan keterlambatan kamu di sini..."></textarea>
                 </div>
-                <button id="btn-hadir-pagi" class="btn" style="background:linear-gradient(135deg,#f39c12,#e67e22); color:white;">📸 Absen Pagi (Telat)</button>`;
-                html += `<button id="btn-ajukan-izin" class="btn btn-outline" style="margin-top:6px;">📋 Ajukan Izin/Sakit</button>`;
+                <button id="btn-hadir-pagi" class="btn" style="background:linear-gradient(135deg,#f39c12,#e67e22); color:white; font-size:16px; padding:16px;">
+                    📸 Absen Pagi (Telat)
+                </button>
+                <button id="btn-ajukan-izin" class="btn btn-outline" style="margin-top:8px;">📋 Ajukan Izin/Sakit</button>`;
             } else {
-                // After 08:00
-                html = `<div class="status-card error">❌ <b>Waktu Absen Pagi Sudah Habis</b><br><small>Batas absen pagi: 08:00 WIB</small></div>`;
-                html += `<button id="btn-ajukan-izin" class="btn" style="background:linear-gradient(135deg,var(--bps-orange),#e06b0a); margin-top:6px;">📋 Ajukan Izin/Sakit</button>`;
+                // 14:00 ke atas dan belum pernah absen pagi
+                statusCard.className = "status-card error";
+                statusCard.innerHTML = "❌ <b>Sudah Lewat Jam Absen Pagi</b>";
+                html = `<div style="text-align:center; padding:10px; color:var(--text-muted); font-size:13px;">
+                    Kamu belum melakukan absen masuk hari ini. Silakan ajukan izin/sakit.
+                </div>
+                <button id="btn-ajukan-izin" class="btn btn-primary" style="background:linear-gradient(135deg,var(--bps-orange),#e06b0a); margin-top:6px;">📋 Ajukan Izin/Sakit</button>`;
             }
 
             html += `<p style="font-size:11px; color:#999; text-align:center; margin-top:8px;">📍 Geofencing 50m aktif · BPS Kota Banjar</p>`;
 
             actionArea.innerHTML = html;
 
-            // Re-attach events
             document.getElementById('btn-hadir-pagi')?.addEventListener('click', () => openKameraAbsen('check_in'));
             document.getElementById('btn-ajukan-izin')?.addEventListener('click', () => openLeaveModal());
         }
@@ -1042,30 +1062,50 @@
         // CHECK TODAY ATTENDANCE
         // =========================================
         async function checkTodayAttendance(uid) {
-            const now = new Date();
-            const offset = now.getTimezoneOffset() * 60000;
-            const tgl = new Date(now - offset).toISOString().split('T')[0];
-
-            const q = query(collection(db, 'attendances'),
-                where('user_id', '==', uid),
-                where('tanggal', '==', tgl));
-            const snap = await getDocs(q);
-
             let hasCheckIn = false, hasCheckOut = false, checkInTime = '';
-            snap.forEach(docSnap => {
-                const d = docSnap.data();
-                if (d.status === 'check_in') {
-                    hasCheckIn = true;
-                    // Try to get formatted time from check_in_time timestamp
-                    if (d.check_in_time && d.check_in_time.toDate) {
-                        const t = d.check_in_time.toDate();
-                        checkInTime = t.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace('.', ':');
+            try {
+                const now = new Date();
+                const offset = now.getTimezoneOffset() * 60000;
+                const tgl = new Date(now - offset).toISOString().split('T')[0];
+
+                try {
+                    const q = query(collection(db, 'attendances'),
+                        where('user_id', '==', uid),
+                        where('tanggal', '==', tgl));
+                    const snap = await getDocs(q);
+
+                    snap.forEach(docSnap => {
+                        const d = docSnap.data();
+                        if (d.status === 'check_in') {
+                            hasCheckIn = true;
+                            if (d.check_in_time && d.check_in_time.toDate) {
+                                const t = d.check_in_time.toDate();
+                                checkInTime = t.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace('.', ':');
+                            }
+                        }
+                        if (d.status === 'check_out') hasCheckOut = true;
+                    });
+                } catch (eAtt) {
+                    console.warn('Gagal membaca koleksi attendances, coba presensi:', eAtt.message);
+                    try {
+                        const qOld = query(collection(db, 'presensi'),
+                            where('uid', '==', uid),
+                            where('tanggal', '==', tgl));
+                        const snapOld = await getDocs(qOld);
+                        snapOld.forEach(docSnap => {
+                            const d = docSnap.data();
+                            if (d.status && d.status.includes('Hadir')) hasCheckIn = true;
+                            if (d.status && d.status.includes('Pulang')) hasCheckOut = true;
+                        });
+                    } catch (eOld) {
+                        console.warn('Fallback presensi juga gagal:', eOld.message);
                     }
                 }
-                if (d.status === 'check_out') hasCheckOut = true;
-            });
-
-            renderDashboardState(hasCheckIn, hasCheckOut, checkInTime);
+            } catch (err) {
+                console.error('checkTodayAttendance error:', err);
+            } finally {
+                renderDashboardState(hasCheckIn, hasCheckOut, checkInTime);
+            }
         }
 
         // =========================================
@@ -1079,43 +1119,50 @@
             const firstDay = new Date(year, month, 1).toISOString().split('T')[0];
             const lastDay = new Date(year, month + 1, 0).toISOString().split('T')[0];
 
+            let telatCount = 0;
+            let cepatCount = 0;
+            let izinCount = 0;
+
             try {
                 // Count telat
-                const qTelat = query(collection(db, 'attendances'),
-                    where('user_id', '==', uid),
-                    where('is_late', '==', true));
-                const snapTelat = await getDocs(qTelat);
-                let telatCount = 0;
-                snapTelat.forEach(d => {
-                    if (d.data().tanggal >= firstDay && d.data().tanggal <= lastDay) telatCount++;
-                });
+                try {
+                    const qTelat = query(collection(db, 'attendances'),
+                        where('user_id', '==', uid),
+                        where('is_late', '==', true));
+                    const snapTelat = await getDocs(qTelat);
+                    snapTelat.forEach(d => {
+                        if (d.data().tanggal >= firstDay && d.data().tanggal <= lastDay) telatCount++;
+                    });
+                } catch (e) { console.warn('Telat stat error:', e.message); }
 
                 // Count early leave
-                const qCepat = query(collection(db, 'attendances'),
-                    where('user_id', '==', uid),
-                    where('is_early_leave', '==', true));
-                const snapCepat = await getDocs(qCepat);
-                let cepatCount = 0;
-                snapCepat.forEach(d => {
-                    if (d.data().tanggal >= firstDay && d.data().tanggal <= lastDay) cepatCount++;
-                });
+                try {
+                    const qCepat = query(collection(db, 'attendances'),
+                        where('user_id', '==', uid),
+                        where('is_early_leave', '==', true));
+                    const snapCepat = await getDocs(qCepat);
+                    snapCepat.forEach(d => {
+                        if (d.data().tanggal >= firstDay && d.data().tanggal <= lastDay) cepatCount++;
+                    });
+                } catch (e) { console.warn('Cepat stat error:', e.message); }
 
                 // Count leaves
-                const qIzin = query(collection(db, 'leaves'), where('user_id', '==', uid));
-                const snapIzin = await getDocs(qIzin);
-                let izinCount = 0;
-                snapIzin.forEach(d => {
-                    if (d.data().start_date >= firstDay && d.data().start_date <= lastDay) izinCount++;
-                });
-
-                document.getElementById('count-telat').innerText = telatCount;
-                document.getElementById('count-cepat').innerText = cepatCount;
-                document.getElementById('count-izin').innerText = izinCount;
+                try {
+                    const qIzin = query(collection(db, 'leaves'), where('user_id', '==', uid));
+                    const snapIzin = await getDocs(qIzin);
+                    snapIzin.forEach(d => {
+                        if (d.data().start_date >= firstDay && d.data().start_date <= lastDay) izinCount++;
+                    });
+                } catch (e) { console.warn('Leaves stat error:', e.message); }
             } catch (e) {
                 console.warn('Stats load error:', e);
-                document.getElementById('count-telat').innerText = '?';
-                document.getElementById('count-cepat').innerText = '?';
-                document.getElementById('count-izin').innerText = '?';
+            } finally {
+                const elTelat = document.getElementById('count-telat');
+                const elCepat = document.getElementById('count-cepat');
+                const elIzin = document.getElementById('count-izin');
+                if (elTelat) elTelat.innerText = telatCount;
+                if (elCepat) elCepat.innerText = cepatCount;
+                if (elIzin) elIzin.innerText = izinCount;
             }
         }
 
@@ -1238,25 +1285,22 @@
                         if (avatarEl) avatarEl.innerText = currentUserData.nama.charAt(0).toUpperCase();
                         switchView(viewDashboard);
 
-                        // Jalankan state UI & stats dalam try-catch TERPISAH
-                        // agar error dari koleksi baru (attendances/leaves) tidak mengganggu login
+                        // 1. Render tombol absen seketika agar langsung muncul tanpa delay
+                        renderDashboardState(false, false, '');
+
+                        // 2. Cek status presensi hari ini dari Firestore untuk memperbarui tombol
                         try {
-                            const isOk = validateSystemStatus();
-                            if (isOk) {
-                                await checkTodayAttendance(user.uid);
-                            }
+                            validateSystemStatus();
+                            checkTodayAttendance(user.uid);
                         } catch (eState) {
-                            console.warn('checkTodayAttendance/validateSystem error:', eState.message);
+                            console.warn('checkTodayAttendance error:', eState.message);
                         }
+
+                        // 3. Muat ringkasan statistik bulan ini
                         try {
-                            await loadMonthlyStats(user.uid);
+                            loadMonthlyStats(user.uid);
                         } catch (eStats) {
                             console.warn('loadMonthlyStats error:', eStats.message);
-                            // Tampilkan 0 jika koleksi belum ada atau rules belum dibuat
-                            ['count-telat', 'count-cepat', 'count-izin'].forEach(id => {
-                                const el = document.getElementById(id);
-                                if (el) el.innerText = '0';
-                            });
                         }
                     }
                 } catch (e) {
@@ -1364,6 +1408,30 @@
         }
 
         function openKameraAbsen(mode) {
+            if (mode === 'check_in') {
+                const now = new Date();
+                const totalMin = now.getHours() * 60 + now.getMinutes();
+                if (totalMin > 7 * 60 + 30) {
+                    const reason = document.getElementById('input-late-reason')?.value?.trim();
+                    if (!reason) {
+                        alert('⚠️ Anda terlambat (lewat dari pukul 07:30).\nHarap isi kolom "Keterangan Telat" terlebih dahulu sebelum membuka kamera!');
+                        document.getElementById('input-late-reason')?.focus();
+                        return;
+                    }
+                }
+            }
+            if (mode === 'check_out') {
+                const now = new Date();
+                const totalMin = now.getHours() * 60 + now.getMinutes();
+                if (totalMin < 16 * 60) {
+                    const reason = document.getElementById('input-early-reason')?.value?.trim();
+                    if (!reason) {
+                        alert('⚠️ Anda pulang lebih awal (sebelum pukul 16:00).\nHarap isi kolom "Keterangan Pulang Cepat" terlebih dahulu sebelum membuka kamera!');
+                        document.getElementById('input-early-reason')?.focus();
+                        return;
+                    }
+                }
+            }
             currentCameraMode = mode;
             openKameraHadir();
         }
