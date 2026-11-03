@@ -1,0 +1,2172 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Presensee</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap');
+
+        :root {
+            /* Palette: Fresh, Vermillion, Sunshine, Clean */
+            --fresh: #4ABDAC;
+            --fresh-hover: #3ca092;
+            --fresh-dark: #206d62;
+            --fresh-light: #eef9f8;
+            --fresh-border: #aee3db;
+
+            --vermillion: #FC4A1A;
+            --vermillion-hover: #e33b0d;
+            --vermillion-light: #fff2ef;
+            --vermillion-border: #ffb8a5;
+
+            --sunshine: #F7B733;
+            --sunshine-hover: #e3a21b;
+            --sunshine-light: #fef8ec;
+            --sunshine-border: #fce3a7;
+
+            --clean: #DFDCE3;
+            --clean-dark: #c2bdcb;
+            --clean-light: #f7f6f9;
+
+            --primary: var(--fresh);
+            --primary-hover: var(--fresh-hover);
+            --primary-light: var(--fresh-light);
+
+            --accent: var(--vermillion);
+            --warning: var(--sunshine);
+            --danger: var(--vermillion);
+
+            --text-dark: #1e1b24;
+            --text-main: #36323f;
+            --text-muted: #6e697a;
+            --text-light: #9f9aa8;
+            --border-color: #dcd8e3;
+
+            --radius-sm: 10px;
+            --radius-md: 14px;
+            --radius-lg: 18px;
+            --radius-xl: 24px;
+            --radius-2xl: 32px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Ambient Liquid Mesh Gradient (Clean, Vibrant, Non-Boring) */
+        body {
+            background-color: #d5d1dc;
+            background-image:
+                radial-gradient(at 8% 8%, rgba(74, 189, 172, 0.45) 0px, transparent 48%),
+                radial-gradient(at 92% 92%, rgba(247, 183, 51, 0.38) 0px, transparent 46%),
+                radial-gradient(at 88% 12%, rgba(252, 74, 26, 0.22) 0px, transparent 42%),
+                radial-gradient(at 12% 88%, rgba(74, 189, 172, 0.32) 0px, transparent 46%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Modern Bento / Floating Frame */
+        .phone-container {
+            width: 100%;
+            max-width: 430px;
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(24px);
+            border-radius: var(--radius-2xl);
+            box-shadow:
+                0 32px 64px -16px rgba(30, 27, 36, 0.22),
+                0 0 0 2px rgba(255, 255, 255, 0.85),
+                0 0 0 3px rgba(223, 220, 227, 0.7);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            min-height: 660px;
+            max-height: 94vh;
+        }
+
+        /* Dynamic Island Hero Header */
+        .header {
+            margin: 14px 14px 6px;
+            padding: 22px 20px 18px;
+            text-align: center;
+            background: linear-gradient(135deg, #1b5b52 0%, #4ABDAC 100%);
+            border-radius: var(--radius-xl);
+            position: relative;
+            color: #ffffff;
+            box-shadow:
+                0 16px 36px -10px rgba(74, 189, 172, 0.45),
+                inset 0 1px 1px rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.22), transparent 55%);
+            pointer-events: none;
+        }
+
+        .header-top-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.16);
+            backdrop-filter: blur(8px);
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 6px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .clock-display {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 42px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.04em;
+            font-variant-numeric: tabular-nums;
+            line-height: 1.05;
+            margin: 4px 0 6px;
+            text-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-date {
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.92);
+            position: relative;
+            z-index: 1;
+        }
+
+        #user-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.22);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 9999px;
+            padding: 5px 14px 5px 6px;
+            margin-top: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            position: relative;
+            z-index: 1;
+            max-width: 90%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        #user-chip:hover {
+            background: rgba(255, 255, 255, 0.32);
+            transform: translateY(-1px);
+        }
+
+        #user-avatar {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--sunshine), var(--vermillion));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 800;
+            color: white;
+            text-transform: uppercase;
+            box-shadow: 0 2px 8px rgba(252, 74, 26, 0.4);
+            flex-shrink: 0;
+        }
+
+        #user-info {
+            font-size: 12px;
+            color: #ffffff;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .content {
+            padding: 16px 18px 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            flex-grow: 1;
+            overflow-y: auto;
+            background: transparent;
+        }
+
+        .content::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .content::-webkit-scrollbar-thumb {
+            background: var(--clean);
+            border-radius: 4px;
+        }
+
+        /* Bento Quick Info Row */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .bento-card {
+            background: #ffffff;
+            border: 1.5px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            box-shadow: 0 4px 14px rgba(35, 32, 41, 0.04);
+            transition: all 0.2s ease;
+        }
+
+        .bento-card:hover {
+            border-color: var(--fresh);
+            transform: translateY(-1px);
+        }
+
+        .bento-badge {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .bento-main {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--text-dark);
+            letter-spacing: -0.02em;
+        }
+
+        .bento-desc {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .live-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--fresh);
+            box-shadow: 0 0 0 3px rgba(74, 189, 172, 0.3);
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        /* Daily Progress Journey Card */
+        .journey-card {
+            background: #ffffff;
+            border: 1.5px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 14px 16px;
+            box-shadow: 0 4px 16px rgba(35, 32, 41, 0.04);
+        }
+
+        .journey-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .journey-title {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .journey-steps {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .journey-step {
+            background: var(--clean-light);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 10px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            transition: all 0.2s ease;
+        }
+
+        .journey-step.done {
+            background: var(--fresh-light);
+            border-color: var(--fresh-border);
+        }
+
+        .journey-step-tag {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .journey-step.done .journey-step-tag {
+            color: var(--fresh-dark);
+        }
+
+        .journey-step-time {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        /* Form Inputs */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: -0.01em;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 13px 15px;
+            border-radius: var(--radius-md);
+            border: 1.5px solid var(--border-color);
+            background: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-dark);
+            outline: none;
+            transition: all 0.2s ease;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+            min-width: 0;
+            box-sizing: border-box;
+        }
+
+        input[type="date"] {
+            min-width: 0;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            background: #ffffff;
+            border-color: var(--fresh);
+            box-shadow: 0 0 0 3px rgba(74, 189, 172, 0.22);
+        }
+
+        /* Chunky 3D Tactile Buttons (Gen Z Favorite) */
+        .btn {
+            width: 100%;
+            padding: 15px 20px;
+            border: none;
+            border-radius: var(--radius-lg);
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            letter-spacing: -0.01em;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow: none !important;
+        }
+
+        /* FRESH Button (3D Depth) */
+        .btn-primary,
+        .btn-fresh,
+        .btn-success {
+            background: linear-gradient(180deg, #5ec3b5 0%, #4ABDAC 100%);
+            color: #ffffff;
+            box-shadow:
+                0 8px 20px -4px rgba(74, 189, 172, 0.5),
+                0 4px 0 #2e8376,
+                inset 0 1px 1px rgba(255, 255, 255, 0.5);
+        }
+
+        /* SUNSHINE Button (3D Depth) */
+        .btn-warning,
+        .btn-sunshine {
+            background: linear-gradient(180deg, #f9c55b 0%, #F7B733 100%);
+            color: #ffffff;
+            box-shadow:
+                0 8px 20px -4px rgba(247, 183, 51, 0.5),
+                0 4px 0 #c28b17,
+                inset 0 1px 1px rgba(255, 255, 255, 0.55);
+        }
+
+        /* VERMILLION Button (3D Depth) */
+        .btn-danger,
+        .btn-vermillion,
+        .btn-dark {
+            background: linear-gradient(180deg, #fd6840 0%, #FC4A1A 100%);
+            color: #ffffff;
+            box-shadow:
+                0 8px 20px -4px rgba(252, 74, 26, 0.5),
+                0 4px 0 #c42d05,
+                inset 0 1px 1px rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-outline {
+            background: #ffffff;
+            color: var(--text-dark);
+            border: 2px solid var(--border-color);
+            box-shadow: 0 4px 12px rgba(35, 32, 41, 0.05);
+        }
+
+        .btn-outline:hover {
+            background: var(--clean-light);
+            border-color: var(--clean-dark);
+        }
+
+        .btn-outline-primary {
+            background: #ffffff;
+            color: var(--fresh-dark);
+            border: 2px solid var(--fresh);
+            box-shadow: 0 6px 16px -2px rgba(74, 189, 172, 0.2);
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--fresh-light);
+        }
+
+        .btn-outline-warning {
+            background: #ffffff;
+            color: #b87c07;
+            border: 2px solid var(--sunshine);
+            box-shadow: 0 6px 16px -2px rgba(247, 183, 51, 0.2);
+        }
+
+        .btn-outline-warning:hover {
+            background: var(--sunshine-light);
+        }
+
+        .btn-outline-danger {
+            background: #ffffff;
+            color: var(--vermillion);
+            border: 2px solid var(--vermillion);
+            box-shadow: 0 6px 16px -2px rgba(252, 74, 26, 0.18);
+        }
+
+        .btn-outline-danger:hover {
+            background: var(--vermillion-light);
+        }
+
+        /* Status card */
+        .status-card {
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            padding: 13px 16px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-dark);
+            border: 1.5px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-align: center;
+            box-shadow: 0 4px 16px rgba(35, 32, 41, 0.04);
+            letter-spacing: -0.01em;
+        }
+
+        .status-card.error {
+            background: var(--vermillion-light);
+            border-color: var(--vermillion-border);
+            color: var(--vermillion);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: inline-block;
+        }
+
+        .status-dot.dot-success {
+            background: var(--fresh);
+            box-shadow: 0 0 0 3px rgba(74, 189, 172, 0.3);
+        }
+
+        .status-dot.dot-warning {
+            background: var(--sunshine);
+            box-shadow: 0 0 0 3px rgba(247, 183, 51, 0.35);
+        }
+
+        .status-dot.dot-danger {
+            background: var(--vermillion);
+            box-shadow: 0 0 0 3px rgba(252, 74, 26, 0.3);
+        }
+
+        .status-dot.dot-muted {
+            background: var(--text-light);
+            box-shadow: 0 0 0 3px rgba(159, 154, 168, 0.25);
+        }
+
+        .geofence-note {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 10px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        /* Modal */
+        .modal {
+            position: absolute;
+            inset: 0;
+            background: rgba(30, 27, 36, 0.65);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 14px;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-content {
+            background: #ffffff;
+            width: 100%;
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            box-shadow: 0 30px 60px -15px rgba(30, 27, 36, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.9);
+        }
+
+        .modal-icon-badge {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .modal-icon-badge.badge-success {
+            background: var(--fresh-light);
+            color: var(--fresh-dark);
+            border: 2px solid var(--fresh-border);
+        }
+
+        .modal-icon-badge.badge-danger {
+            background: var(--vermillion-light);
+            color: var(--vermillion);
+            border: 2px solid var(--vermillion-border);
+        }
+
+        .modal-icon-badge.badge-warning {
+            background: var(--sunshine-light);
+            color: #b87c07;
+            border: 2px solid var(--sunshine-border);
+        }
+
+        .modal-icon-badge svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        /* SPA Views */
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.25s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.35);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading .spinner {
+            display: inline-block;
+        }
+
+        /* Dashboard Grid Layout (Responsive HP & Desktop) */
+        .dashboard-layout {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            min-height: 0;
+            overflow-y: auto;
+        }
+
+        .dashboard-col-left {
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .dashboard-col-right {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        /* Responsive Breakpoints: Mobile (HP) */
+        @media (max-width: 768px) {
+            body {
+                padding: 0;
+                align-items: flex-start;
+                min-height: 100dvh;
+                height: 100dvh;
+                overflow: hidden;
+            }
+
+            .phone-container {
+                border-radius: 0;
+                max-width: 100%;
+                width: 100%;
+                min-height: 100dvh;
+                max-height: 100dvh;
+                box-shadow: none;
+                flex-grow: 1;
+            }
+
+            .header {
+                margin: 10px 10px 4px;
+                border-radius: 20px;
+            }
+
+            #view-dashboard.content,
+            #view-register.content {
+                padding-bottom: 24px;
+            }
+        }
+
+        /* Responsive Breakpoints: Tablet & Desktop */
+        @media (min-width: 769px) {
+            body {
+                padding: 30px 20px;
+            }
+
+            .phone-container {
+                max-width: 1040px;
+                width: 94%;
+                min-height: 640px;
+                max-height: 90vh;
+                border-radius: var(--radius-2xl);
+            }
+
+            .dashboard-layout {
+                display: grid;
+                grid-template-columns: 390px 1fr;
+                min-height: 100%;
+                overflow: hidden;
+            }
+
+            .dashboard-col-left {
+                background: rgba(247, 246, 249, 0.7);
+                border-right: 1.5px solid var(--border-color);
+                overflow-y: auto;
+                padding-bottom: 20px;
+            }
+
+            .dashboard-col-right {
+                overflow-y: auto;
+                padding: 24px 28px;
+            }
+
+            .header {
+                margin: 14px 14px 10px;
+            }
+
+            #view-login {
+                max-width: 440px;
+                margin: auto;
+                padding: 36px 32px;
+                width: 100%;
+            }
+
+            #view-register {
+                max-width: 760px;
+                margin: auto;
+                padding: 28px 36px;
+                width: 100%;
+            }
+
+            .register-grid-desktop {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0 16px;
+            }
+
+            .register-full-width {
+                grid-column: span 2;
+            }
+        }
+
+        /* Modern Bottom Navigation Bar (3 Menus: Dashboard, Riwayat, Profil) */
+        .bottom-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(16px);
+            border-top: 1.5px solid var(--border-color);
+            padding: 8px 12px 10px;
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            color: var(--text-muted);
+            text-decoration: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px 16px;
+            flex: 1;
+            max-width: 120px;
+            border-radius: var(--radius-md);
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            outline: none;
+        }
+
+        .bottom-nav-item svg {
+            width: 22px;
+            height: 22px;
+            transition: all 0.2s ease;
+        }
+
+        .bottom-nav-item:hover {
+            color: var(--fresh-dark);
+            transform: translateY(-2px);
+        }
+
+        .bottom-nav-item.active {
+            color: var(--fresh-dark);
+            background: var(--fresh-light);
+        }
+
+        .bottom-nav-item.active svg {
+            stroke: var(--fresh-dark);
+            stroke-width: 2.5;
+        }
+
+        .bottom-nav-item.nav-logout:hover {
+            color: var(--vermillion);
+            background: var(--vermillion-light);
+        }
+
+        .bottom-nav-item.nav-logout:hover svg {
+            stroke: var(--vermillion);
+        }
+    
+        .izin-dates-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        @media (max-width: 420px) {
+            .izin-dates-row {
+                grid-template-columns: 1fr !important;
+                gap: 10px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <!-- VIEW: DASHBOARD -->
+        <div id="view-dashboard" class="view active" style="flex-grow:1; height:100%; overflow:hidden;">
+            <div class="dashboard-layout">
+                <!-- Kolom Kiri (Desktop) / Atas (HP) -->
+                <div class="dashboard-col-left">
+                    <div class="header">
+                        <div class="header-top-tag">
+                            <span class="live-dot"
+                                style="background:#ffffff; box-shadow:0 0 0 2px rgba(255,255,255,0.4);"></span>
+                            <span>BPS KOTA BANJAR</span>
+                        </div>
+                        <div class="clock-display" id="clock">00:00:00</div>
+                        <p class="header-date" id="header-date">Selasa, 03 November 2026</p>
+                        <div id="user-chip" onclick="window.location.href='profil.html';">
+                            <div id="user-avatar">?</div>
+                            <span id="user-info">Memuat Akun...</span>
+                        </div>
+                    </div>
+
+                    <!-- Reminder Banner (Tepat di bawah card waktu realtime & nama) -->
+                    <div style="display:flex; justify-content:center; margin: 8px 14px 10px;">
+                        <div
+                            style="width:100%; max-width:280px; height:180px; border-radius:18px; overflow:hidden; box-shadow:0 6px 18px rgba(30, 27, 36, 0.1); position:relative; flex-shrink:0; border:2px solid var(--border-color); background:#ffffff;">
+                            <img id="banner-img" src="assets/reminder.jpg" alt="Reminder Presensi"
+                                style="width:100%; height:100%; object-fit:cover; display:block;">
+                            <div
+                                style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent 0%, rgba(0, 0, 0, 0.72) 100%); padding:18px 8px 8px;">
+                                <p id="banner-text"
+                                    style="color:white; font-size:11.5px; font-weight:700; margin:0; text-align:center; text-shadow:0 1px 3px rgba(0,0,0,0.6);">
+                                    🔔 Jangan lupa presensi ya guys!
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bento Quick Info Row (Shift & Lokasi) -->
+                    <div class="bento-grid" style="margin: 0 14px 14px;">
+                        <div class="bento-card">
+                            <div class="bento-badge">Jam Kerja</div>
+                            <div class="bento-main">06:00 - 16:00</div>
+                            <div class="bento-desc">Senin - Jumat</div>
+                        </div>
+                        <div class="bento-card">
+                            <div class="bento-badge">Zona Kantor</div>
+                            <div class="bento-main">Radius 50m</div>
+                            <div class="bento-desc"><span class="live-dot"></span> BPS Kota Banjar</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kolom Kanan (Desktop) / Bawah (HP) -->
+                <div class="dashboard-col-right content">
+                    <!-- Live Status Banner -->
+                    <div id="status-card" class="status-card">
+                        <span class="status-dot dot-warning"></span> Memuat status presensi...
+                    </div>
+
+                    <!-- Daily Progress Journey (Not Plain!) -->
+                    <div class="journey-card">
+                        <div class="journey-header">
+                            <span class="journey-title">Alur Presensi Hari Ini</span>
+                            <span id="journey-status-pill"
+                                style="font-size:10px; font-weight:800; padding:3px 8px; border-radius:999px; background:var(--clean-light); color:var(--text-muted); text-transform:uppercase;">Aktif</span>
+                        </div>
+                        <div class="journey-steps">
+                            <div class="journey-step" id="step-masuk">
+                                <div class="journey-step-tag">
+                                    <span class="status-dot dot-muted" id="dot-step-masuk"></span>
+                                    <span>1. Masuk</span>
+                                </div>
+                                <div class="journey-step-time" id="time-step-masuk">Belum Absen</div>
+                            </div>
+                            <div class="journey-step" id="step-pulang">
+                                <div class="journey-step-tag">
+                                    <span class="status-dot dot-muted" id="dot-step-pulang"></span>
+                                    <span>2. Pulang</span>
+                                </div>
+                                <div class="journey-step-time" id="time-step-pulang">Belum Absen</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Action Area (Buttons) -->
+                    <div id="action-buttons" style="display:block;">
+                    </div>
+
+                    <div id="recap-list" style="display:none;"></div>
+                </div>
+            </div>
+
+            <!-- BOTTOM NAVIGATION BAR (3 Menus: Dashboard, Riwayat, Profil) -->
+            <nav class="bottom-nav">
+                <a href="dashboard.html" class="bottom-nav-item active" id="nav-dashboard" onclick="return false;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="riwayat.html" class="bottom-nav-item" id="nav-riwayat">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span>Riwayat</span>
+                </a>
+                <a href="profil.html" class="bottom-nav-item" id="nav-profil">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>Profil</span>
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- MODAL: KAMERA LIVE (HADIR) -->
+    <div class="modal" id="modal-kamera">
+        <div class="modal-content" style="padding:0; overflow:hidden; border-radius:20px;">
+            <!-- Camera Header -->
+            <div
+                style="background:linear-gradient(135deg,var(--fresh),var(--fresh-dark)); padding:14px 18px; display:flex; align-items:center; justify-content:space-between;">
+                <span style="color:white; font-weight:700; font-size:15px;">Kamera Presensi</span>
+                <button id="btn-tutup-kamera"
+                    style="background:rgba(255,255,255,0.2); border:none; color:white; border-radius:50%; width:30px; height:30px; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center;">✕</button>
+            </div>
+            <!-- Live Video -->
+            <div style="position:relative; background:#000;">
+                <video id="cam-video" autoplay playsinline muted
+                    style="width:100%; display:block; max-height:260px; object-fit:cover;"></video>
+                <canvas id="cam-canvas" style="display:none;"></canvas>
+                <!-- GPS Overlay -->
+                <div id="cam-gps-status"
+                    style="position:absolute; bottom:10px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.6); color:white; font-size:11px; padding:4px 12px; border-radius:20px; white-space:nowrap;">
+                    Mendeteksi lokasi GPS...</div>
+            </div>
+            <!-- Capture Button -->
+            <div style="padding:16px; display:flex; flex-direction:column; gap:10px;">
+                <button id="btn-capture-hadir"
+                    style="width:100%; padding:14px; border-radius:12px; border:none; background:linear-gradient(135deg,var(--bps-green),#48a448); color:white; font-weight:700; font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+                    Ambil Foto & Kirim Presensi
+                </button>
+                <p style="font-size:11px; color:#999; text-align:center;">GPS & foto diambil bersamaan saat klik
+                    tombol</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: BERHASIL (SUCCESS POP-UP) -->
+    <div class="modal" id="modal-berhasil">
+        <div class="modal-content" style="text-align:center; max-width:320px; padding:24px 20px;">
+            <img id="img-berhasil" src="assets/berhasil.jpg" alt="Berhasil"
+                style="width:140px; height:140px; object-fit:cover; margin:0 auto 14px; display:block; border-radius:18px; box-shadow:0 8px 24px rgba(74,189,172,0.25); border:2px solid var(--fresh-border);">
+            <h3 id="judul-berhasil" style="font-size:18px; font-weight:800; color:var(--text-dark); margin-bottom:6px;">
+                Berhasil Disimpan</h3>
+            <p id="teks-berhasil"
+                style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.45;">Presensi berhasil
+                tercatat dalam sistem.</p>
+            <button class="btn btn-primary" id="btn-tutup-berhasil">Tutup</button>
+        </div>
+    </div>
+
+    <!-- MODAL: GAGAL (FAILURE POP-UP) -->
+    <div class="modal" id="modal-gagal">
+        <div class="modal-content" style="text-align:center; max-width:320px; padding:24px 20px;">
+            <img id="img-gagal" src="assets/gagal.jpg" alt="Gagal"
+                style="width:140px; height:140px; object-fit:cover; margin:0 auto 14px; display:block; border-radius:18px; box-shadow:0 8px 24px rgba(252,74,26,0.25); border:2px solid var(--vermillion-border);">
+            <h3 id="judul-gagal" style="font-size:18px; font-weight:800; color:var(--text-dark); margin-bottom:6px;">
+                Tidak Dapat Diproses</h3>
+            <p id="teks-gagal" style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.45;">
+                Terjadi kesalahan saat memproses presensi.</p>
+            <button class="btn btn-danger" id="btn-tutup-gagal">Mengerti</button>
+        </div>
+    </div>
+
+    <!-- MODAL: TUNGGU (WAIT POP-UP) -->
+    <div class="modal" id="modal-tunggu" style="z-index:200;">
+        <div class="modal-content" style="text-align:center; max-width:320px; padding:24px 20px;">
+            <img id="img-tunggu" src="assets/tunggu.jpg" alt="Tunggu"
+                style="width:140px; height:140px; object-fit:cover; margin:0 auto 14px; display:block; border-radius:18px; box-shadow:0 8px 24px rgba(247,183,51,0.25); border:2px solid var(--sunshine-border);">
+            <h3 id="judul-tunggu" style="font-size:18px; font-weight:800; color:var(--text-dark); margin-bottom:6px;">
+                Belum Waktunya Presensi</h3>
+            <p id="teks-tunggu" style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.45;">
+                Waktu presensi belum dibuka. Silakan tunggu hingga jadwal presensi tiba.</p>
+            <button class="btn btn-warning" id="btn-tutup-tunggu">Mengerti</button>
+        </div>
+    </div>
+
+    <!-- MODAL: STOP (LEWAT JAM 18:00 / PERINGATAN WAJIB KETERANGAN) -->
+    <div class="modal" id="modal-stop" style="z-index:200;">
+        <div class="modal-content" style="text-align:center; max-width:320px; padding:24px 20px;">
+            <img id="img-stop" src="assets/stop.jpg" alt="Stop Presensi"
+                style="width:140px; height:140px; object-fit:cover; margin:0 auto 14px; display:block; border-radius:18px; box-shadow:0 8px 24px rgba(252,74,26,0.25); border:2px solid var(--vermillion-border);">
+            <h3 id="judul-stop" style="font-size:18px; font-weight:800; color:var(--vermillion); margin-bottom:6px;">Waktu Presensi Berakhir</h3>
+            <p id="teks-stop" style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.45;">
+                Kamu belum absen hari ini! Batas waktu presensi harian telah berakhir pada pukul 18:00 WIB.</p>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+                <button class="btn btn-warning" id="btn-stop-izin" style="font-size:14px; padding:12px;">Ajukan Izin /
+                    Sakit</button>
+                <button class="btn btn-outline" id="btn-tutup-stop" style="font-size:14px; padding:12px;">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: KELUAR (LOGOUT POP-UP) -->
+    <div class="modal" id="modal-keluar" style="z-index:200;">
+        <div class="modal-content" style="text-align:center; max-width:320px; padding:24px 20px;">
+            <img id="img-keluar" src="assets/keluar.jpg" alt="Keluar"
+                style="width:140px; height:140px; object-fit:cover; margin:0 auto 14px; display:block; border-radius:18px; box-shadow:0 8px 24px rgba(252,74,26,0.2); border:2px solid var(--vermillion-border);">
+            <h3 style="font-size:18px; font-weight:800; color:var(--text-dark); margin-bottom:6px;">Konfirmasi Keluar
+            </h3>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.45;">Apakah kamu yakin
+                ingin keluar dari akun ini?</p>
+            <div style="display:flex; gap:10px;">
+                <button class="btn btn-outline" id="btn-batal-keluar" style="flex:1;">Batal</button>
+                <button class="btn btn-danger" id="btn-konfirm-keluar" style="flex:1;">Ya, Keluar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: TIDAK HADIR (kept for backward compatibility) -->
+    <div class="modal" id="modal-tidak-hadir">
+        <div class="modal-content">
+            <h3 style="margin-bottom:15px; text-align:center; font-size:18px;">Form Tidak Hadir</h3>
+            <div class="form-group">
+                <label>Status</label>
+                <select id="form-status">
+                    <option value="Sakit">Sakit</option>
+                    <option value="Izin">Izin</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Keterangan Lengkap (Wajib)</label>
+                <textarea id="form-keterangan" rows="3"
+                    placeholder="Contoh: Izin acara keluarga/ Sakit demam berdarah..."></textarea>
+            </div>
+            <div class="form-group" style="margin-top:5px;">
+                <label for="kamera-bukti" class="btn btn-outline"
+                    style="text-align:center; font-size:14px; padding:12px; margin-top:0;">Unggah Foto Bukti</label>
+                <input type="file" id="kamera-bukti" accept="image/*" capture="environment">
+                <span id="file-name"
+                    style="font-size:12px; color:var(--success); margin-top:5px; text-align:center; display:block; min-height:15px;">Belum
+                    ada file dipilih</span>
+            </div>
+            <div style="display:flex; gap:10px; margin-top:15px;">
+                <button class="btn btn-outline" id="btn-batal-modal" style="flex:1;">Batal</button>
+                <button class="btn btn-primary" id="btn-kirim-modal" style="flex:1;">Kirim Laporan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: PENGAJUAN IZIN/SAKIT -->
+    <div class="modal" id="modal-izin">
+        <div class="modal-content" style="max-height:88vh; max-width:400px; padding:0; overflow:hidden; border-radius:var(--radius-xl); box-shadow:0 25px 50px -12px rgba(30,27,36,0.35);">
+            <div
+                style="background:linear-gradient(135deg, var(--vermillion) 0%, #e03b0d 100%); padding:16px 20px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
+                <span style="color:white; font-weight:800; font-size:16px; letter-spacing:-0.01em;">Pengajuan Izin / Sakit</span>
+                <button id="btn-tutup-izin"
+                    style="background:rgba(255,255,255,0.22); border:none; color:white; border-radius:50%; width:32px; height:32px; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s ease;">✕</button>
+            </div>
+
+            <div style="padding:18px 20px; max-height:calc(88vh - 65px); overflow-y:auto; display:flex; flex-direction:column; gap:12px;">
+                <div class="form-group" style="margin-bottom:0;">
+                    <label style="font-weight:700; color:var(--text-muted); font-size:12px;">Jenis Pengajuan</label>
+                    <select id="izin-type" style="padding:11px 14px; font-size:14px; font-weight:600;">
+                        <option value="sakit">Sakit</option>
+                        <option value="izin_darurat">Izin Darurat (Mendadak)</option>
+                        <option value="keperluan">Keperluan Pribadi</option>
+                    </select>
+                </div>
+
+                <div class="izin-dates-row">
+                    <div class="form-group" style="margin-bottom:0; min-width:0;">
+                        <label style="font-weight:700; color:var(--text-muted); font-size:12px;">Tanggal Mulai</label>
+                        <input type="date" id="izin-start" style="padding:10px 8px; font-size:13px; font-weight:600; min-width:0; width:100%; box-sizing:border-box;">
+                    </div>
+                    <div class="form-group" style="margin-bottom:0; min-width:0;">
+                        <label style="font-weight:700; color:var(--text-muted); font-size:12px;">Tanggal Selesai</label>
+                        <input type="date" id="izin-end" style="padding:10px 8px; font-size:13px; font-weight:600; min-width:0; width:100%; box-sizing:border-box;">
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom:0;">
+                    <label style="font-weight:700; color:var(--text-muted); font-size:12px;">Alasan / Keterangan (Wajib)</label>
+                    <textarea id="izin-reason" rows="3" style="padding:11px 14px; font-size:13px; line-height:1.45;"
+                        placeholder="Jelaskan alasan pengajuan izin/sakit kamu..."></textarea>
+                </div>
+
+                <div class="form-group" style="margin-bottom:0;">
+                    <label style="font-weight:700; color:var(--text-muted); font-size:12px;">Foto Bukti (Opsional Izin, Wajib Sakit)</label>
+                    <label for="izin-bukti-file" class="btn btn-outline"
+                        style="text-align:center; font-size:13px; font-weight:700; padding:11px; margin-top:0; cursor:pointer; border-style:dashed; border-width:1.5px; border-color:var(--fresh);">Pilih Berkas Bukti (Foto / Surat)</label>
+                    <input type="file" id="izin-bukti-file" accept="image/*" capture="environment">
+                    <span id="izin-file-name"
+                        style="font-size:11.5px; font-weight:600; color:var(--fresh-dark); margin-top:4px; text-align:center; display:block; min-height:16px;">Belum ada file dipilih</span>
+                </div>
+
+                <div style="display:flex; gap:10px; margin-top:4px;">
+                    <button class="btn btn-outline" id="btn-batal-izin" style="flex:1; padding:13px 14px; font-size:14px; font-weight:700; margin-top:0;">Batal</button>
+                    <button class="btn btn-primary" id="btn-kirim-izin"
+                        style="flex:1.3; padding:13px 14px; font-size:14px; font-weight:800; white-space:nowrap; margin-top:0; display:flex; align-items:center; justify-content:center; gap:8px;">
+                        <span class="spinner" id="izin-spin"></span>Kirim Pengajuan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK Modular (v10.8) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, limit, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Konfigurasi Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDe394Hog3cODzHBWgC00jtQybKq_Ul4l4",
+            authDomain: "presensee-d653b.firebaseapp.com",
+            databaseURL: "https://presensee-d653b-default-rtdb.firebaseio.com",
+            projectId: "presensee-d653b",
+            storageBucket: "presensee-d653b.firebasestorage.app",
+            messagingSenderId: "983111308568",
+            appId: "1:983111308568:web:de94c7403005a596083a6d",
+            measurementId: "G-9WBWFBFGYQ"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // State variables
+        let currentUserData = null;
+        let currentCameraMode = 'check_in'; // 'check_in' | 'check_out'
+        let izinBuktiFile = null;
+
+        // Hard-coded libur nasional
+        const LIBUR_NASIONAL = {
+            "2026-12-24": "Cuti Bersama Hari Raya Natal",
+            "2026-12-25": "Hari Raya Natal",
+            "2027-01-01": "Tahun Baru 2027 Masehi",
+            "2027-01-05": "Isra Mi'raj Nabi Muhammad SAW 1448 H",
+            "2027-02-05": "Cuti Bersama Tahun Baru Imlek 2578",
+            "2027-02-06": "Tahun Baru Imlek 2578 Kongzili",
+            "2027-03-08": "Hari Suci Nyepi (Tahun Baru Saka 1949)",
+            "2027-03-09": "Cuti Bersama Hari Raya Idul Fitri 1448 H",
+            "2027-03-10": "Hari Raya Idul Fitri 1448 H",
+            "2027-03-11": "Hari Raya Idul Fitri 1448 H",
+            "2027-03-12": "Cuti Bersama Hari Raya Idul Fitri 1448 H",
+            "2027-03-15": "Cuti Bersama Hari Raya Idul Fitri 1448 H"
+        };
+        let nationalHolidays = { ...LIBUR_NASIONAL };
+
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(/\./g, ':');
+            const dateEl = document.getElementById('header-date');
+            if (dateEl) dateEl.innerText = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // =========================================
+        // GEOLOCATION UTILS
+        // =========================================
+        const BPS_LAT = -7.3834252;
+        const BPS_LNG = 108.5399708;
+
+        function checkJarak(lat, lng) {
+            const R = 6371e3;
+            const p1 = BPS_LAT * Math.PI / 180, p2 = lat * Math.PI / 180;
+            const dp = (lat - BPS_LAT) * Math.PI / 180;
+            const dl = (lng - BPS_LNG) * Math.PI / 180;
+            const a = Math.sin(dp / 2) ** 2 + Math.cos(p1) * Math.cos(p2) * Math.sin(dl / 2) ** 2;
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        }
+
+        function setStatus(msg, isError = false) {
+            const el = document.getElementById('status-card');
+            el.className = isError ? "status-card error" : "status-card";
+            el.innerHTML = msg;
+        }
+
+        // =========================================
+        // VALIDATE SYSTEM STATUS (period + holiday)
+        // =========================================
+        function validateSystemStatus() {
+            const now = new Date();
+            const statusCard = document.getElementById('status-card');
+            const actionBtns = document.getElementById('action-buttons');
+
+            // 1. Validasi Periode: 21 Sep 2026 - 20 Mar 2027
+            const startPeriod = new Date('2026-09-21T00:00:00');
+            const endPeriod = new Date('2027-03-20T23:59:59');
+
+            if (now < startPeriod || now > endPeriod) {
+                statusCard.className = "status-card error";
+                statusCard.innerHTML = "❌ <b>Di luar periode magang aktif</b><br>Periode diperbolehkan: 21 Sep 2026 - 20 Mar 2027.";
+                actionBtns.style.display = 'none';
+                return false;
+            }
+
+            // 2. Validasi Weekend (Sabtu = 6, Minggu = 0) & Libur Nasional
+            const day = now.getDay();
+            const offset = now.getTimezoneOffset() * 60000;
+            const todayStr = new Date(now - offset).toISOString().split('T')[0];
+
+            if (day === 0 || day === 6 || nationalHolidays[todayStr]) {
+                statusCard.className = "status-card error";
+                const liburKet = nationalHolidays[todayStr] ? ` — ${nationalHolidays[todayStr]}` : '';
+                statusCard.innerText = `Hari libur, tidak ada presensi (Sabtu/Minggu atau Libur Nasional)${liburKet}.`;
+                actionBtns.style.display = 'none';
+                return false;
+            }
+
+            // Sistem OK — status card & action area will be populated by renderDashboardState
+            return true;
+        }
+
+        // =========================================
+        // RENDER DASHBOARD STATE (3 UI states)
+        // =========================================
+        function renderDashboardState(hasCheckIn, hasCheckOut, checkInTimeStr) {
+            const now = new Date();
+            const h = now.getHours(), m = now.getMinutes();
+            const totalMin = h * 60 + m;
+            const day = now.getDay();
+            const statusCard = document.getElementById('status-card');
+            const actionArea = document.getElementById('action-buttons');
+            const stepMasuk = document.getElementById('step-masuk');
+            const dotStepMasuk = document.getElementById('dot-step-masuk');
+            const timeStepMasuk = document.getElementById('time-step-masuk');
+            const stepPulang = document.getElementById('step-pulang');
+            const dotStepPulang = document.getElementById('dot-step-pulang');
+            const timeStepPulang = document.getElementById('time-step-pulang');
+            const journeyStatusPill = document.getElementById('journey-status-pill');
+
+            if (!statusCard || !actionArea) return;
+
+            // Update Journey visual tracker
+            if (hasCheckIn) {
+                if (stepMasuk) stepMasuk.classList.add('done');
+                if (dotStepMasuk) {
+                    dotStepMasuk.className = 'status-dot dot-success';
+                }
+                if (timeStepMasuk) {
+                    timeStepMasuk.innerText = checkInTimeStr ? (checkInTimeStr + ' WIB') : 'Sudah Masuk';
+                }
+            } else {
+                if (stepMasuk) stepMasuk.classList.remove('done');
+                if (dotStepMasuk) dotStepMasuk.className = 'status-dot dot-muted';
+                if (timeStepMasuk) timeStepMasuk.innerText = 'Belum Absen';
+            }
+
+            if (hasCheckOut) {
+                if (stepPulang) stepPulang.classList.add('done');
+                if (dotStepPulang) dotStepPulang.className = 'status-dot dot-success';
+                if (timeStepPulang) timeStepPulang.innerText = 'Sudah Pulang';
+                if (journeyStatusPill) {
+                    journeyStatusPill.innerText = 'Selesai';
+                    journeyStatusPill.style.background = 'var(--fresh-light)';
+                    journeyStatusPill.style.color = 'var(--fresh-dark)';
+                }
+            } else {
+                if (stepPulang) stepPulang.classList.remove('done');
+                if (dotStepPulang) dotStepPulang.className = 'status-dot dot-muted';
+                if (timeStepPulang) timeStepPulang.innerText = 'Belum Absen';
+            }
+
+            // Weekend check (Sabtu = 6, Minggu = 0)
+            if (day === 0 || day === 6) {
+                statusCard.className = "status-card error";
+                statusCard.innerText = "Hari libur akhir pekan, tidak ada presensi.";
+                actionArea.style.display = 'none';
+                return;
+            }
+
+            actionArea.style.display = 'block';
+
+            // State 3: Hari ini selesai (Sudah absen masuk & pulang)
+            if (hasCheckOut) {
+                statusCard.className = "status-card";
+                statusCard.innerHTML = '<span class="status-dot dot-success"></span> Presensi Hari Ini Selesai';
+                actionArea.innerHTML = `<div style="background:var(--fresh-light); border:1.5px solid var(--fresh-border); border-radius:var(--radius-lg); text-align:center; padding:18px 16px;">
+                    <div style="font-size:16px; font-weight:800; color:var(--fresh-dark); margin-bottom:4px;">Presensi Hari Ini Selesai</div>
+                    <p style="font-size:13px; color:var(--text-muted); margin:0;">Terima kasih atas dedikasi dan kinerjamu hari ini.</p>
+                </div>`;
+                return;
+            }
+
+            // State 2: Sudah absen masuk -> Tampilkan Absen Pulang & Izin Darurat
+            if (hasCheckIn) {
+                statusCard.className = "status-card";
+                statusCard.innerHTML = '<span class="status-dot dot-success"></span> Sudah Absen Masuk' + (checkInTimeStr ? ` &bull; ${checkInTimeStr} WIB` : '');
+
+                let html = '';
+
+                if (totalMin >= 14 * 60) {
+                    // 14:00–15:59 (Pulang cepat, wajib keterangan)
+                    if (totalMin < 16 * 60) {
+                        html += `<div class="form-group" id="early-reason-group" style="margin-top:6px;">
+                            <label style="color:#b45309; font-weight:700;">Alasan Pulang Cepat (Wajib Diisi):</label>
+                            <textarea id="input-early-reason" rows="2" placeholder="Tulis alasan pulang sebelum pukul 16:00..."></textarea>
+                        </div>
+                        <button id="btn-absen-pulang" class="btn btn-warning" style="font-size:15px; padding:16px;">
+                            Absen Pulang (Pulang Cepat)
+                        </button>`;
+                    } else {
+                        // >= 16:00 (Normal pulang)
+                        html += `<button id="btn-absen-pulang" class="btn btn-danger" style="font-size:15px; padding:16px;">
+                            Absen Pulang Sekarang
+                        </button>`;
+                    }
+                } else {
+                    const minsLeft = (14 * 60) - totalMin;
+                    const hLeft = Math.floor(minsLeft / 60), mLeft = minsLeft % 60;
+                    html += `<button id="btn-pulang-locked" class="btn btn-outline" style="background:var(--clean-light); color:var(--text-muted); border-color:var(--border-color); cursor:pointer;">
+                        Absen Pulang (Tersedia ${hLeft > 0 ? hLeft + 'j ' : ''}${mLeft}m lagi)
+                    </button>`;
+                }
+
+                html += `<button id="btn-izin-darurat" class="btn btn-outline-warning" style="margin-top:8px;">
+                    Ajukan Izin Darurat (Pulang Mendadak)
+                </button>`;
+                html += `<p class="geofence-note">Geofencing 50m aktif &bull; BPS Kota Banjar</p>`;
+
+                actionArea.innerHTML = html;
+
+                const btnPulang = document.getElementById('btn-absen-pulang');
+                if (btnPulang) btnPulang.onclick = () => openKameraAbsen('check_out');
+
+                document.getElementById('btn-pulang-locked')?.addEventListener('click', () => {
+                    showTungguModal('Belum Waktunya Pulang', 'Waktu absen pulang belum dibuka. Presensi pulang dimulai pukul 14:00 WIB.');
+                });
+
+                document.getElementById('btn-izin-darurat')?.addEventListener('click', () => openLeaveModal('izin_darurat'));
+                return;
+            }
+
+            // State 1: Belum Absen Masuk
+            let html = '';
+
+            if (totalMin < 6 * 60) {
+                // Sebelum 06:00
+                statusCard.className = "status-card";
+                statusCard.innerHTML = '<span class="status-dot dot-muted"></span> Belum Jam Absen (Mulai 06:00 WIB)';
+                html = `<button id="btn-masuk-locked" class="btn btn-outline" style="background:var(--clean-light); color:var(--text-muted); border-color:var(--border-color); cursor:pointer;">Absen Masuk (Mulai 06:00)</button>`;
+                html += `<button id="btn-ajukan-izin" class="btn btn-outline" style="margin-top:8px;">Ajukan Izin / Sakit</button>`;
+            } else if (totalMin <= 7 * 60 + 30) {
+                // 06:00 – 07:30 (Absen Normal)
+                statusCard.className = "status-card";
+                statusCard.innerHTML = '<span class="status-dot dot-success"></span> Waktu Presensi Normal (06:00 - 07:30)';
+                html = `<button id="btn-hadir-pagi" class="btn btn-primary" style="font-size:15px; padding:16px;">Absen Masuk Sekarang</button>`;
+                html += `<button id="btn-ajukan-izin" class="btn btn-outline" style="margin-top:8px;">Ajukan Izin / Sakit</button>`;
+            } else if (totalMin < 14 * 60) {
+                // 07:31 – 13:59 (Absen Telat - WAJIB Keterangan)
+                const isVeryLate = totalMin > 8 * 60;
+                statusCard.className = "status-card";
+                statusCard.innerHTML = isVeryLate
+                    ? '<span class="status-dot dot-warning"></span> Terlambat (Lewat 07:30) &bull; Wajib keterangan'
+                    : '<span class="status-dot dot-warning"></span> Absen Masuk (Terlambat) &bull; Wajib keterangan';
+
+                html = `
+                <div class="form-group" id="late-reason-group">
+                    <label style="color:#b45309; font-weight:700;">Alasan Keterlambatan (Wajib Diisi):</label>
+                    <textarea id="input-late-reason" rows="2" placeholder="Tuliskan alasan keterlambatan kamu di sini..."></textarea>
+                </div>
+                <button id="btn-hadir-pagi" class="btn btn-warning" style="font-size:15px; padding:16px;">
+                    Absen Masuk (Terlambat)
+                </button>
+                <button id="btn-ajukan-izin" class="btn btn-outline" style="margin-top:8px;">Ajukan Izin / Sakit</button>`;
+            } else if (totalMin >= 18 * 60) {
+                // Lewat jam 18:00 dan belum pernah absen masuk
+                statusCard.className = "status-card error";
+                statusCard.innerHTML = '<span class="status-dot dot-danger"></span> Waktu Presensi Berakhir (Lewat 18:00 WIB)';
+                html = `<div style="text-align:center; padding:10px; color:var(--vermillion); font-size:13px; font-weight:800;">
+                    Kamu belum absen hari ini! Batas presensi harian adalah pukul 18:00 WIB.
+                </div>
+                <button id="btn-lihat-stop" class="btn btn-danger" style="font-size:15px; padding:15px;">
+                    Peringatan: Kamu Belum Absen Hari Ini!
+                </button>
+                <button id="btn-ajukan-izin" class="btn btn-outline" style="margin-top:8px;">Ajukan Izin / Sakit</button>`;
+            } else {
+                // 14:00 - 17:59 dan belum pernah absen pagi
+                statusCard.className = "status-card error";
+                statusCard.innerHTML = '<span class="status-dot dot-danger"></span> Waktu Absen Masuk Telah Berakhir';
+                html = `<div style="text-align:center; padding:10px; color:var(--text-muted); font-size:13px;">
+                    Kamu belum melakukan absen masuk hari ini. Silakan ajukan izin/sakit jika berhalangan.
+                </div>
+                <button id="btn-ajukan-izin" class="btn btn-primary" style="margin-top:6px;">Ajukan Izin / Sakit</button>`;
+            }
+
+            html += `<p class="geofence-note">Geofencing 50m aktif &bull; BPS Kota Banjar</p>`;
+
+            actionArea.innerHTML = html;
+
+            document.getElementById('btn-hadir-pagi')?.addEventListener('click', () => openKameraAbsen('check_in'));
+            document.getElementById('btn-masuk-locked')?.addEventListener('click', () => {
+                showTungguModal('Belum Jam Absen', 'Presensi masuk baru dibuka pukul 06:00 WIB. Silakan tunggu sebentar ya!');
+            });
+            document.getElementById('btn-lihat-stop')?.addEventListener('click', showStopModal);
+            document.getElementById('btn-ajukan-izin')?.addEventListener('click', () => openLeaveModal());
+
+            // Auto-trigger modal stop jika lewat jam 18:00 dan belum absen hari ini
+            if (totalMin >= 18 * 60 && !hasCheckIn && !hasShownStopNotice) {
+                hasShownStopNotice = true;
+                showStopModal();
+            }
+        }
+
+        // =========================================
+        // CHECK TODAY ATTENDANCE
+        // =========================================
+        async function checkTodayAttendance(uid) {
+            let hasCheckIn = false, hasCheckOut = false, checkInTime = '';
+            try {
+                const now = new Date();
+                const offset = now.getTimezoneOffset() * 60000;
+                const tgl = new Date(now - offset).toISOString().split('T')[0];
+
+                try {
+                    const q = query(collection(db, 'attendances'),
+                        where('user_id', '==', uid),
+                        where('tanggal', '==', tgl));
+                    const snap = await getDocs(q);
+
+                    snap.forEach(docSnap => {
+                        const d = docSnap.data();
+                        if (d.status === 'check_in') {
+                            hasCheckIn = true;
+                            if (d.check_in_time && d.check_in_time.toDate) {
+                                const t = d.check_in_time.toDate();
+                                checkInTime = t.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace('.', ':');
+                            }
+                        }
+                        if (d.status === 'check_out') hasCheckOut = true;
+                    });
+                } catch (eAtt) {
+                    console.warn('Gagal membaca koleksi attendances, coba presensi:', eAtt.message);
+                    try {
+                        const qOld = query(collection(db, 'presensi'),
+                            where('uid', '==', uid),
+                            where('tanggal', '==', tgl));
+                        const snapOld = await getDocs(qOld);
+                        snapOld.forEach(docSnap => {
+                            const d = docSnap.data();
+                            if (d.status && d.status.includes('Hadir')) hasCheckIn = true;
+                            if (d.status && d.status.includes('Pulang')) hasCheckOut = true;
+                        });
+                    } catch (eOld) {
+                        console.warn('Fallback presensi juga gagal:', eOld.message);
+                    }
+                }
+            } catch (err) {
+                console.error('checkTodayAttendance error:', err);
+            } finally {
+                renderDashboardState(hasCheckIn, hasCheckOut, checkInTime);
+            }
+        }
+
+        // =========================================
+        // SAVE ATTENDANCE (new simpanAttendance)
+        // =========================================
+        async function simpanAttendance(lat, lng, mode, fotoBase64) {
+            const now = new Date();
+            const offset = now.getTimezoneOffset() * 60000;
+            const tgl = new Date(now - offset).toISOString().split('T')[0];
+            const hour = now.getHours();
+            const minute = now.getMinutes();
+            const totalMin = hour * 60 + minute;
+
+            let is_late = false, late_reason = '', is_early_leave = false, early_leave_reason = '';
+
+            if (mode === 'check_in') {
+                is_late = totalMin > (7 * 60 + 30); // after 07:30
+                if (is_late) {
+                    late_reason = document.getElementById('input-late-reason')?.value?.trim() || '';
+                    if (!late_reason) {
+                        showStopModal(
+                            'Keterangan Wajib Diisi',
+                            'Kamu terlambat (lewat dari pukul 07:30). Kolom "Keterangan Telat" wajib diisi sebelum menyimpan presensi!',
+                            false,
+                            () => {
+                                document.getElementById('input-late-reason')?.focus();
+                            }
+                        );
+                        return;
+                    }
+                }
+            }
+
+            if (mode === 'check_out') {
+                is_early_leave = totalMin < (16 * 60); // before 16:00
+                if (is_early_leave) {
+                    early_leave_reason = document.getElementById('input-early-reason')?.value?.trim() || '';
+                    if (!early_leave_reason) {
+                        showStopModal(
+                            'Keterangan Wajib Diisi',
+                            'Kamu pulang lebih awal (sebelum pukul 16:00). Kolom "Keterangan Pulang Cepat" wajib diisi sebelum menyimpan presensi!',
+                            false,
+                            () => {
+                                document.getElementById('input-early-reason')?.focus();
+                            }
+                        );
+                        return;
+                    }
+                }
+            }
+
+            try {
+                const docData = {
+                    user_id: currentUserData.uid,
+                    nik: currentUserData.nik,
+                    nama: currentUserData.nama || '',
+                    tanggal: tgl,
+                    status: mode,
+                    is_late,
+                    late_reason,
+                    is_early_leave,
+                    early_leave_reason,
+                    lat,
+                    lng,
+                    foto_url: fotoBase64,
+                    keterangan: ''
+                };
+
+                if (mode === 'check_in') {
+                    docData.check_in_time = serverTimestamp();
+                } else {
+                    docData.check_out_time = serverTimestamp();
+                }
+
+                await addDoc(collection(db, 'attendances'), docData);
+
+                // Update UI state after success
+                await checkTodayAttendance(currentUserData.uid);
+                showSuccessModal(mode, hour, minute);
+            } catch (e) {
+                showFailModal(e.message);
+            }
+        }
+
+        let hasShownStopNotice = false;
+
+        function showSuccessModal(mode, hour, minute) {
+            const timeStr = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+            const imgElem = document.getElementById('img-berhasil');
+            if (imgElem) imgElem.src = 'assets/berhasil.jpg';
+            const titleElem = document.getElementById('judul-berhasil');
+            if (titleElem) titleElem.innerText = 'Berhasil Disimpan';
+
+            if (mode === 'check_in') {
+                document.getElementById('teks-berhasil').innerText = `Absen Masuk berhasil dicatat pukul ${timeStr} WIB!`;
+            } else {
+                document.getElementById('teks-berhasil').innerText = `Absen Pulang berhasil dicatat pukul ${timeStr} WIB!`;
+            }
+
+            document.getElementById('modal-berhasil').classList.add('active');
+            document.getElementById('btn-tutup-berhasil').onclick = () => {
+                document.getElementById('modal-berhasil').classList.remove('active');
+            };
+        }
+
+        function showFailModal(msg) {
+            const imgFail = document.getElementById('img-gagal');
+            if (imgFail) imgFail.src = 'assets/gagal.jpg';
+            document.getElementById('teks-gagal').innerText = 'Gagal memproses: ' + msg;
+            document.getElementById('modal-gagal').classList.add('active');
+            document.getElementById('btn-tutup-gagal').onclick = () => {
+                document.getElementById('modal-gagal').classList.remove('active');
+            };
+        }
+
+        function showTungguModal(title = 'Belum Waktunya Presensi', msg = 'Waktu presensi belum dibuka. Silakan tunggu hingga jadwal presensi tiba.', onTutupCallback = null) {
+            const imgTunggu = document.getElementById('img-tunggu');
+            if (imgTunggu) imgTunggu.src = 'assets/tunggu.jpg';
+            const titleElem = document.getElementById('judul-tunggu');
+            if (titleElem) titleElem.innerText = title;
+            const textElem = document.getElementById('teks-tunggu');
+            if (textElem) textElem.innerText = msg;
+            const modalTunggu = document.getElementById('modal-tunggu');
+            modalTunggu.classList.add('active');
+            document.getElementById('btn-tutup-tunggu').onclick = () => {
+                modalTunggu.classList.remove('active');
+                if (typeof onTutupCallback === 'function') onTutupCallback();
+            };
+        }
+
+        function showStopModal(judul = 'Waktu Presensi Berakhir', pesan = 'Kamu belum absen hari ini! Batas waktu presensi harian telah berakhir pada pukul 18:00 WIB.', showIzinBtn = true, onTutupCallback = null) {
+            const imgStop = document.getElementById('img-stop');
+            if (imgStop) imgStop.src = 'assets/stop.jpg';
+            const jEl = document.getElementById('judul-stop');
+            if (jEl) jEl.innerText = judul;
+            const tEl = document.getElementById('teks-stop');
+            if (tEl) tEl.innerText = pesan;
+
+            const btnIzin = document.getElementById('btn-stop-izin');
+            const btnTutup = document.getElementById('btn-tutup-stop');
+
+            if (btnIzin) {
+                btnIzin.style.display = showIzinBtn ? 'block' : 'none';
+            }
+            if (btnTutup) {
+                if (showIzinBtn) {
+                    btnTutup.className = 'btn btn-outline';
+                    btnTutup.innerText = 'Tutup';
+                } else {
+                    btnTutup.className = 'btn btn-danger';
+                    btnTutup.innerText = 'Mengerti, Isi Keterangan';
+                }
+                btnTutup.onclick = () => {
+                    document.getElementById('modal-stop').classList.remove('active');
+                    if (typeof onTutupCallback === 'function') onTutupCallback();
+                };
+            }
+            if (btnIzin) {
+                btnIzin.onclick = () => {
+                    document.getElementById('modal-stop').classList.remove('active');
+                    openLeaveModal();
+                };
+            }
+
+            document.getElementById('modal-stop').classList.add('active');
+        }
+
+        // =========================================
+        // AUTH STATE CHANGED
+        // =========================================
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "index.html";
+                return;
+            }
+            try {
+                // Merge libur dari Firebase ke hard-coded list
+                try {
+                    const qLibur = await getDocs(collection(db, "libur_nasional"));
+                    qLibur.forEach(d => {
+                        if (d.data().tanggal) nationalHolidays[d.data().tanggal] = d.data().keterangan || "Libur Nasional";
+                    });
+                } catch (e) { /* fallback hardcoded */ }
+
+                let userData = null;
+                try {
+                    const docSnap = await getDoc(doc(db, "users", user.uid));
+                    if (docSnap.exists()) {
+                        userData = docSnap.data();
+                    }
+                } catch (eDoc) {
+                    console.warn('Gagal membaca users doc:', eDoc);
+                }
+
+                if (!userData) {
+                    userData = {
+                        nama: user.displayName || user.email.split('@')[0],
+                        posisi: 'Asisten Pranata Komputer',
+                        perusahaan: 'BPS Kota Banjar',
+                        email: user.email,
+                        nik: '-'
+                    };
+                }
+
+                currentUserData = userData;
+                currentUserData.uid = user.uid;
+
+                const infoEl = document.getElementById('user-info');
+                if (infoEl) infoEl.innerText = `${currentUserData.nama || 'Peserta'} · ${currentUserData.posisi || 'Magang'}`;
+                const avatarEl = document.getElementById('user-avatar');
+                if (avatarEl) avatarEl.innerText = (currentUserData.nama || 'P').charAt(0).toUpperCase();
+
+                // Render tombol absen seketika agar langsung muncul tanpa delay
+                renderDashboardState(false, false, '');
+
+                // Perbarui status presensi hari ini dari Firestore
+                try {
+                    validateSystemStatus();
+                    checkTodayAttendance(user.uid);
+                } catch (eState) {
+                    console.warn('checkTodayAttendance error:', eState.message);
+                }
+            } catch (e) {
+                console.error('Auth error:', e);
+                renderDashboardState(false, false, '');
+            }
+        });
+
+        // =========================================
+        // GEOLOCATION & CAMERA LOGIC
+        // =========================================
+        const modalKamera = document.getElementById('modal-kamera');
+        const camVideo = document.getElementById('cam-video');
+        const camCanvas = document.getElementById('cam-canvas');
+        let camStream = null;
+        let gpsPosition = null;
+        let gpsWatcher = null;
+
+        function stopCamera() {
+            if (camStream) {
+                camStream.getTracks().forEach(t => t.stop());
+                camStream = null;
+            }
+            if (gpsWatcher !== null) {
+                navigator.geolocation.clearWatch(gpsWatcher);
+                gpsWatcher = null;
+            }
+            gpsPosition = null;
+        }
+
+        function openKameraAbsen(mode) {
+            if (mode === 'check_in') {
+                const now = new Date();
+                const totalMin = now.getHours() * 60 + now.getMinutes();
+                if (totalMin > 7 * 60 + 30) {
+                    const reason = document.getElementById('input-late-reason')?.value?.trim();
+                    if (!reason) {
+                        showStopModal(
+                            'Kamu Terlambat!',
+                            'Kamu terlambat (lewat dari pukul 07:30). Harap isi kolom "Keterangan Telat" terlebih dahulu sebelum membuka kamera!',
+                            false,
+                            () => {
+                                document.getElementById('input-late-reason')?.focus();
+                            }
+                        );
+                        return;
+                    }
+                }
+            }
+            if (mode === 'check_out') {
+                const now = new Date();
+                const totalMin = now.getHours() * 60 + now.getMinutes();
+                if (totalMin < 16 * 60) {
+                    const reason = document.getElementById('input-early-reason')?.value?.trim();
+                    if (!reason) {
+                        showStopModal(
+                            'Pulang Lebih Awal!',
+                            'Kamu pulang lebih awal (sebelum pukul 16:00). Harap isi kolom "Keterangan Pulang Cepat" terlebih dahulu sebelum membuka kamera!',
+                            false,
+                            () => {
+                                document.getElementById('input-early-reason')?.focus();
+                            }
+                        );
+                        return;
+                    }
+                }
+            }
+            currentCameraMode = mode;
+            openKameraHadir();
+        }
+
+        async function openKameraHadir() {
+            if (!validateSystemStatus()) return;
+            gpsPosition = null;
+            document.getElementById('cam-gps-status').innerText = 'Mendeteksi lokasi GPS...';
+            modalKamera.classList.add('active');
+
+            // Start camera
+            try {
+                camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+                camVideo.srcObject = camStream;
+            } catch (err) {
+                showFailModal('Kamera Bermasalah', 'Gagal membuka kamera: ' + err.message);
+                modalKamera.classList.remove('active');
+                return;
+            }
+
+            // Start GPS watch simultaneously
+            if ('geolocation' in navigator) {
+                gpsWatcher = navigator.geolocation.watchPosition(
+                    (pos) => {
+                        gpsPosition = pos;
+                        const jarak = checkJarak(pos.coords.latitude, pos.coords.longitude);
+                        const icon = jarak <= 50 ? '✅' : '⚠️';
+                        document.getElementById('cam-gps-status').innerText =
+                            `${icon} GPS: ${jarak <= 50 ? 'Dalam area BPS' : Math.round(jarak) + 'm dari BPS'} (Akurasi ±${Math.round(pos.coords.accuracy)}m)`;
+                    },
+                    () => { document.getElementById('cam-gps-status').innerText = '❌ GPS tidak tersedia'; },
+                    { enableHighAccuracy: true, maximumAge: 0 }
+                );
+            } else {
+                document.getElementById('cam-gps-status').innerText = '❌ GPS tidak didukung browser ini';
+            }
+        }
+
+        document.getElementById('btn-tutup-kamera').onclick = () => {
+            stopCamera();
+            modalKamera.classList.remove('active');
+        };
+
+        document.getElementById('btn-capture-hadir').onclick = async () => {
+            if (!gpsPosition) {
+                showTungguModal('Menunggu Lokasi GPS', 'Mohon tunggu sebentar hingga sinyal GPS kamu terdeteksi akurat.');
+                return;
+            }
+
+            const lat = gpsPosition.coords.latitude;
+            const lng = gpsPosition.coords.longitude;
+            const jarak = checkJarak(lat, lng);
+
+            if (jarak > 50) {
+                showFailModal('Lokasimu terlalu jauh dari area BPS Kota Banjar (Maksimal radius 50 meter)!');
+                return;
+            }
+
+            // Capture frame from video to canvas, max 600px width
+            const MAX_WIDTH = 600;
+            let width = camVideo.videoWidth;
+            let height = camVideo.videoHeight;
+
+            if (width > MAX_WIDTH) {
+                height = Math.round((height * MAX_WIDTH) / width);
+                width = MAX_WIDTH;
+            }
+
+            camCanvas.width = width;
+            camCanvas.height = height;
+            camCanvas.getContext('2d').drawImage(camVideo, 0, 0, width, height);
+
+            // Konversi canvas ke Base64 (60% quality)
+            const fotoBase64 = camCanvas.toDataURL('image/jpeg', 0.6);
+
+            stopCamera();
+            modalKamera.classList.remove('active');
+            await simpanAttendance(lat, lng, currentCameraMode, fotoBase64);
+        };
+
+        // =========================================
+        // TIDAK HADIR FLOW (backward compatible)
+        // =========================================
+        const modalTh = document.getElementById('modal-tidak-hadir');
+        let fileBukti = null;
+
+        document.getElementById('btn-batal-modal').onclick = () => {
+            modalTh.classList.remove('active');
+            fileBukti = null;
+            document.getElementById('file-name').innerText = 'Belum ada file dipilih';
+            document.getElementById('kamera-bukti').value = '';
+            document.getElementById('form-keterangan').value = '';
+        };
+
+        document.getElementById('kamera-bukti').addEventListener('change', (e) => {
+            if (e.target.files[0]) {
+                fileBukti = e.target.files[0];
+                document.getElementById('file-name').innerText = "✅ " + fileBukti.name;
+            }
+        });
+
+        document.getElementById('btn-kirim-modal').onclick = () => {
+            const st = document.getElementById('form-status').value;
+            const ket = document.getElementById('form-keterangan').value;
+            if (!ket.trim()) {
+                showTungguModal('Keterangan Wajib Diisi', 'Form Keterangan wajib diisi dengan jelas!');
+                return;
+            }
+            if (!fileBukti) {
+                showTungguModal('Lampirkan Bukti', 'Foto Bukti (Misal: Surat Dokter) harus dilampirkan!');
+                return;
+            }
+
+            modalTh.classList.remove('active');
+            setStatus("Sedang mengirim laporan...", false);
+
+            const reader = new FileReader();
+            reader.onload = function (evt) {
+                const img = new Image();
+                img.onload = function () {
+                    let width = img.width;
+                    let height = img.height;
+                    const MAX_WIDTH = 600;
+
+                    if (width > MAX_WIDTH) {
+                        height = Math.round((height * MAX_WIDTH) / width);
+                        width = MAX_WIDTH;
+                    }
+
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const fotoBase64 = canvas.toDataURL("image/jpeg", 0.6);
+
+                    navigator.geolocation.getCurrentPosition((pos) => {
+                        const lat = pos.coords.latitude;
+                        const lng = pos.coords.longitude;
+                        simpanPresensiLama(lat, lng, st, ket, fotoBase64);
+                    }, () => {
+                        simpanPresensiLama(0, 0, st, ket, fotoBase64);
+                    });
+                };
+                img.src = evt.target.result;
+            };
+            reader.readAsDataURL(fileBukti);
+        };
+
+        // Old simpanPresensi for backward-compat tidak-hadir modal (uses old `presensi` collection)
+        async function simpanPresensiLama(lat, lng, status, keterangan = '', fotoUrl = '') {
+            setStatus("⏳ Sedang memproses data absen...");
+            try {
+                const nowLocal = new Date();
+                const offset = nowLocal.getTimezoneOffset() * 60000;
+                const tgl = new Date(nowLocal - offset).toISOString().split('T')[0];
+
+                await addDoc(collection(db, "presensi"), {
+                    uid: currentUserData.uid,
+                    nik: currentUserData.nik,
+                    tanggal: tgl,
+                    waktu: serverTimestamp(),
+                    status: status,
+                    keterangan: keterangan,
+                    lat: lat,
+                    lng: lng,
+                    foto_url: fotoUrl
+                });
+
+                const imgElem = document.getElementById('img-berhasil');
+                document.getElementById('teks-berhasil').innerText = `Laporan Tidak Hadir (${status}) berhasil dikirim!`;
+                if (imgElem) imgElem.src = "assets/terima.jpg";
+                document.getElementById('modal-berhasil').classList.add('active');
+                document.getElementById('btn-tutup-berhasil').onclick = () => {
+                    document.getElementById('modal-berhasil').classList.remove('active');
+                };
+                setStatus("✅ <b>Laporan Tidak Hadir Terkirim</b>");
+            } catch (error) {
+                console.error(error);
+                setStatus("❌ Gagal mengirim laporan: " + error.message, true);
+            }
+        }
+
+        // =========================================
+        // LEAVE (IZIN/SAKIT) MODAL LOGIC
+        // =========================================
+        function openLeaveModal(preselectedType = null) {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('izin-start').value = today;
+            document.getElementById('izin-end').value = today;
+            if (preselectedType) document.getElementById('izin-type').value = preselectedType;
+            document.getElementById('modal-izin').classList.add('active');
+        }
+
+        function resetLeaveForm() {
+            document.getElementById('izin-type').value = 'sakit';
+            document.getElementById('izin-start').value = '';
+            document.getElementById('izin-end').value = '';
+            document.getElementById('izin-reason').value = '';
+            document.getElementById('izin-file-name').innerText = 'Belum ada file dipilih';
+            document.getElementById('izin-bukti-file').value = '';
+            izinBuktiFile = null;
+        }
+
+        document.getElementById('btn-tutup-izin').onclick = () => {
+            document.getElementById('modal-izin').classList.remove('active');
+        };
+
+        document.getElementById('btn-batal-izin').onclick = () => {
+            document.getElementById('modal-izin').classList.remove('active');
+            resetLeaveForm();
+        };
+
+        document.getElementById('izin-bukti-file').addEventListener('change', (e) => {
+            if (e.target.files[0]) {
+                izinBuktiFile = e.target.files[0];
+                document.getElementById('izin-file-name').innerText = "✅ " + izinBuktiFile.name;
+            }
+        });
+
+        document.getElementById('btn-kirim-izin').onclick = async () => {
+            await submitLeave();
+        };
+
+        function convertFileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (evt) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        let width = img.width;
+                        let height = img.height;
+                        const MAX_WIDTH = 600;
+                        if (width > MAX_WIDTH) {
+                            height = Math.round((height * MAX_WIDTH) / width);
+                            width = MAX_WIDTH;
+                        }
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        resolve(canvas.toDataURL('image/jpeg', 0.6));
+                    };
+                    img.onerror = () => resolve(evt.target.result); // fallback jika gagal render ke img
+                    img.src = evt.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function submitLeave() {
+            const type = document.getElementById('izin-type').value;
+            const startDate = document.getElementById('izin-start').value;
+            const endDate = document.getElementById('izin-end').value;
+            const reason = document.getElementById('izin-reason').value.trim();
+
+            if (!startDate || !endDate) {
+                showTungguModal(
+                    'Lengkapi Tanggal',
+                    'Tanggal mulai dan tanggal selesai pengajuan wajib diisi!',
+                    () => {
+                        if (!startDate) document.getElementById('izin-start')?.focus();
+                        else document.getElementById('izin-end')?.focus();
+                    }
+                );
+                return;
+            }
+            if (!reason) {
+                showTungguModal(
+                    'Keterangan Wajib Diisi',
+                    'Alasan / Keterangan wajib diisi sebelum mengirimkan pengajuan!',
+                    () => {
+                        document.getElementById('izin-reason')?.focus();
+                    }
+                );
+                return;
+            }
+            if (type === 'sakit' && !izinBuktiFile) {
+                showTungguModal(
+                    'Lampirkan Bukti',
+                    'Foto bukti surat dokter wajib dilampirkan untuk pengajuan izin sakit!'
+                );
+                return;
+            }
+
+            const btn = document.getElementById('btn-kirim-izin');
+            btn.classList.add('loading');
+            btn.disabled = true;
+
+            try {
+                let proof_url = '';
+
+                if (izinBuktiFile) {
+                    proof_url = await convertFileToBase64(izinBuktiFile);
+                }
+
+                await addDoc(collection(db, 'leaves'), {
+                    user_id: currentUserData.uid,
+                    nik: currentUserData.nik || '',
+                    nama: currentUserData.nama || '',
+                    leave_type: type,
+                    start_date: startDate,
+                    end_date: endDate,
+                    reason,
+                    proof_url,
+                    status: 'pending',
+                    created_at: serverTimestamp()
+                });
+
+                document.getElementById('modal-izin').classList.remove('active');
+                resetLeaveForm();
+
+                const imgElem = document.getElementById('img-berhasil');
+                if (imgElem) imgElem.src = 'assets/terima.jpg';
+                const titleElem = document.getElementById('judul-berhasil');
+                if (titleElem) titleElem.innerText = 'Pengajuan Diterima';
+                document.getElementById('teks-berhasil').innerText = 'Pengajuan izin/sakit kamu berhasil dikirim! Menunggu persetujuan admin.';
+                document.getElementById('modal-berhasil').classList.add('active');
+                document.getElementById('btn-tutup-berhasil').onclick = () => {
+                    document.getElementById('modal-berhasil').classList.remove('active');
+                };
+
+            } catch (e) {
+                console.error(e);
+                showFailModal('Pengajuan Gagal', 'Gagal mengirim pengajuan: ' + e.message);
+            } finally {
+                btn.classList.remove('loading');
+                btn.disabled = false;
+            }
+        }
+
+    </script>
+</body>
+</html>
