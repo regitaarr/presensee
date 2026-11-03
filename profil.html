@@ -8,7 +8,9 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             /* Palette: Fresh, Vermillion, Sunshine, Clean */
@@ -64,7 +66,7 @@
         /* Ambient Liquid Mesh Gradient */
         body {
             background-color: #d5d1dc;
-            background-image: 
+            background-image:
                 radial-gradient(at 8% 8%, rgba(74, 189, 172, 0.45) 0px, transparent 48%),
                 radial-gradient(at 92% 92%, rgba(247, 183, 51, 0.38) 0px, transparent 46%),
                 radial-gradient(at 88% 12%, rgba(252, 74, 26, 0.22) 0px, transparent 42%),
@@ -86,7 +88,7 @@
             background: rgba(255, 255, 255, 0.94);
             backdrop-filter: blur(24px);
             border-radius: var(--radius-2xl);
-            box-shadow: 
+            box-shadow:
                 0 32px 64px -16px rgba(30, 27, 36, 0.22),
                 0 0 0 2px rgba(255, 255, 255, 0.85),
                 0 0 0 3px rgba(223, 220, 227, 0.7);
@@ -185,7 +187,7 @@
             border-radius: 50%;
             background: #10b981;
             border: 3px solid #ffffff;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
 
         .user-full-name {
@@ -228,6 +230,7 @@
         .content::-webkit-scrollbar {
             width: 4px;
         }
+
         .content::-webkit-scrollbar-thumb {
             background: var(--clean);
             border-radius: 4px;
@@ -339,7 +342,7 @@
         .btn-danger {
             background: linear-gradient(180deg, #fd6840 0%, #FC4A1A 100%);
             color: #ffffff;
-            box-shadow: 
+            box-shadow:
                 0 8px 20px -4px rgba(252, 74, 26, 0.5),
                 0 4px 0 #c42d05,
                 inset 0 1px 1px rgba(255, 255, 255, 0.5);
@@ -431,6 +434,7 @@
                 opacity: 0;
                 transform: scale(0.96);
             }
+
             to {
                 opacity: 1;
                 transform: scale(1);
@@ -508,14 +512,10 @@
 
             <!-- Responsive Wrapper: Dual Column on Desktop, Stack on Mobile -->
             <div class="profile-desktop-grid">
-                
+
                 <!-- Left Pane / Mobile Top: Profile Hero Card & Status Keanggotaan -->
                 <div>
                     <div class="header">
-                        <div class="header-top-tag">
-                            <span class="live-dot" style="background:#ffffff; box-shadow:0 0 0 2px rgba(255,255,255,0.4);"></span>
-                            <span>BPS KOTA BANJAR</span>
-                        </div>
                         <div class="avatar-wrap">
                             <div class="avatar-circle" id="prof-avatar">?</div>
                             <span class="avatar-online-dot" title="Aktif"></span>
@@ -526,145 +526,193 @@
                         </div>
                     </div>
 
-                    <!-- Status Verification Bento Card -->
-                    <div style="background:#ffffff; border:1.5px solid var(--border-color); border-radius:var(--radius-xl); padding:13px 16px; margin: 10px 14px 4px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 4px 16px rgba(30,27,36,0.03);">
+                    <!-- Status Verification Bento Card
+                    <div
+                        style="background:#ffffff; border:1.5px solid var(--border-color); border-radius:var(--radius-xl); padding:13px 16px; margin: 10px 14px 4px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 4px 16px rgba(30,27,36,0.03);">
                         <div style="display:flex; align-items:center; gap:12px;">
-                            <div style="width:36px; height:36px; border-radius:12px; background:var(--fresh-light); display:flex; align-items:center; justify-content:center; color:var(--fresh-dark); flex-shrink:0;">
-                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <div
+                                style="width:36px; height:36px; border-radius:12px; background:var(--fresh-light); display:flex; align-items:center; justify-content:center; color:var(--fresh-dark); flex-shrink:0;">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                    stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                     <polyline points="22 4 12 14.01 9 11.01"></polyline>
                                 </svg>
                             </div>
                             <div>
-                                <p style="font-size:11px; font-weight:600; color:var(--text-muted); margin:0;">Status Keanggotaan</p>
-                                <p style="font-size:13px; font-weight:800; color:var(--fresh-dark); margin:0;">Magang Aktif &amp; Sah</p>
+                                <p style="font-size:11px; font-weight:600; color:var(--text-muted); margin:0;">Status
+                                    Keanggotaan</p>
+                                <p style="font-size:13px; font-weight:800; color:var(--fresh-dark); margin:0;">Magang
+                                    Aktif &amp; Sah</p>
                             </div>
-                        </div>
-                        <span style="font-size:10px; font-weight:800; background:var(--fresh-light); color:var(--fresh-dark); padding:5px 10px; border-radius:8px; border:1px solid var(--fresh-border);">RESMI</span>
-                    </div>
+                        </div> -->
+                    <span
+                        style="font-size:10px; font-weight:800; background:var(--fresh-light); color:var(--fresh-dark); padding:5px 10px; border-radius:8px; border:1px solid var(--fresh-border);">RESMI</span>
+                </div>
+            </div>
+
+            <!-- Right Pane / Mobile Bottom: Detailed Account Information & Logout Button at Bottom -->
+            <div style="display:flex; flex-direction:column; gap:12px; margin: 4px 14px 0;">
+                <div class="bento-section-title">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    <span>Data Lengkap Peserta</span>
                 </div>
 
-                <!-- Right Pane / Mobile Bottom: Detailed Account Information & Logout Button at Bottom -->
-                <div style="display:flex; flex-direction:column; gap:12px; margin: 4px 14px 0;">
-                    <div class="bento-section-title">
-                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                        <span>Data Lengkap Peserta</span>
-                    </div>
-
-                    <div class="bento-card">
-                        <!-- NIK -->
-                        <div class="bento-tile">
-                            <div class="tile-icon" style="background:var(--clean-light); color:var(--text-muted);">
-                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"></rect><circle cx="9" cy="10" r="2"></circle><line x1="15" y1="8" x2="17" y2="8"></line><line x1="15" y1="12" x2="17" y2="12"></line><line x1="7" y1="16" x2="17" y2="16"></line></svg>
-                            </div>
-                            <div class="tile-content">
-                                <span class="tile-label">Nomor Induk Kependudukan (NIK)</span>
-                                <span class="tile-value" id="prof-nik">-</span>
-                            </div>
-                        </div>
-
-                        <!-- Email -->
-                        <div class="bento-tile">
-                            <div class="tile-icon" style="background:var(--clean-light); color:var(--text-muted);">
-                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                            </div>
-                            <div class="tile-content">
-                                <span class="tile-label">Alamat Email</span>
-                                <span class="tile-value" id="prof-email">-</span>
-                            </div>
-                        </div>
-
-                        <!-- WhatsApp / HP -->
-                        <div class="bento-tile">
-                            <div class="tile-icon" style="background:var(--clean-light); color:var(--text-muted);">
-                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-                            </div>
-                            <div class="tile-content">
-                                <span class="tile-label">Nomor Telepon / WhatsApp</span>
-                                <span class="tile-value" id="prof-hp">-</span>
-                            </div>
-                        </div>
-
-                        <!-- Instansi / Penempatan -->
-                        <div class="bento-tile">
-                            <div class="tile-icon" style="background:var(--clean-light); color:var(--text-muted);">
-                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"></path><path d="M5 21V7l8-4v18"></path><path d="M19 21V11l-6-4"></path><path d="M9 9h1"></path><path d="M9 13h1"></path><path d="M9 17h1"></path></svg>
-                            </div>
-                            <div class="tile-content">
-                                <span class="tile-label">Instansi Penempatan</span>
-                                <span class="tile-value" id="prof-perusahaan">BPS Kota Banjar</span>
-                            </div>
-                        </div>
-
-                        <!-- Periode Magang -->
-                        <div class="bento-tile">
-                            <div class="tile-icon" style="background:var(--sunshine-light); color:var(--sunshine-hover);">
-                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                            </div>
-                            <div class="tile-content">
-                                <span class="tile-label">Periode Magang</span>
-                                <span class="tile-value" id="prof-periode">21 Sep 2026 - 20 Mar 2027</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- BUTTON KELUAR DI TARUH DI BAWAH DATA PESERTA -->
-                    <div style="margin-top:6px; margin-bottom:8px;">
-                        <button type="button" class="btn btn-danger" id="btn-trigger-logout">
-                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                                <polyline points="16 17 21 12 16 7"></polyline>
-                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                <div class="bento-card">
+                    <!-- NIK -->
+                    <div class="bento-tile">
+                        <div class="tile-icon" style="background:var(--clean-light); color:var(--text-muted);">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                                <circle cx="9" cy="10" r="2"></circle>
+                                <line x1="15" y1="8" x2="17" y2="8"></line>
+                                <line x1="15" y1="12" x2="17" y2="12"></line>
+                                <line x1="7" y1="16" x2="17" y2="16"></line>
                             </svg>
-                            <span>Keluar dari Akun</span>
-                        </button>
+                        </div>
+                        <div class="tile-content">
+                            <span class="tile-label">Nomor Induk Kependudukan (NIK)</span>
+                            <span class="tile-value" id="prof-nik">-</span>
+                        </div>
                     </div>
 
+                    <!-- Email -->
+                    <div class="bento-tile">
+                        <div class="tile-icon" style="background:var(--clean-light); color:var(--text-muted);">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
+                                </path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                        </div>
+                        <div class="tile-content">
+                            <span class="tile-label">Alamat Email</span>
+                            <span class="tile-value" id="prof-email">-</span>
+                        </div>
+                    </div>
+
+                    <!-- WhatsApp / HP -->
+                    <div class="bento-tile">
+                        <div class="tile-icon" style="background:var(--clean-light); color:var(--text-muted);">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div class="tile-content">
+                            <span class="tile-label">Nomor Telepon / WhatsApp</span>
+                            <span class="tile-value" id="prof-hp">-</span>
+                        </div>
+                    </div>
+
+                    <!-- Instansi / Penempatan -->
+                    <div class="bento-tile">
+                        <div class="tile-icon" style="background:var(--clean-light); color:var(--text-muted);">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 21h18"></path>
+                                <path d="M5 21V7l8-4v18"></path>
+                                <path d="M19 21V11l-6-4"></path>
+                                <path d="M9 9h1"></path>
+                                <path d="M9 13h1"></path>
+                                <path d="M9 17h1"></path>
+                            </svg>
+                        </div>
+                        <div class="tile-content">
+                            <span class="tile-label">Instansi Penempatan</span>
+                            <span class="tile-value" id="prof-perusahaan">BPS Kota Banjar</span>
+                        </div>
+                    </div>
+
+                    <!-- Periode Magang -->
+                    <div class="bento-tile">
+                        <div class="tile-icon" style="background:var(--sunshine-light); color:var(--sunshine-hover);">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                        </div>
+                        <div class="tile-content">
+                            <span class="tile-label">Periode Magang</span>
+                            <span class="tile-value" id="prof-periode">21 Sep 2026 - 20 Mar 2027</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BUTTON KELUAR DI TARUH DI BAWAH DATA PESERTA -->
+                <div style="margin-top:6px; margin-bottom:8px;">
+                    <button type="button" class="btn btn-danger" id="btn-trigger-logout">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        <span>Keluar dari Akun</span>
+                    </button>
                 </div>
 
             </div>
+
         </div>
+    </div>
 
-        <!-- BOTTOM NAVIGATION BAR (3 Menus: Dashboard, Riwayat, Profil) -->
-        <nav class="bottom-nav">
-            <a href="dashboard.html" class="bottom-nav-item" id="nav-dashboard">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                </svg>
-                <span>Dashboard</span>
-            </a>
-            <a href="riwayat.html" class="bottom-nav-item" id="nav-riwayat">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                </svg>
-                <span>Riwayat</span>
-            </a>
-            <a href="#" class="bottom-nav-item active" id="nav-profil" onclick="return false;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                </svg>
-                <span>Profil</span>
-            </a>
-        </nav>
+    <!-- BOTTOM NAVIGATION BAR (3 Menus: Dashboard, Riwayat, Profil) -->
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="bottom-nav-item" id="nav-dashboard">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span>Dashboard</span>
+        </a>
+        <a href="riwayat.html" class="bottom-nav-item" id="nav-riwayat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>Riwayat</span>
+        </a>
+        <a href="#" class="bottom-nav-item active" id="nav-profil" onclick="return false;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span>Profil</span>
+        </a>
+    </nav>
 
-        <!-- MODAL: KELUAR DI PROFIL -->
-        <div class="modal" id="modal-keluar">
-            <div class="modal-content" style="text-align:center; max-width:320px; padding:24px 20px;">
-                <img id="img-keluar" src="assets/keluar.jpg" alt="Keluar"
-                    style="width:140px; height:140px; object-fit:cover; margin:0 auto 14px; display:block; border-radius:18px; box-shadow:0 8px 24px rgba(252,74,26,0.2); border:2px solid var(--vermillion-border);">
-                <h3 style="font-size:18px; font-weight:800; color:var(--text-dark); margin-bottom:6px;">Konfirmasi Keluar</h3>
-                <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.45;">Apakah kamu yakin ingin keluar dari akun ini?</p>
-                <div style="display:flex; gap:10px;">
-                    <button class="btn btn-outline" id="btn-batal-keluar" style="flex:1;">Batal</button>
-                    <button class="btn btn-danger" id="btn-konfirm-keluar" style="flex:1;">Ya, Keluar</button>
-                </div>
+    <!-- MODAL: KELUAR DI PROFIL -->
+    <div class="modal" id="modal-keluar">
+        <div class="modal-content" style="text-align:center; max-width:320px; padding:24px 20px;">
+            <img id="img-keluar" src="assets/keluar.jpg" alt="Keluar"
+                style="width:140px; height:140px; object-fit:cover; margin:0 auto 14px; display:block; border-radius:18px; box-shadow:0 8px 24px rgba(252,74,26,0.2); border:2px solid var(--vermillion-border);">
+            <h3 style="font-size:18px; font-weight:800; color:var(--text-dark); margin-bottom:6px;">Konfirmasi
+                Keluar</h3>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.45;">Apakah kamu
+                yakin ingin keluar dari akun ini?</p>
+            <div style="display:flex; gap:10px;">
+                <button class="btn btn-outline" id="btn-batal-keluar" style="flex:1;">Batal</button>
+                <button class="btn btn-danger" id="btn-konfirm-keluar" style="flex:1;">Ya, Keluar</button>
             </div>
         </div>
+    </div>
     </div>
 
     <!-- Firebase SDK Modular (v10.8) -->
