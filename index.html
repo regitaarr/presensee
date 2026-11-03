@@ -328,6 +328,20 @@
             display: inline-block;
         }
 
+        /* Summary Cards */
+        .summary-card {
+            background: white;
+            border-radius: 12px;
+            padding: 12px 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 1px solid #eef;
+        }
+
+        .sum-icon { font-size: 20px; }
+        .sum-num { font-size: 22px; font-weight: 800; color: var(--primary); margin: 4px 0 2px; }
+        .sum-label { font-size: 10px; color: var(--text-muted); font-weight: 600; }
+
         /* Mobile Adjustments */
         @media (max-width: 480px) {
             body {
@@ -474,6 +488,25 @@
                     ⏳ Mengecek sistem...
                 </div>
 
+                <!-- Summary Cards -->
+                <div id="summary-cards" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
+                    <div class="summary-card" id="card-telat">
+                        <div class="sum-icon">⏰</div>
+                        <div class="sum-num" id="count-telat">-</div>
+                        <div class="sum-label">Telat</div>
+                    </div>
+                    <div class="summary-card" id="card-cepat">
+                        <div class="sum-icon">🏃</div>
+                        <div class="sum-num" id="count-cepat">-</div>
+                        <div class="sum-label">Pulang Cepat</div>
+                    </div>
+                    <div class="summary-card" id="card-izin">
+                        <div class="sum-icon">📋</div>
+                        <div class="sum-num" id="count-izin">-</div>
+                        <div class="sum-label">Izin/Sakit</div>
+                    </div>
+                </div>
+
                 <!-- Reminder Banner -->
                 <div style="display:flex; justify-content:center;">
                     <div
@@ -489,34 +522,10 @@
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
+                <!-- Action Buttons (dynamic, populated by renderDashboardState) -->
                 <div id="action-buttons" style="display:none;">
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-                        <!-- Hadir - Now opens live camera modal -->
-                        <button id="btn-hadir" style="
-                            background: linear-gradient(135deg, var(--bps-green), #48a448);
-                            border-radius: 16px; padding: 18px 12px; display:flex; flex-direction:column;
-                            align-items:center; gap:8px; cursor:pointer; box-shadow: 0 4px 15px rgba(92,184,92,0.3);
-                            transition: transform 0.2s; color: white; font-weight:700; font-size:13px; border:none;
-                            text-align:center; width:100%;">
-                            <span style="font-size:30px;">📸</span>
-                            HADIR
-                        </button>
-
-                        <!-- Tidak Hadir -->
-                        <button id="btn-tidak-hadir" style="
-                            background: linear-gradient(135deg, var(--bps-orange), #e06b0a);
-                            border-radius: 16px; padding: 18px 12px; display:flex; flex-direction:column;
-                            align-items:center; gap:8px; cursor:pointer; box-shadow: 0 4px 15px rgba(245,130,30,0.3);
-                            transition: transform 0.2s; color: white; font-weight:700; font-size:13px; border:none;
-                            text-align:center; width:100%;">
-                            <span style="font-size:30px;">❌</span>
-                            TIDAK HADIR
-                        </button>
-                    </div>
-                    <p style="font-size:11px; color:#999; text-align:center; margin-top:8px;">📍 Geofencing 50m aktif ·
-                        BPS Kota Banjar</p>
                 </div>
+
                 <!-- RIWAYAT KEHADIRAN BUTTON -->
                 <div style="margin-top:5px; display:flex; flex-direction:column; gap:10px; margin-bottom:20px;">
                     <a href="riwayat.html" class="btn btn-outline"
@@ -630,7 +639,7 @@
         </div>
     </div>
 
-    <!-- MODAL: TIDAK HADIR -->
+    <!-- MODAL: TIDAK HADIR (kept for backward compatibility) -->
     <div class="modal" id="modal-tidak-hadir">
         <div class="modal-content">
             <h3 style="margin-bottom:15px; text-align:center; font-size:18px;">Form Tidak Hadir</h3>
@@ -662,6 +671,53 @@
         </div>
     </div>
 
+    <!-- MODAL: PENGAJUAN IZIN/SAKIT -->
+    <div class="modal" id="modal-izin">
+        <div class="modal-content" style="max-height:85vh; overflow-y:auto;">
+            <div style="background:linear-gradient(135deg,var(--bps-orange),#e06b0a); padding:14px 18px; display:flex; align-items:center; justify-content:space-between; margin:-24px -24px 16px; border-radius:16px 16px 0 0;">
+                <span style="color:white; font-weight:700; font-size:15px;">📋 Pengajuan Izin/Sakit</span>
+                <button id="btn-tutup-izin" style="background:rgba(255,255,255,0.2); border:none; color:white; border-radius:50%; width:30px; height:30px; font-size:18px; cursor:pointer;">✕</button>
+            </div>
+
+            <div class="form-group">
+                <label>Jenis Pengajuan</label>
+                <select id="izin-type">
+                    <option value="sakit">🤒 Sakit</option>
+                    <option value="izin_darurat">🚨 Izin Darurat</option>
+                    <option value="keperluan">📌 Keperluan Pribadi</option>
+                </select>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div class="form-group" style="margin-bottom:0;">
+                    <label>Tanggal Mulai</label>
+                    <input type="date" id="izin-start">
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <label>Tanggal Selesai</label>
+                    <input type="date" id="izin-end">
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-top:12px;">
+                <label>Alasan / Keterangan (Wajib)</label>
+                <textarea id="izin-reason" rows="3" placeholder="Jelaskan alasan pengajuan izin/sakit kamu..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Foto Bukti (Opsional untuk Izin, Wajib untuk Sakit)</label>
+                <label for="izin-bukti-file" class="btn btn-outline" style="text-align:center; font-size:13px; padding:10px; margin-top:0; cursor:pointer;">📸 Pilih / Ambil Foto Bukti</label>
+                <input type="file" id="izin-bukti-file" accept="image/*" capture="environment">
+                <span id="izin-file-name" style="font-size:12px; color:var(--success); margin-top:5px; text-align:center; display:block; min-height:15px;">Belum ada file dipilih</span>
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <button class="btn btn-outline" id="btn-batal-izin" style="flex:1; margin-top:0;">Batal</button>
+                <button class="btn btn-primary" id="btn-kirim-izin" style="flex:1; margin-top:0; display:flex; align-items:center; justify-content:center; gap:6px; background:var(--bps-orange);">
+                    <span class="spinner" id="izin-spin"></span>Kirim Pengajuan
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- MODAL: LUPA PASSWORD -->
@@ -691,9 +747,10 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, limit, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
-        // Konfigurasi Firebase Kamu
+        // Konfigurasi Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDe394Hog3cODzHBWgC00jtQybKq_Ul4l4",
             authDomain: "presensee-d653b.firebaseapp.com",
@@ -711,6 +768,8 @@
 
         // State variables
         let currentUserData = null;
+        let currentCameraMode = 'check_in'; // 'check_in' | 'check_out'
+        let izinBuktiFile = null;
 
         // Hard-coded libur nasional
         const LIBUR_NASIONAL = {
@@ -752,7 +811,7 @@
             e.preventDefault();
             const emailVal = document.getElementById('log-email').value;
             const resetInput = document.getElementById('reset-email');
-            if (emailVal) resetInput.value = emailVal; // pre-fill email dari form login jika ada
+            if (emailVal) resetInput.value = emailVal;
             document.getElementById('reset-status').innerText = '';
             document.getElementById('modal-lupa-pass').classList.add('active');
         };
@@ -804,7 +863,40 @@
             }
         };
 
-        // Core Requirement Validations
+        // Clock + Date Update
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(/\./g, ':');
+            const dateEl = document.getElementById('header-date');
+            if (dateEl) dateEl.innerText = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // =========================================
+        // GEOLOCATION UTILS
+        // =========================================
+        const BPS_LAT = -7.3834252;
+        const BPS_LNG = 108.5399708;
+
+        function checkJarak(lat, lng) {
+            const R = 6371e3;
+            const p1 = BPS_LAT * Math.PI / 180, p2 = lat * Math.PI / 180;
+            const dp = (lat - BPS_LAT) * Math.PI / 180;
+            const dl = (lng - BPS_LNG) * Math.PI / 180;
+            const a = Math.sin(dp / 2) ** 2 + Math.cos(p1) * Math.cos(p2) * Math.sin(dl / 2) ** 2;
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        }
+
+        function setStatus(msg, isError = false) {
+            const el = document.getElementById('status-card');
+            el.className = isError ? "status-card error" : "status-card";
+            el.innerHTML = msg;
+        }
+
+        // =========================================
+        // VALIDATE SYSTEM STATUS (period + holiday)
+        // =========================================
         function validateSystemStatus() {
             const now = new Date();
             const statusCard = document.getElementById('status-card');
@@ -821,7 +913,7 @@
                 return false;
             }
 
-            // 2. Validasi Weekend (Sabtu = 6, Minggu = 0)
+            // 2. Validasi Weekend (Sabtu = 6, Minggu = 0) & Libur Nasional
             const day = now.getDay();
             const offset = now.getTimezoneOffset() * 60000;
             const todayStr = new Date(now - offset).toISOString().split('T')[0];
@@ -834,24 +926,298 @@
                 return false;
             }
 
-            // Sistem OK
-            statusCard.className = "status-card";
-            statusCard.innerHTML = "✅ <b>Sistem Aktif</b>";
-            actionBtns.style.display = 'block';
+            // Sistem OK — status card & action area will be populated by renderDashboardState
             return true;
         }
 
-        // Clock + Date Update
-        function updateClock() {
+        // =========================================
+        // RENDER DASHBOARD STATE (3 UI states)
+        // =========================================
+        function renderDashboardState(hasCheckIn, hasCheckOut, checkInTimeStr) {
             const now = new Date();
-            document.getElementById('clock').innerText = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(/\./g, ':');
-            const dateEl = document.getElementById('header-date');
-            if (dateEl) dateEl.innerText = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-        }
-        updateClock();
-        setInterval(updateClock, 1000);
+            const h = now.getHours(), m = now.getMinutes();
+            const totalMin = h * 60 + m;
+            const day = now.getDay();
+            const statusCard = document.getElementById('status-card');
+            const actionArea = document.getElementById('action-buttons');
 
-        // Auth Listeners
+            // Weekend check
+            if (day === 0 || day === 6) {
+                statusCard.className = "status-card error";
+                statusCard.innerText = "🛌 Hari libur akhir pekan, tidak ada presensi.";
+                actionArea.style.display = 'none';
+                return;
+            }
+
+            actionArea.style.display = 'block';
+
+            // State: All done
+            if (hasCheckOut) {
+                statusCard.className = "status-card";
+                statusCard.innerHTML = "✅ <b>Presensi Hari Ini Selesai</b>";
+                actionArea.innerHTML = `<div class="status-card" style="background:linear-gradient(135deg,#e6f9e6,#d4f5d4); border-color:#5cb85c; text-align:center; padding:20px;">
+                    <div style="font-size:30px;">🎉</div>
+                    <b style="color:var(--success);">Presensi Hari Ini Selesai!</b>
+                    <p style="font-size:13px; color:var(--text-muted); margin-top:4px;">Sampai jumpa besok 👋</p>
+                </div>`;
+                return;
+            }
+
+            // State 2: Has check_in
+            if (hasCheckIn) {
+                statusCard.className = "status-card";
+                statusCard.innerHTML = "✅ <b>Sudah Absen Masuk</b>" + (checkInTimeStr ? ` pukul ${checkInTimeStr}` : '');
+
+                let html = `<div class="status-card" style="background:linear-gradient(135deg,#e6f9e6,#d4f5d4); border-color:#5cb85c;">
+                    ✅ <b>Sudah Absen Masuk</b>${checkInTimeStr ? ' pukul ' + checkInTimeStr : ''}
+                </div>`;
+
+                if (totalMin >= 14 * 60) {
+                    // Show early leave reason textarea if 14:00–15:59
+                    if (totalMin < 16 * 60) {
+                        html += `<div class="form-group" id="early-reason-group" style="margin-top:12px;">
+                            <label style="color:var(--warning); font-weight:700;">⚠️ Keterangan Pulang Cepat (Wajib)</label>
+                            <textarea id="input-early-reason" rows="2" placeholder="Jelaskan alasan pulang sebelum jam 16:00..."></textarea>
+                        </div>`;
+                    }
+                    html += `<button id="btn-absen-pulang" class="btn btn-primary" style="background:linear-gradient(135deg,var(--bps-blue),#1482B8); margin-top:10px;">🏠 Absen Pulang</button>`;
+                } else {
+                    const minsLeft = (14 * 60) - totalMin;
+                    const hLeft = Math.floor(minsLeft / 60), mLeft = minsLeft % 60;
+                    html += `<button disabled class="btn" style="background:#ccc; cursor:not-allowed; margin-top:10px;">🏠 Absen Pulang (tersedia ${hLeft > 0 ? hLeft + 'j ' : ''}${mLeft}m lagi)</button>`;
+                }
+
+                html += `<button id="btn-izin-darurat" class="btn" style="background:linear-gradient(135deg,var(--bps-orange),#e06b0a); margin-top:10px;">🚨 Ajukan Izin Darurat (Pulang Mendadak)</button>`;
+                html += `<p style="font-size:11px; color:#999; text-align:center; margin-top:8px;">📍 Geofencing 50m aktif · BPS Kota Banjar</p>`;
+
+                actionArea.innerHTML = html;
+
+                // Re-attach events
+                const btnPulang = document.getElementById('btn-absen-pulang');
+                if (btnPulang) btnPulang.onclick = () => openKameraAbsen('check_out');
+                document.getElementById('btn-izin-darurat')?.addEventListener('click', () => openLeaveModal('izin_darurat'));
+                return;
+            }
+
+            // State 1: No check_in yet
+            statusCard.className = "status-card";
+            statusCard.innerHTML = "⏳ <b>Belum Absen Pagi</b>";
+
+            let html = '';
+
+            if (totalMin < 6 * 60) {
+                // Before 06:00
+                html = `<button disabled class="btn" style="background:#ccc; cursor:not-allowed;">📸 Absen Pagi (mulai pukul 06:00)</button>`;
+                html += `<button id="btn-ajukan-izin" class="btn btn-outline" style="margin-top:6px;">📋 Ajukan Izin/Sakit</button>`;
+            } else if (totalMin <= 7 * 60 + 30) {
+                // 06:00 – 07:30 normal
+                html = `<button id="btn-hadir-pagi" class="btn btn-success" style="font-size:16px; padding:18px;">📸 Absen Pagi</button>`;
+                html += `<button id="btn-ajukan-izin" class="btn btn-outline" style="margin-top:6px;">📋 Ajukan Izin/Sakit</button>`;
+            } else if (totalMin <= 8 * 60) {
+                // 07:31 – 08:00 late, need reason
+                html = `<div class="status-card" style="background:linear-gradient(135deg,#fff8e1,#fff3cd); border-color:var(--warning); margin-bottom:8px;">
+                    ⏰ <b style="color:var(--warning);">Kamu Terlambat!</b> Mohon isi keterangan.
+                </div>
+                <div class="form-group" id="late-reason-group">
+                    <label style="color:var(--warning); font-weight:700;">⚠️ Keterangan Telat (Wajib)</label>
+                    <textarea id="input-late-reason" rows="2" placeholder="Jelaskan alasan keterlambatan kamu..."></textarea>
+                </div>
+                <button id="btn-hadir-pagi" class="btn" style="background:linear-gradient(135deg,#f39c12,#e67e22); color:white;">📸 Absen Pagi (Telat)</button>`;
+                html += `<button id="btn-ajukan-izin" class="btn btn-outline" style="margin-top:6px;">📋 Ajukan Izin/Sakit</button>`;
+            } else {
+                // After 08:00
+                html = `<div class="status-card error">❌ <b>Waktu Absen Pagi Sudah Habis</b><br><small>Batas absen pagi: 08:00 WIB</small></div>`;
+                html += `<button id="btn-ajukan-izin" class="btn" style="background:linear-gradient(135deg,var(--bps-orange),#e06b0a); margin-top:6px;">📋 Ajukan Izin/Sakit</button>`;
+            }
+
+            html += `<p style="font-size:11px; color:#999; text-align:center; margin-top:8px;">📍 Geofencing 50m aktif · BPS Kota Banjar</p>`;
+
+            actionArea.innerHTML = html;
+
+            // Re-attach events
+            document.getElementById('btn-hadir-pagi')?.addEventListener('click', () => openKameraAbsen('check_in'));
+            document.getElementById('btn-ajukan-izin')?.addEventListener('click', () => openLeaveModal());
+        }
+
+        // =========================================
+        // CHECK TODAY ATTENDANCE
+        // =========================================
+        async function checkTodayAttendance(uid) {
+            const now = new Date();
+            const offset = now.getTimezoneOffset() * 60000;
+            const tgl = new Date(now - offset).toISOString().split('T')[0];
+
+            const q = query(collection(db, 'attendances'),
+                where('user_id', '==', uid),
+                where('tanggal', '==', tgl));
+            const snap = await getDocs(q);
+
+            let hasCheckIn = false, hasCheckOut = false, checkInTime = '';
+            snap.forEach(docSnap => {
+                const d = docSnap.data();
+                if (d.status === 'check_in') {
+                    hasCheckIn = true;
+                    // Try to get formatted time from check_in_time timestamp
+                    if (d.check_in_time && d.check_in_time.toDate) {
+                        const t = d.check_in_time.toDate();
+                        checkInTime = t.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace('.', ':');
+                    }
+                }
+                if (d.status === 'check_out') hasCheckOut = true;
+            });
+
+            renderDashboardState(hasCheckIn, hasCheckOut, checkInTime);
+        }
+
+        // =========================================
+        // LOAD MONTHLY STATS
+        // =========================================
+        async function loadMonthlyStats(uid) {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth();
+
+            const firstDay = new Date(year, month, 1).toISOString().split('T')[0];
+            const lastDay = new Date(year, month + 1, 0).toISOString().split('T')[0];
+
+            try {
+                // Count telat
+                const qTelat = query(collection(db, 'attendances'),
+                    where('user_id', '==', uid),
+                    where('is_late', '==', true));
+                const snapTelat = await getDocs(qTelat);
+                let telatCount = 0;
+                snapTelat.forEach(d => {
+                    if (d.data().tanggal >= firstDay && d.data().tanggal <= lastDay) telatCount++;
+                });
+
+                // Count early leave
+                const qCepat = query(collection(db, 'attendances'),
+                    where('user_id', '==', uid),
+                    where('is_early_leave', '==', true));
+                const snapCepat = await getDocs(qCepat);
+                let cepatCount = 0;
+                snapCepat.forEach(d => {
+                    if (d.data().tanggal >= firstDay && d.data().tanggal <= lastDay) cepatCount++;
+                });
+
+                // Count leaves
+                const qIzin = query(collection(db, 'leaves'), where('user_id', '==', uid));
+                const snapIzin = await getDocs(qIzin);
+                let izinCount = 0;
+                snapIzin.forEach(d => {
+                    if (d.data().start_date >= firstDay && d.data().start_date <= lastDay) izinCount++;
+                });
+
+                document.getElementById('count-telat').innerText = telatCount;
+                document.getElementById('count-cepat').innerText = cepatCount;
+                document.getElementById('count-izin').innerText = izinCount;
+            } catch (e) {
+                console.warn('Stats load error:', e);
+                document.getElementById('count-telat').innerText = '?';
+                document.getElementById('count-cepat').innerText = '?';
+                document.getElementById('count-izin').innerText = '?';
+            }
+        }
+
+        // =========================================
+        // SAVE ATTENDANCE (new simpanAttendance)
+        // =========================================
+        async function simpanAttendance(lat, lng, mode, fotoBase64) {
+            const now = new Date();
+            const offset = now.getTimezoneOffset() * 60000;
+            const tgl = new Date(now - offset).toISOString().split('T')[0];
+            const hour = now.getHours();
+            const minute = now.getMinutes();
+            const totalMin = hour * 60 + minute;
+
+            let is_late = false, late_reason = '', is_early_leave = false, early_leave_reason = '';
+
+            if (mode === 'check_in') {
+                is_late = totalMin > (7 * 60 + 30); // after 07:30
+                if (is_late) {
+                    late_reason = document.getElementById('input-late-reason')?.value?.trim() || '';
+                    if (!late_reason) {
+                        alert('Keterangan Telat wajib diisi!');
+                        return;
+                    }
+                }
+            }
+
+            if (mode === 'check_out') {
+                is_early_leave = totalMin < (16 * 60); // before 16:00
+                if (is_early_leave) {
+                    early_leave_reason = document.getElementById('input-early-reason')?.value?.trim() || '';
+                    if (!early_leave_reason) {
+                        alert('Keterangan Pulang Cepat wajib diisi!');
+                        return;
+                    }
+                }
+            }
+
+            try {
+                const docData = {
+                    user_id: currentUserData.uid,
+                    nik: currentUserData.nik,
+                    nama: currentUserData.nama || '',
+                    tanggal: tgl,
+                    status: mode,
+                    is_late,
+                    late_reason,
+                    is_early_leave,
+                    early_leave_reason,
+                    lat,
+                    lng,
+                    foto_url: fotoBase64,
+                    keterangan: ''
+                };
+
+                if (mode === 'check_in') {
+                    docData.check_in_time = serverTimestamp();
+                } else {
+                    docData.check_out_time = serverTimestamp();
+                }
+
+                await addDoc(collection(db, 'attendances'), docData);
+
+                // Update UI state after success
+                await checkTodayAttendance(currentUserData.uid);
+                showSuccessModal(mode, hour, minute);
+            } catch (e) {
+                showFailModal(e.message);
+            }
+        }
+
+        function showSuccessModal(mode, hour, minute) {
+            const timeStr = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+            const imgElem = document.getElementById('img-berhasil');
+            if (imgElem) imgElem.src = 'assets/berhasil.jpg';
+
+            if (mode === 'check_in') {
+                document.getElementById('teks-berhasil').innerText = `✅ Absen Masuk berhasil dicatat pukul ${timeStr}!`;
+            } else {
+                document.getElementById('teks-berhasil').innerText = `✅ Absen Pulang berhasil dicatat pukul ${timeStr}!`;
+            }
+
+            document.getElementById('modal-berhasil').classList.add('active');
+            document.getElementById('btn-tutup-berhasil').onclick = () => {
+                document.getElementById('modal-berhasil').classList.remove('active');
+            };
+        }
+
+        function showFailModal(msg) {
+            const imgFail = document.getElementById('img-gagal');
+            if (imgFail) imgFail.src = 'assets/gagal.jpg';
+            document.getElementById('teks-gagal').innerText = 'Gagal memproses: ' + msg;
+            document.getElementById('modal-gagal').classList.add('active');
+            document.getElementById('btn-tutup-gagal').onclick = () => {
+                document.getElementById('modal-gagal').classList.remove('active');
+            };
+        }
+
+        // =========================================
+        // AUTH STATE CHANGED
+        // =========================================
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 document.getElementById('btn-login').classList.remove('loading');
@@ -867,11 +1233,20 @@
                     const docSnap = await getDoc(doc(db, "users", user.uid));
                     if (docSnap.exists()) {
                         currentUserData = docSnap.data();
+                        currentUserData.uid = user.uid; // ensure uid is set
                         document.getElementById('user-info').innerText = `${currentUserData.nama} · ${currentUserData.posisi}`;
                         const avatarEl = document.getElementById('user-avatar');
                         if (avatarEl) avatarEl.innerText = currentUserData.nama.charAt(0).toUpperCase();
                         switchView(viewDashboard);
-                        validateSystemStatus();
+
+                        const isOk = validateSystemStatus();
+                        if (isOk) {
+                            await checkTodayAttendance(user.uid);
+                            loadMonthlyStats(user.uid);
+                        } else {
+                            // Still load stats even on non-working days
+                            loadMonthlyStats(user.uid);
+                        }
                     }
                 } catch (e) {
                     alert("Akun ditemukan, namun profil detail tidak bisa dimuat dari Database.");
@@ -883,7 +1258,9 @@
             }
         });
 
-        // Register Logic
+        // =========================================
+        // REGISTER LOGIC
+        // =========================================
         document.getElementById('btn-register').onclick = async () => {
             const btn = document.getElementById('btn-register');
             const nik = document.getElementById('reg-nik').value;
@@ -905,11 +1282,10 @@
 
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-                const user = userCredential.user;
+                const newUser = userCredential.user;
 
-                // Simpan profil detail ke db users
-                await setDoc(doc(db, "users", user.uid), {
-                    uid: user.uid, nik, nama, no_hp: hp, email, perusahaan: perus, posisi, created_at: serverTimestamp()
+                await setDoc(doc(db, "users", newUser.uid), {
+                    uid: newUser.uid, nik, nama, no_hp: hp, email, perusahaan: perus, posisi, created_at: serverTimestamp()
                 });
                 await signOut(auth);
                 alert("Pendaftaran Sukses! Silakan masuk dengan akun kamu.");
@@ -921,7 +1297,9 @@
             }
         };
 
-        // Login Logic
+        // =========================================
+        // LOGIN LOGIC
+        // =========================================
         document.getElementById('btn-login').onclick = async () => {
             const btn = document.getElementById('btn-login');
             const email = document.getElementById('log-email').value;
@@ -931,13 +1309,15 @@
             btn.classList.add('loading');
             try {
                 await signInWithEmailAndPassword(auth, email, pass);
-            }
-            catch (error) {
+            } catch (error) {
                 btn.classList.remove('loading');
                 alert("Akses Ditolak: Email atau Kata Sandi salah.");
             }
         };
 
+        // =========================================
+        // LOGOUT
+        // =========================================
         document.getElementById('btn-logout').onclick = () => {
             document.getElementById('modal-keluar').classList.add('active');
         };
@@ -949,150 +1329,9 @@
             signOut(auth);
         };
 
-        // Remove loadRecap function and calls
-
-        // Logic WFO Geolocation - BPS Banjar
-        const BPS_LAT = -7.3834252;
-        const BPS_LNG = 108.5399708;
-
-        function checkJarak(lat, lng) {
-            const R = 6371e3;
-            const p1 = BPS_LAT * Math.PI / 180, p2 = lat * Math.PI / 180;
-            const dp = (lat - BPS_LAT) * Math.PI / 180;
-            const dl = (lng - BPS_LNG) * Math.PI / 180;
-            const a = Math.sin(dp / 2) ** 2 + Math.cos(p1) * Math.cos(p2) * Math.sin(dl / 2) ** 2;
-            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); // Hasil dalam Meter
-        }
-
-        function setStatus(msg, isError = false) {
-            const el = document.getElementById('status-card');
-            el.className = isError ? "status-card error" : "status-card";
-            el.innerHTML = msg;
-        }
-
-        async function simpanPresensi(lat, lng, status, keterangan = '', fotoUrl = '') {
-            setStatus("⏳ Sedang memproses data absen...");
-            document.getElementById('btn-hadir').disabled = true;
-            document.getElementById('btn-tidak-hadir').disabled = true;
-
-            try {
-                // Tanggal lokal standar & Waktu Absen
-                const nowLocal = new Date();
-                const offset = nowLocal.getTimezoneOffset() * 60000;
-                const localDateObj = new Date(nowLocal - offset);
-                const tgl = localDateObj.toISOString().split('T')[0];
-
-                const currentHour = nowLocal.getHours();
-                const currentMinute = nowLocal.getMinutes();
-                const totalMinutes = currentHour * 60 + currentMinute;
-
-                // VALIDASI WAKTU PRESENSI (HADIR)
-                if (status === 'Hadir') {
-                    const startDatang = 6 * 60;        // 06:00
-                    const endDatang = 7 * 60 + 30;     // 07:30
-                    const startPulang = 15 * 60 + 30;  // 15:30
-
-                    if (totalMinutes >= startDatang && totalMinutes <= endDatang) {
-                        status = 'Hadir (Datang)';
-                    } else if (totalMinutes >= startPulang) {
-                        status = 'Hadir (Pulang)';
-                    } else {
-                        const imgFail = document.getElementById('img-gagal');
-                        if (imgFail) imgFail.src = 'assets/stop.jpg';
-                        document.getElementById('teks-gagal').innerText = "Stop, belum saatnya!\nDatang: 06:00-07:30\nPulang: Mulai 15:30";
-                        document.getElementById('modal-gagal').classList.add('active');
-                        document.getElementById('btn-tutup-gagal').onclick = () => {
-                            document.getElementById('modal-gagal').classList.remove('active');
-                        };
-                        validateSystemStatus();
-                        return;
-                    }
-                }
-
-                // CEK PRESENSI GANDA (Dipisahkan berdasarkan status Datang/Pulang)
-                const qLimit = query(
-                    collection(db, "presensi"),
-                    where("uid", "==", currentUserData.uid),
-                    where("tanggal", "==", tgl)
-                );
-                const qSnapshot = await getDocs(qLimit);
-
-                let isDuplicate = false;
-                qSnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    // Cegah double submit untuk status yang sama
-                    if (data.status === status) isDuplicate = true;
-                    // Jika izin/sakit, tidak boleh absen lagi hari ini
-                    if (data.status === "Izin" || data.status === "Sakit") isDuplicate = true;
-                });
-
-                if (isDuplicate) {
-                    const imgFail = document.getElementById('img-gagal');
-                    if (imgFail) imgFail.src = 'assets/gagal.jpg';
-                    document.getElementById('teks-gagal').innerText = "Gagal presensi, data ini sudah tercatat sebelumnya!";
-                    document.getElementById('modal-gagal').classList.add('active');
-
-                    document.getElementById('btn-tutup-gagal').onclick = () => {
-                        document.getElementById('modal-gagal').classList.remove('active');
-                    };
-                    validateSystemStatus();
-                    return; // Batalkan proses kirim
-                }
-
-                await addDoc(collection(db, "presensi"), {
-                    uid: currentUserData.uid,
-                    nik: currentUserData.nik,
-                    tanggal: tgl,
-                    waktu: serverTimestamp(), // Secure UTC Server timestamp
-                    status: status,
-                    keterangan: keterangan,
-                    lat: lat,
-                    lng: lng,
-                    foto_url: fotoUrl // Disimpan dalam format Base64 secara native di Firestore
-                });
-
-                // Tampilkan Pop-up Berhasil
-                const imgElem = document.getElementById('img-berhasil');
-                if (status === 'Sakit') {
-                    document.getElementById('teks-berhasil').innerText = "Presensi kamu (Sakit) Berhasil Tersimpan!\nSemoga lekas sembuh 😊";
-                    if (imgElem) imgElem.src = "assets/berhasil.jpg";
-                } else if (status === 'Izin') {
-                    document.getElementById('teks-berhasil').innerText = "Presensi kamu (Izin) Berhasil Tersimpan!";
-                    if (imgElem) imgElem.src = "assets/terima.jpg";
-                } else {
-                    const timeString = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`;
-                    document.getElementById('teks-berhasil').innerText = `Presensi kamu (${status}) Berhasil Tersimpan pada pukul ${timeString}!`;
-                    if (imgElem) imgElem.src = "assets/berhasil.jpg";
-                }
-
-                document.getElementById('modal-berhasil').classList.add('active');
-
-                document.getElementById('btn-tutup-berhasil').onclick = () => {
-                    document.getElementById('modal-berhasil').classList.remove('active');
-                };
-
-                validateSystemStatus();
-
-            } catch (error) {
-                console.error(error);
-                const imgFail = document.getElementById('img-gagal');
-                if (imgFail) imgFail.src = 'gagal.jpg';
-                document.getElementById('teks-gagal').innerText = "Gagal memproses: " + error.message;
-                document.getElementById('modal-gagal').classList.add('active');
-
-                document.getElementById('btn-tutup-gagal').onclick = () => {
-                    document.getElementById('modal-gagal').classList.remove('active');
-                };
-                validateSystemStatus();
-            } finally {
-                document.getElementById('btn-hadir').disabled = false;
-                document.getElementById('btn-tidak-hadir').disabled = false;
-            }
-        }
-
-        // ==========================================
-        // LIVE CAMERA + GPS HADIR FLOW
-        // ==========================================
+        // =========================================
+        // GEOLOCATION & CAMERA LOGIC
+        // =========================================
         const modalKamera = document.getElementById('modal-kamera');
         const camVideo = document.getElementById('cam-video');
         const camCanvas = document.getElementById('cam-canvas');
@@ -1112,10 +1351,15 @@
             gpsPosition = null;
         }
 
+        function openKameraAbsen(mode) {
+            currentCameraMode = mode;
+            openKameraHadir();
+        }
+
         async function openKameraHadir() {
             if (!validateSystemStatus()) return;
             gpsPosition = null;
-            document.getElementById('cam-gps-status').innerText = '� Mengambil GPS...';
+            document.getElementById('cam-gps-status').innerText = '📡 Mengambil GPS...';
             modalKamera.classList.add('active');
 
             // Start camera
@@ -1146,8 +1390,6 @@
             }
         }
 
-        document.getElementById('btn-hadir').onclick = () => openKameraHadir();
-
         document.getElementById('btn-tutup-kamera').onclick = () => {
             stopCamera();
             modalKamera.classList.remove('active');
@@ -1156,12 +1398,12 @@
         document.getElementById('btn-capture-hadir').onclick = async () => {
             if (!gpsPosition) {
                 document.getElementById('modal-tunggu').classList.add('active');
-
                 document.getElementById('btn-tutup-tunggu').onclick = () => {
                     document.getElementById('modal-tunggu').classList.remove('active');
                 };
                 return;
             }
+
             const lat = gpsPosition.coords.latitude;
             const lng = gpsPosition.coords.longitude;
             const jarak = checkJarak(lat, lng);
@@ -1171,14 +1413,13 @@
                 if (imgFail) imgFail.src = 'assets/gagal.jpg';
                 document.getElementById('teks-gagal').innerText = "Gagal presensi, lokasimu terlalu jauh!";
                 document.getElementById('modal-gagal').classList.add('active');
-
                 document.getElementById('btn-tutup-gagal').onclick = () => {
                     document.getElementById('modal-gagal').classList.remove('active');
                 };
                 return;
             }
 
-            // Capture frame from video to canvas dengan Limit ukuran maksimal 600px 
+            // Capture frame from video to canvas, max 600px width
             const MAX_WIDTH = 600;
             let width = camVideo.videoWidth;
             let height = camVideo.videoHeight;
@@ -1192,25 +1433,24 @@
             camCanvas.height = height;
             camCanvas.getContext('2d').drawImage(camVideo, 0, 0, width, height);
 
-            // Konversi canvas ke Base64 (Kualitas 60% untuk menghemat ukuran Firestore DB limit 1MB)
+            // Konversi canvas ke Base64 (60% quality)
             const fotoBase64 = camCanvas.toDataURL('image/jpeg', 0.6);
 
             stopCamera();
             modalKamera.classList.remove('active');
-            await simpanPresensi(lat, lng, 'Hadir', '', fotoBase64);
+            await simpanAttendance(lat, lng, currentCameraMode, fotoBase64);
         };
 
-        // Tidak Hadir Flow
+        // =========================================
+        // TIDAK HADIR FLOW (backward compatible)
+        // =========================================
         const modalTh = document.getElementById('modal-tidak-hadir');
         let fileBukti = null;
 
-        document.getElementById('btn-tidak-hadir').onclick = () => {
-            if (!validateSystemStatus()) return;
-            modalTh.classList.add('active');
-        };
         document.getElementById('btn-batal-modal').onclick = () => {
             modalTh.classList.remove('active');
-            fileBukti = null; document.getElementById('file-name').innerText = 'Belum ada file dipilih';
+            fileBukti = null;
+            document.getElementById('file-name').innerText = 'Belum ada file dipilih';
             document.getElementById('kamera-bukti').value = '';
             document.getElementById('form-keterangan').value = '';
         };
@@ -1249,26 +1489,156 @@
                     canvas.height = height;
                     const ctx = canvas.getContext("2d");
                     ctx.drawImage(img, 0, 0, width, height);
-
-                    // Compress to JPEG 60% agar ukuran file jauh di bawah 1MB
                     const fotoBase64 = canvas.toDataURL("image/jpeg", 0.6);
 
                     navigator.geolocation.getCurrentPosition((pos) => {
                         const lat = pos.coords.latitude;
                         const lng = pos.coords.longitude;
-                        // Tetap kirim record lokasi jika diizinkan (Tidak di limit jarak utk Izin/Sakit)
-                        simpanPresensi(lat, lng, st, ket, fotoBase64);
-                    }, (e) => {
-                        // JIka gagal ambil GPS, tetap kirim koordinat 0 khusus untuk flow ini
-                        simpanPresensi(0, 0, st, ket, fotoBase64);
+                        simpanPresensiLama(lat, lng, st, ket, fotoBase64);
+                    }, () => {
+                        simpanPresensiLama(0, 0, st, ket, fotoBase64);
                     });
                 };
                 img.src = evt.target.result;
             };
-
-            // Baca file sbg base64
             reader.readAsDataURL(fileBukti);
+        };
+
+        // Old simpanPresensi for backward-compat tidak-hadir modal (uses old `presensi` collection)
+        async function simpanPresensiLama(lat, lng, status, keterangan = '', fotoUrl = '') {
+            setStatus("⏳ Sedang memproses data absen...");
+            try {
+                const nowLocal = new Date();
+                const offset = nowLocal.getTimezoneOffset() * 60000;
+                const tgl = new Date(nowLocal - offset).toISOString().split('T')[0];
+
+                await addDoc(collection(db, "presensi"), {
+                    uid: currentUserData.uid,
+                    nik: currentUserData.nik,
+                    tanggal: tgl,
+                    waktu: serverTimestamp(),
+                    status: status,
+                    keterangan: keterangan,
+                    lat: lat,
+                    lng: lng,
+                    foto_url: fotoUrl
+                });
+
+                const imgElem = document.getElementById('img-berhasil');
+                document.getElementById('teks-berhasil').innerText = `Laporan Tidak Hadir (${status}) berhasil dikirim!`;
+                if (imgElem) imgElem.src = "assets/terima.jpg";
+                document.getElementById('modal-berhasil').classList.add('active');
+                document.getElementById('btn-tutup-berhasil').onclick = () => {
+                    document.getElementById('modal-berhasil').classList.remove('active');
+                };
+                setStatus("✅ <b>Laporan Tidak Hadir Terkirim</b>");
+            } catch (error) {
+                console.error(error);
+                setStatus("❌ Gagal mengirim laporan: " + error.message, true);
+            }
         }
+
+        // =========================================
+        // LEAVE (IZIN/SAKIT) MODAL LOGIC
+        // =========================================
+        function openLeaveModal(preselectedType = null) {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('izin-start').value = today;
+            document.getElementById('izin-end').value = today;
+            if (preselectedType) document.getElementById('izin-type').value = preselectedType;
+            document.getElementById('modal-izin').classList.add('active');
+        }
+
+        function resetLeaveForm() {
+            document.getElementById('izin-type').value = 'sakit';
+            document.getElementById('izin-start').value = '';
+            document.getElementById('izin-end').value = '';
+            document.getElementById('izin-reason').value = '';
+            document.getElementById('izin-file-name').innerText = 'Belum ada file dipilih';
+            document.getElementById('izin-bukti-file').value = '';
+            izinBuktiFile = null;
+        }
+
+        document.getElementById('btn-tutup-izin').onclick = () => {
+            document.getElementById('modal-izin').classList.remove('active');
+        };
+
+        document.getElementById('btn-batal-izin').onclick = () => {
+            document.getElementById('modal-izin').classList.remove('active');
+            resetLeaveForm();
+        };
+
+        document.getElementById('izin-bukti-file').addEventListener('change', (e) => {
+            if (e.target.files[0]) {
+                izinBuktiFile = e.target.files[0];
+                document.getElementById('izin-file-name').innerText = "✅ " + izinBuktiFile.name;
+            }
+        });
+
+        document.getElementById('btn-kirim-izin').onclick = async () => {
+            await submitLeave();
+        };
+
+        async function submitLeave() {
+            const type = document.getElementById('izin-type').value;
+            const startDate = document.getElementById('izin-start').value;
+            const endDate = document.getElementById('izin-end').value;
+            const reason = document.getElementById('izin-reason').value.trim();
+
+            if (!startDate || !endDate) return alert('Tanggal mulai dan selesai wajib diisi!');
+            if (!reason) return alert('Alasan/Keterangan wajib diisi!');
+            if (type === 'sakit' && !izinBuktiFile) return alert('Foto bukti wajib dilampirkan untuk izin sakit!');
+
+            const btn = document.getElementById('btn-kirim-izin');
+            btn.classList.add('loading');
+            btn.disabled = true;
+
+            try {
+                let proof_url = '';
+
+                if (izinBuktiFile) {
+                    const storage = getStorage();
+                    const timestamp = Date.now();
+                    const storageRef = ref(storage, `leaves/${currentUserData.uid}/${timestamp}_${izinBuktiFile.name}`);
+                    await uploadBytes(storageRef, izinBuktiFile);
+                    proof_url = await getDownloadURL(storageRef);
+                }
+
+                await addDoc(collection(db, 'leaves'), {
+                    user_id: currentUserData.uid,
+                    nik: currentUserData.nik || '',
+                    nama: currentUserData.nama || '',
+                    leave_type: type,
+                    start_date: startDate,
+                    end_date: endDate,
+                    reason,
+                    proof_url,
+                    status: 'pending',
+                    created_at: serverTimestamp()
+                });
+
+                document.getElementById('modal-izin').classList.remove('active');
+                resetLeaveForm();
+
+                document.getElementById('teks-berhasil').innerText = 'Pengajuan izin/sakit berhasil dikirim! Menunggu persetujuan admin.';
+                document.getElementById('img-berhasil').src = 'assets/terima.jpg';
+                document.getElementById('modal-berhasil').classList.add('active');
+                document.getElementById('btn-tutup-berhasil').onclick = () => {
+                    document.getElementById('modal-berhasil').classList.remove('active');
+                };
+
+                // Reload stats
+                await loadMonthlyStats(currentUserData.uid);
+
+            } catch (e) {
+                console.error(e);
+                alert('Gagal mengirim pengajuan: ' + e.message);
+            } finally {
+                btn.classList.remove('loading');
+                btn.disabled = false;
+            }
+        }
+
     </script>
 </body>
 
