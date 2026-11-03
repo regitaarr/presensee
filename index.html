@@ -812,6 +812,22 @@
                 <div id="action-buttons" style="display:block;">
                 </div>
 
+                <!-- Reminder Banner -->
+                <div style="display:flex; justify-content:center; margin: 4px 0 6px;">
+                    <div
+                        style="width:180px; height:180px; border-radius:18px; overflow:hidden; box-shadow:0 6px 18px rgba(30, 27, 36, 0.1); position:relative; flex-shrink:0; border:2px solid var(--border-color); background:#ffffff;">
+                        <img id="banner-img" src="assets/reminder.jpg" alt="Reminder Presensi"
+                            style="width:100%; height:100%; object-fit:cover; display:block;">
+                        <div
+                            style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent 0%, rgba(0, 0, 0, 0.72) 100%); padding:18px 8px 8px;">
+                            <p id="banner-text"
+                                style="color:white; font-size:11.5px; font-weight:700; margin:0; text-align:center; text-shadow:0 1px 3px rgba(0,0,0,0.6);">
+                                🔔 Jangan lupa presensi ya guys!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Navigation Actions (Bento Style) -->
                 <div style="margin-top:6px; display:flex; flex-direction:column; gap:10px; margin-bottom:12px;">
                     <a href="riwayat.html" class="btn btn-outline-primary" style="font-weight:700;">
@@ -891,7 +907,7 @@
                 <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
             </div>
             <h3 style="font-size:18px; font-weight:700; color:var(--slate-900); margin-bottom:6px;">Menunggu Lokasi GPS</h3>
-            <p id="teks-tunggu" style="font-size:13px; color:var(--slate-500); margin-bottom:20px; line-height:1.45;">Mohon tunggu sebentar hingga sinyal GPS Anda terdeteksi akurat.</p>
+            <p id="teks-tunggu" style="font-size:13px; color:var(--slate-500); margin-bottom:20px; line-height:1.45;">Mohon tunggu sebentar hingga sinyal GPS kamu terdeteksi akurat.</p>
             <button class="btn btn-outline" id="btn-tutup-tunggu">Tutup</button>
         </div>
     </div>
@@ -900,7 +916,7 @@
     <div class="modal" id="modal-keluar">
         <div class="modal-content" style="text-align:center; max-width:300px; padding:28px 24px;">
             <h3 style="font-size:18px; font-weight:700; color:var(--slate-900); margin-bottom:6px;">Konfirmasi Keluar</h3>
-            <p style="font-size:13px; color:var(--slate-500); margin-bottom:22px; line-height:1.45;">Apakah Anda yakin ingin keluar dari akun ini?</p>
+            <p style="font-size:13px; color:var(--slate-500); margin-bottom:22px; line-height:1.45;">Apakah kamu yakin ingin keluar dari akun ini?</p>
             <div style="display:flex; gap:10px;">
                 <button class="btn btn-outline" id="btn-batal-keluar" style="flex:1;">Batal</button>
                 <button class="btn btn-danger" id="btn-konfirm-keluar" style="flex:1;">Ya, Keluar</button>
@@ -1338,7 +1354,7 @@
                 html = `
                 <div class="form-group" id="late-reason-group">
                     <label style="color:#b45309; font-weight:700;">Alasan Keterlambatan (Wajib Diisi):</label>
-                    <textarea id="input-late-reason" rows="2" placeholder="Tuliskan alasan keterlambatan Anda di sini..."></textarea>
+                    <textarea id="input-late-reason" rows="2" placeholder="Tuliskan alasan keterlambatan kamu di sini..."></textarea>
                 </div>
                 <button id="btn-hadir-pagi" class="btn btn-warning" style="font-size:15px; padding:16px;">
                     Absen Masuk (Terlambat)
@@ -1349,7 +1365,7 @@
                 statusCard.className = "status-card error";
                 statusCard.innerHTML = '<span class="status-dot dot-danger"></span> Waktu Absen Masuk Telah Berakhir';
                 html = `<div style="text-align:center; padding:10px; color:var(--text-muted); font-size:13px;">
-                    Anda belum melakukan absen masuk hari ini. Silakan ajukan izin/sakit jika berhalangan.
+                    Kamu belum melakukan absen masuk hari ini. Silakan ajukan izin/sakit jika berhalangan.
                 </div>
                 <button id="btn-ajukan-izin" class="btn btn-primary" style="margin-top:6px;">Ajukan Izin / Sakit</button>`;
             }
@@ -1674,7 +1690,7 @@
                 if (totalMin > 7 * 60 + 30) {
                     const reason = document.getElementById('input-late-reason')?.value?.trim();
                     if (!reason) {
-                        alert('⚠️ Anda terlambat (lewat dari pukul 07:30).\nHarap isi kolom "Keterangan Telat" terlebih dahulu sebelum membuka kamera!');
+                        alert('🔔 Kamu terlambat (lewat dari pukul 07:30).\nHarap isi kolom "Keterangan Telat" terlebih dahulu sebelum membuka kamera!');
                         document.getElementById('input-late-reason')?.focus();
                         return;
                     }
@@ -1686,7 +1702,7 @@
                 if (totalMin < 16 * 60) {
                     const reason = document.getElementById('input-early-reason')?.value?.trim();
                     if (!reason) {
-                        alert('⚠️ Anda pulang lebih awal (sebelum pukul 16:00).\nHarap isi kolom "Keterangan Pulang Cepat" terlebih dahulu sebelum membuka kamera!');
+                        alert('🔔 Kamu pulang lebih awal (sebelum pukul 16:00).\nHarap isi kolom "Keterangan Pulang Cepat" terlebih dahulu sebelum membuka kamera!');
                         document.getElementById('input-early-reason')?.focus();
                         return;
                     }
