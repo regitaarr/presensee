@@ -1331,7 +1331,7 @@
             const greeting = getGreetingText();
             if (currentUserData && currentUserData.nama) {
                 const firstName = currentUserData.nama.trim().split(/\s+/)[0];
-                infoEl.innerText = `${greeting}, ${firstName}`;
+                infoEl.innerText = `${greeting}, ${firstName}!`;
             } else {
                 infoEl.innerText = greeting;
             }
@@ -1466,7 +1466,7 @@
                 statusCard.innerHTML = '<span class="status-dot dot-success"></span> Presensi Hari Ini Selesai';
                 actionArea.innerHTML = `<div style="background:var(--fresh-light); border:1.5px solid var(--fresh-border); border-radius:var(--radius-lg); text-align:center; padding:18px 16px;">
                     <div style="font-size:16px; font-weight:800; color:var(--fresh-dark); margin-bottom:4px;">Presensi Hari Ini Selesai</div>
-                    <p style="font-size:13px; color:var(--text-muted); margin:0;">Terima kasih atas dedikasi dan kinerjamu hari ini.</p>
+                    <p style="font-size:13px; color:var(--text-muted); margin:0;">Terima kasih atas dedikasi dan kinerjamu hari ini. Hati-hati di jalan, selamat beristirahat!</p>
                 </div>`;
                 return;
             }
