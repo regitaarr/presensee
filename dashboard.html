@@ -433,6 +433,41 @@
             box-shadow: none !important;
         }
 
+        
+        /* HIJAU HEADER (Sama seperti card waktu / header diatas) */
+        .btn-absen-green,
+        .btn-header-green {
+            background: linear-gradient(135deg, #1b5b52 0%, #4ABDAC 100%) !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.25) !important;
+            box-shadow:
+                0 8px 20px -4px rgba(74, 189, 172, 0.45),
+                0 4px 0 #164a42,
+                inset 0 1px 1px rgba(255, 255, 255, 0.4) !important;
+        }
+
+        .btn-absen-green:hover,
+        .btn-header-green:hover {
+            background: linear-gradient(135deg, #164a42 0%, #3ca092 100%) !important;
+            transform: translateY(-2px);
+        }
+
+        /* ORANGE (Untuk tombol ajukan izin/sakit) */
+        .btn-orange {
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%) !important;
+            color: #ffffff !important;
+            border: none !important;
+            box-shadow:
+                0 8px 20px -4px rgba(245, 124, 0, 0.45),
+                0 4px 0 #b35900,
+                inset 0 1px 1px rgba(255, 255, 255, 0.45) !important;
+        }
+
+        .btn-orange:hover {
+            background: linear-gradient(135deg, #f57c00 0%, #e65100 100%) !important;
+            transform: translateY(-2px);
+        }
+
         /* FRESH Button (3D Depth) */
         .btn-primary,
         .btn-fresh,
@@ -1087,7 +1122,7 @@
             <p id="teks-stop" style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.45;">
                 Kamu belum absen hari ini! Batas waktu presensi harian telah berakhir pada pukul 18:00 WIB.</p>
             <div style="display:flex; flex-direction:column; gap:8px;">
-                <button class="btn btn-warning" id="btn-stop-izin" style="font-size:14px; padding:12px;">Ajukan Izin /
+                <button class="btn btn-orange" id="btn-stop-izin" style="font-size:14px; padding:12px;">Ajukan Izin /
                     Sakit</button>
                 <button class="btn btn-outline" id="btn-tutup-stop" style="font-size:14px; padding:12px;">Tutup</button>
             </div>
@@ -1393,12 +1428,12 @@
                             <label style="color:#b45309; font-weight:700;">Alasan Pulang Cepat (Wajib Diisi):</label>
                             <textarea id="input-early-reason" rows="2" placeholder="Tulis alasan pulang sebelum pukul 16:00..."></textarea>
                         </div>
-                        <button id="btn-absen-pulang" class="btn btn-warning" style="font-size:15px; padding:16px;">
+                        <button id="btn-absen-pulang" class="btn btn-absen-green" style="font-size:15px; padding:16px;">
                             Absen Pulang (Pulang Cepat)
                         </button>`;
                     } else {
                         // >= 16:00 (Normal pulang)
-                        html += `<button id="btn-absen-pulang" class="btn btn-danger" style="font-size:15px; padding:16px;">
+                        html += `<button id="btn-absen-pulang" class="btn btn-absen-green" style="font-size:15px; padding:16px;">
                             Absen Pulang Sekarang
                         </button>`;
                     }
@@ -1410,7 +1445,7 @@
                     </button>`;
                 }
 
-                html += `<button id="btn-izin-darurat" class="btn btn-outline-warning" style="margin-top:8px;">
+                html += `<button id="btn-izin-darurat" class="btn btn-orange" style="margin-top:8px;">
                     Ajukan Izin Darurat (Pulang Mendadak)
                 </button>`;
                 html += `<p class="geofence-note">Geofencing 50m aktif &bull; BPS Kota Banjar</p>`;
@@ -1436,13 +1471,13 @@
                 statusCard.className = "status-card";
                 statusCard.innerHTML = '<span class="status-dot dot-muted"></span> Belum Jam Absen (Mulai 06:00 WIB)';
                 html = `<button id="btn-masuk-locked" class="btn btn-outline" style="background:var(--clean-light); color:var(--text-muted); border-color:var(--border-color); cursor:pointer;">Absen Masuk (Mulai 06:00)</button>`;
-                html += `<button id="btn-ajukan-izin" class="btn btn-outline" style="margin-top:8px;">Ajukan Izin / Sakit</button>`;
+                html += `<button id="btn-ajukan-izin" class="btn btn-orange" style="margin-top:8px;">Ajukan Izin / Sakit</button>`;
             } else if (totalMin <= 7 * 60 + 30) {
                 // 06:00 – 07:30 (Absen Normal)
                 statusCard.className = "status-card";
                 statusCard.innerHTML = '<span class="status-dot dot-success"></span> Waktu Presensi Normal (06:00 - 07:30)';
-                html = `<button id="btn-hadir-pagi" class="btn btn-primary" style="font-size:15px; padding:16px;">Absen Masuk Sekarang</button>`;
-                html += `<button id="btn-ajukan-izin" class="btn btn-outline" style="margin-top:8px;">Ajukan Izin / Sakit</button>`;
+                html = `<button id="btn-hadir-pagi" class="btn btn-absen-green" style="font-size:15px; padding:16px;">Absen Masuk Sekarang</button>`;
+                html += `<button id="btn-ajukan-izin" class="btn btn-orange" style="margin-top:8px;">Ajukan Izin / Sakit</button>`;
             } else if (totalMin < 14 * 60) {
                 // 07:31 – 13:59 (Absen Telat - WAJIB Keterangan)
                 const isVeryLate = totalMin > 8 * 60;
@@ -1456,10 +1491,10 @@
                     <label style="color:#b45309; font-weight:700;">Alasan Keterlambatan (Wajib Diisi):</label>
                     <textarea id="input-late-reason" rows="2" placeholder="Tuliskan alasan keterlambatan kamu di sini..."></textarea>
                 </div>
-                <button id="btn-hadir-pagi" class="btn btn-warning" style="font-size:15px; padding:16px;">
+                <button id="btn-hadir-pagi" class="btn btn-absen-green" style="font-size:15px; padding:16px;">
                     Absen Masuk (Terlambat)
                 </button>
-                <button id="btn-ajukan-izin" class="btn btn-outline" style="margin-top:8px;">Ajukan Izin / Sakit</button>`;
+                <button id="btn-ajukan-izin" class="btn btn-orange" style="margin-top:8px;">Ajukan Izin / Sakit</button>`;
             } else if (totalMin >= 18 * 60) {
                 // Lewat jam 18:00 dan belum pernah absen masuk
                 statusCard.className = "status-card error";
@@ -1470,7 +1505,7 @@
                 <button id="btn-lihat-stop" class="btn btn-danger" style="font-size:15px; padding:15px;">
                     Peringatan: Kamu Belum Absen Hari Ini!
                 </button>
-                <button id="btn-ajukan-izin" class="btn btn-outline" style="margin-top:8px;">Ajukan Izin / Sakit</button>`;
+                <button id="btn-ajukan-izin" class="btn btn-orange" style="margin-top:8px;">Ajukan Izin / Sakit</button>`;
             } else {
                 // 14:00 - 17:59 dan belum pernah absen pagi
                 statusCard.className = "status-card error";
@@ -1478,7 +1513,7 @@
                 html = `<div style="text-align:center; padding:10px; color:var(--text-muted); font-size:13px;">
                     Kamu belum melakukan absen masuk hari ini. Silakan ajukan izin/sakit jika berhalangan.
                 </div>
-                <button id="btn-ajukan-izin" class="btn btn-primary" style="margin-top:6px;">Ajukan Izin / Sakit</button>`;
+                <button id="btn-ajukan-izin" class="btn btn-orange" style="margin-top:6px;">Ajukan Izin / Sakit</button>`;
             }
 
             html += `<p class="geofence-note">Geofencing 50m aktif &bull; BPS Kota Banjar</p>`;
