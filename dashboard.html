@@ -927,10 +927,14 @@
             }
         }
 
-        #cam-video,
+        #cam-video {
+            transform: scaleX(-1) !important;
+            -webkit-transform: scaleX(-1) !important;
+        }
+
         #cam-preview {
-            transform: scaleX(1) !important;
-            -webkit-transform: scaleX(1) !important;
+            transform: none !important;
+            -webkit-transform: none !important;
         }
     </style>
 </head>
@@ -1066,15 +1070,22 @@
             <div
                 style="background:linear-gradient(135deg,var(--fresh),var(--fresh-dark)); padding:14px 18px; display:flex; align-items:center; justify-content:space-between;">
                 <span style="color:white; font-weight:700; font-size:15px;">Kamera Presensi</span>
-                <button id="btn-tutup-kamera"
-                    style="background:rgba(255,255,255,0.2); border:none; color:white; border-radius:50%; width:30px; height:30px; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center;">✕</button>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <button type="button" id="btn-toggle-flip" title="Balik Orientasi Kamera"
+                        style="background:rgba(255,255,255,0.22); border:none; color:white; border-radius:8px; padding:5px 10px; font-size:11.5px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:5px;">
+                        <span id="label-flip">🔄 Flip: Aktif</span>
+                    </button>
+                    <button id="btn-tutup-kamera"
+                        style="background:rgba(255,255,255,0.2); border:none; color:white; border-radius:50%; width:30px; height:30px; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center;">✕</button>
+                </div>
             </div>
             <!-- Live Video / Snapshot Preview -->
-            <div style="position:relative; background:#000; min-height:220px; display:flex; align-items:center; justify-content:center;">
+            <div
+                style="position:relative; background:#000; min-height:220px; display:flex; align-items:center; justify-content:center;">
                 <video id="cam-video" autoplay playsinline muted
-                    style="width:100%; display:block; max-height:280px; object-fit:cover; transform:scaleX(1) !important; -webkit-transform:scaleX(1) !important;"></video>
+                    style="width:100%; display:block; max-height:280px; object-fit:cover; transform:scaleX(-1) !important; -webkit-transform:scaleX(-1) !important;"></video>
                 <img id="cam-preview" alt="Snapshot Foto Presensi"
-                    style="width:100%; display:none; max-height:280px; object-fit:cover; transform:scaleX(1) !important; -webkit-transform:scaleX(1) !important;">
+                    style="width:100%; display:none; max-height:280px; object-fit:cover; transform:none !important; -webkit-transform:none !important;">
                 <canvas id="cam-canvas" style="display:none;"></canvas>
                 <!-- GPS Overlay -->
                 <div id="cam-gps-status"
@@ -1091,9 +1102,10 @@
                         </path>
                         <circle cx="12" cy="13" r="4"></circle>
                     </svg>
-                    <span>Ambil Foto (Snapshot)</span>
+                    <span>Ambil Foto</span>
                 </button>
-                <p style="font-size:11px; color:#999; text-align:center; margin:0;">Posisikan wajahmu dengan jelas &bull; GPS aktif otomatis</p>
+                <p style="font-size:11px; color:#999; text-align:center; margin:0;">Posisikan wajahmu dengan jelas
+                    &bull; GPS aktif otomatis</p>
             </div>
             <!-- Action 2: Konfirmasi / Kirim Presensi & Foto Ulang setelah Snapshot -->
             <div id="cam-action-preview" style="padding:16px; display:none; flex-direction:column; gap:10px;">
@@ -1879,6 +1891,23 @@
         let gpsPosition = null;
         let gpsWatcher = null;
         let currentSnapshotBase64 = null;
+        let isCameraFlipped = true; // Default: FLIP AKTIF (Tidak Mirror)
+
+        function updateCameraFlip() {
+            if (camVideo) {
+                camVideo.style.setProperty('transform', isCameraFlipped ? 'scaleX(-1)' : 'scaleX(1)', 'important');
+                camVideo.style.setProperty('-webkit-transform', isCameraFlipped ? 'scaleX(-1)' : 'scaleX(1)', 'important');
+            }
+            const label = document.getElementById('label-flip');
+            if (label) {
+                label.innerText = isCameraFlipped ? '🔄 Flip: Aktif' : '🔄 Flip: Nonaktif';
+            }
+        }
+
+        document.getElementById('btn-toggle-flip')?.addEventListener('click', () => {
+            isCameraFlipped = !isCameraFlipped;
+            updateCameraFlip();
+        });
 
         function stopCamera() {
             if (camStream) {
@@ -2004,8 +2033,12 @@
             camCanvas.width = width;
             camCanvas.height = height;
             const ctx = camCanvas.getContext('2d');
-            
-            // Tangkap frame video ke canvas tanpa mirror, persis sama dengan apa yang terlihat di video
+
+            // Flip horizontal pada canvas agar hasil foto sama persis dengan yang dilihat di video layar (tidak mirror)
+            if (isCameraFlipped) {
+                ctx.translate(width, 0);
+                ctx.scale(-1, 1);
+            }
             ctx.drawImage(camVideo, 0, 0, width, height);
 
             currentSnapshotBase64 = camCanvas.toDataURL('image/jpeg', 0.65);
