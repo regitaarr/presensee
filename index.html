@@ -876,47 +876,53 @@
 
     <!-- MODAL: BERHASIL (SUCCESS POP-UP) -->
     <div class="modal" id="modal-berhasil">
-        <div class="modal-content" style="text-align:center; max-width:300px; padding:28px 24px;">
-            <img id="img-berhasil" src="assets/berhasil.jpg" alt="Berhasil" style="display:none;">
-            <div class="modal-icon-badge badge-success">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-            </div>
-            <h3 style="font-size:18px; font-weight:700; color:var(--slate-900); margin-bottom:6px;">Berhasil Disimpan</h3>
-            <p id="teks-berhasil" style="font-size:13px; color:var(--slate-500); margin-bottom:20px; line-height:1.45;">Presensi berhasil tercatat dalam sistem.</p>
+        <div class="modal-content" style="text-align:center; max-width:320px; padding:24px 20px;">
+            <img id="img-berhasil" src="assets/berhasil.jpg" alt="Berhasil" style="width:140px; height:140px; object-fit:cover; margin:0 auto 14px; display:block; border-radius:18px; box-shadow:0 8px 24px rgba(74,189,172,0.25); border:2px solid var(--fresh-border);">
+            <h3 id="judul-berhasil" style="font-size:18px; font-weight:800; color:var(--text-dark); margin-bottom:6px;">Berhasil Disimpan</h3>
+            <p id="teks-berhasil" style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.45;">Presensi berhasil tercatat dalam sistem.</p>
             <button class="btn btn-primary" id="btn-tutup-berhasil">Tutup</button>
         </div>
     </div>
 
     <!-- MODAL: GAGAL (FAILURE POP-UP) -->
     <div class="modal" id="modal-gagal">
-        <div class="modal-content" style="text-align:center; max-width:300px; padding:28px 24px;">
-            <img id="img-gagal" src="assets/gagal.jpg" alt="Gagal" style="display:none;">
-            <div class="modal-icon-badge badge-danger">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-            </div>
-            <h3 style="font-size:18px; font-weight:700; color:var(--slate-900); margin-bottom:6px;">Tidak Dapat Diproses</h3>
-            <p id="teks-gagal" style="font-size:13px; color:var(--slate-500); margin-bottom:20px; line-height:1.45;">Terjadi kesalahan saat memproses presensi.</p>
+        <div class="modal-content" style="text-align:center; max-width:320px; padding:24px 20px;">
+            <img id="img-gagal" src="assets/gagal.jpg" alt="Gagal" style="width:140px; height:140px; object-fit:cover; margin:0 auto 14px; display:block; border-radius:18px; box-shadow:0 8px 24px rgba(252,74,26,0.25); border:2px solid var(--vermillion-border);">
+            <h3 id="judul-gagal" style="font-size:18px; font-weight:800; color:var(--text-dark); margin-bottom:6px;">Tidak Dapat Diproses</h3>
+            <p id="teks-gagal" style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.45;">Terjadi kesalahan saat memproses presensi.</p>
             <button class="btn btn-danger" id="btn-tutup-gagal">Mengerti</button>
         </div>
     </div>
 
     <!-- MODAL: TUNGGU (WAIT POP-UP) -->
     <div class="modal" id="modal-tunggu">
-        <div class="modal-content" style="text-align:center; max-width:300px; padding:28px 24px;">
-            <div class="modal-icon-badge badge-warning">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        <div class="modal-content" style="text-align:center; max-width:320px; padding:24px 20px;">
+            <img id="img-tunggu" src="assets/tunggu.jpg" alt="Tunggu" style="width:140px; height:140px; object-fit:cover; margin:0 auto 14px; display:block; border-radius:18px; box-shadow:0 8px 24px rgba(247,183,51,0.25); border:2px solid var(--sunshine-border);">
+            <h3 id="judul-tunggu" style="font-size:18px; font-weight:800; color:var(--text-dark); margin-bottom:6px;">Belum Waktunya Presensi</h3>
+            <p id="teks-tunggu" style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.45;">Waktu presensi belum dibuka. Silakan tunggu hingga jadwal presensi tiba.</p>
+            <button class="btn btn-warning" id="btn-tutup-tunggu">Mengerti</button>
+        </div>
+    </div>
+
+    <!-- MODAL: STOP (LEWAT JAM 18:00) -->
+    <div class="modal" id="modal-stop">
+        <div class="modal-content" style="text-align:center; max-width:320px; padding:24px 20px;">
+            <img id="img-stop" src="assets/stop.jpg" alt="Stop Presensi" style="width:140px; height:140px; object-fit:cover; margin:0 auto 14px; display:block; border-radius:18px; box-shadow:0 8px 24px rgba(252,74,26,0.25); border:2px solid var(--vermillion-border);">
+            <h3 style="font-size:18px; font-weight:800; color:var(--vermillion); margin-bottom:6px;">Waktu Presensi Berakhir</h3>
+            <p id="teks-stop" style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.45;">Kamu belum absen hari ini! Batas waktu presensi harian telah berakhir pada pukul 18:00 WIB.</p>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+                <button class="btn btn-warning" id="btn-stop-izin" style="font-size:14px; padding:12px;">Ajukan Izin / Sakit</button>
+                <button class="btn btn-outline" id="btn-tutup-stop" style="font-size:14px; padding:12px;">Tutup</button>
             </div>
-            <h3 style="font-size:18px; font-weight:700; color:var(--slate-900); margin-bottom:6px;">Menunggu Lokasi GPS</h3>
-            <p id="teks-tunggu" style="font-size:13px; color:var(--slate-500); margin-bottom:20px; line-height:1.45;">Mohon tunggu sebentar hingga sinyal GPS kamu terdeteksi akurat.</p>
-            <button class="btn btn-outline" id="btn-tutup-tunggu">Tutup</button>
         </div>
     </div>
 
     <!-- MODAL: KELUAR (LOGOUT POP-UP) -->
     <div class="modal" id="modal-keluar">
-        <div class="modal-content" style="text-align:center; max-width:300px; padding:28px 24px;">
-            <h3 style="font-size:18px; font-weight:700; color:var(--slate-900); margin-bottom:6px;">Konfirmasi Keluar</h3>
-            <p style="font-size:13px; color:var(--slate-500); margin-bottom:22px; line-height:1.45;">Apakah kamu yakin ingin keluar dari akun ini?</p>
+        <div class="modal-content" style="text-align:center; max-width:320px; padding:24px 20px;">
+            <img id="img-keluar" src="assets/keluar.jpg" alt="Keluar" style="width:140px; height:140px; object-fit:cover; margin:0 auto 14px; display:block; border-radius:18px; box-shadow:0 8px 24px rgba(252,74,26,0.2); border:2px solid var(--vermillion-border);">
+            <h3 style="font-size:18px; font-weight:800; color:var(--text-dark); margin-bottom:6px;">Konfirmasi Keluar</h3>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.45;">Apakah kamu yakin ingin keluar dari akun ini?</p>
             <div style="display:flex; gap:10px;">
                 <button class="btn btn-outline" id="btn-batal-keluar" style="flex:1;">Batal</button>
                 <button class="btn btn-danger" id="btn-konfirm-keluar" style="flex:1;">Ya, Keluar</button>
@@ -1310,7 +1316,7 @@
                 } else {
                     const minsLeft = (14 * 60) - totalMin;
                     const hLeft = Math.floor(minsLeft / 60), mLeft = minsLeft % 60;
-                    html += `<button disabled class="btn btn-outline" style="background:var(--clean-light); color:var(--text-light); cursor:not-allowed; border-color:var(--border-color);">
+                    html += `<button id="btn-pulang-locked" class="btn btn-outline" style="background:var(--clean-light); color:var(--text-muted); border-color:var(--border-color); cursor:pointer;">
                         Absen Pulang (Tersedia ${hLeft > 0 ? hLeft + 'j ' : ''}${mLeft}m lagi)
                     </button>`;
                 }
@@ -1324,6 +1330,11 @@
 
                 const btnPulang = document.getElementById('btn-absen-pulang');
                 if (btnPulang) btnPulang.onclick = () => openKameraAbsen('check_out');
+
+                document.getElementById('btn-pulang-locked')?.addEventListener('click', () => {
+                    showTungguModal('Belum Waktunya Pulang', 'Waktu absen pulang belum dibuka. Presensi pulang dimulai pukul 14:00 WIB.');
+                });
+
                 document.getElementById('btn-izin-darurat')?.addEventListener('click', () => openLeaveModal('izin_darurat'));
                 return;
             }
@@ -1335,7 +1346,7 @@
                 // Sebelum 06:00
                 statusCard.className = "status-card";
                 statusCard.innerHTML = '<span class="status-dot dot-muted"></span> Belum Jam Absen (Mulai 06:00 WIB)';
-                html = `<button disabled class="btn btn-outline" style="background:var(--clean-light); color:var(--text-light); cursor:not-allowed; border-color:var(--border-color);">Absen Masuk (Mulai 06:00)</button>`;
+                html = `<button id="btn-masuk-locked" class="btn btn-outline" style="background:var(--clean-light); color:var(--text-muted); border-color:var(--border-color); cursor:pointer;">Absen Masuk (Mulai 06:00)</button>`;
                 html += `<button id="btn-ajukan-izin" class="btn btn-outline" style="margin-top:8px;">Ajukan Izin / Sakit</button>`;
             } else if (totalMin <= 7 * 60 + 30) {
                 // 06:00 – 07:30 (Absen Normal)
@@ -1360,8 +1371,19 @@
                     Absen Masuk (Terlambat)
                 </button>
                 <button id="btn-ajukan-izin" class="btn btn-outline" style="margin-top:8px;">Ajukan Izin / Sakit</button>`;
+            } else if (totalMin >= 18 * 60) {
+                // Lewat jam 18:00 dan belum pernah absen masuk
+                statusCard.className = "status-card error";
+                statusCard.innerHTML = '<span class="status-dot dot-danger"></span> Waktu Presensi Berakhir (Lewat 18:00 WIB)';
+                html = `<div style="text-align:center; padding:10px; color:var(--vermillion); font-size:13px; font-weight:800;">
+                    Kamu belum absen hari ini! Batas presensi harian adalah pukul 18:00 WIB.
+                </div>
+                <button id="btn-lihat-stop" class="btn btn-danger" style="font-size:15px; padding:15px;">
+                    Peringatan: Kamu Belum Absen Hari Ini!
+                </button>
+                <button id="btn-ajukan-izin" class="btn btn-outline" style="margin-top:8px;">Ajukan Izin / Sakit</button>`;
             } else {
-                // 14:00 ke atas dan belum pernah absen pagi
+                // 14:00 - 17:59 dan belum pernah absen pagi
                 statusCard.className = "status-card error";
                 statusCard.innerHTML = '<span class="status-dot dot-danger"></span> Waktu Absen Masuk Telah Berakhir';
                 html = `<div style="text-align:center; padding:10px; color:var(--text-muted); font-size:13px;">
@@ -1375,7 +1397,17 @@
             actionArea.innerHTML = html;
 
             document.getElementById('btn-hadir-pagi')?.addEventListener('click', () => openKameraAbsen('check_in'));
+            document.getElementById('btn-masuk-locked')?.addEventListener('click', () => {
+                showTungguModal('Belum Jam Absen', 'Presensi masuk baru dibuka pukul 06:00 WIB. Silakan tunggu sebentar ya!');
+            });
+            document.getElementById('btn-lihat-stop')?.addEventListener('click', showStopModal);
             document.getElementById('btn-ajukan-izin')?.addEventListener('click', () => openLeaveModal());
+
+            // Auto-trigger modal stop jika lewat jam 18:00 dan belum absen hari ini
+            if (totalMin >= 18 * 60 && !hasCheckIn && !hasShownStopNotice) {
+                hasShownStopNotice = true;
+                showStopModal();
+            }
         }
 
         // =========================================
@@ -1496,15 +1528,19 @@
             }
         }
 
+        let hasShownStopNotice = false;
+
         function showSuccessModal(mode, hour, minute) {
             const timeStr = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
             const imgElem = document.getElementById('img-berhasil');
             if (imgElem) imgElem.src = 'assets/berhasil.jpg';
+            const titleElem = document.getElementById('judul-berhasil');
+            if (titleElem) titleElem.innerText = 'Berhasil Disimpan';
 
             if (mode === 'check_in') {
-                document.getElementById('teks-berhasil').innerText = `✅ Absen Masuk berhasil dicatat pukul ${timeStr}!`;
+                document.getElementById('teks-berhasil').innerText = `Absen Masuk berhasil dicatat pukul ${timeStr} WIB!`;
             } else {
-                document.getElementById('teks-berhasil').innerText = `✅ Absen Pulang berhasil dicatat pukul ${timeStr}!`;
+                document.getElementById('teks-berhasil').innerText = `Absen Pulang berhasil dicatat pukul ${timeStr} WIB!`;
             }
 
             document.getElementById('modal-berhasil').classList.add('active');
@@ -1520,6 +1556,32 @@
             document.getElementById('modal-gagal').classList.add('active');
             document.getElementById('btn-tutup-gagal').onclick = () => {
                 document.getElementById('modal-gagal').classList.remove('active');
+            };
+        }
+
+        function showTungguModal(title, msg) {
+            const imgTunggu = document.getElementById('img-tunggu');
+            if (imgTunggu) imgTunggu.src = 'assets/tunggu.jpg';
+            const titleElem = document.getElementById('judul-tunggu');
+            if (titleElem) titleElem.innerText = title || 'Belum Waktunya Presensi';
+            const textElem = document.getElementById('teks-tunggu');
+            if (textElem) textElem.innerText = msg || 'Waktu presensi belum dibuka. Silakan tunggu hingga jadwal presensi tiba.';
+            document.getElementById('modal-tunggu').classList.add('active');
+            document.getElementById('btn-tutup-tunggu').onclick = () => {
+                document.getElementById('modal-tunggu').classList.remove('active');
+            };
+        }
+
+        function showStopModal() {
+            const imgStop = document.getElementById('img-stop');
+            if (imgStop) imgStop.src = 'assets/stop.jpg';
+            document.getElementById('modal-stop').classList.add('active');
+            document.getElementById('btn-tutup-stop').onclick = () => {
+                document.getElementById('modal-stop').classList.remove('active');
+            };
+            document.getElementById('btn-stop-izin').onclick = () => {
+                document.getElementById('modal-stop').classList.remove('active');
+                openLeaveModal();
             };
         }
 
@@ -1753,10 +1815,7 @@
 
         document.getElementById('btn-capture-hadir').onclick = async () => {
             if (!gpsPosition) {
-                document.getElementById('modal-tunggu').classList.add('active');
-                document.getElementById('btn-tutup-tunggu').onclick = () => {
-                    document.getElementById('modal-tunggu').classList.remove('active');
-                };
+                showTungguModal('Menunggu Lokasi GPS', 'Mohon tunggu sebentar hingga sinyal GPS kamu terdeteksi akurat.');
                 return;
             }
 
@@ -1765,13 +1824,7 @@
             const jarak = checkJarak(lat, lng);
 
             if (jarak > 50) {
-                const imgFail = document.getElementById('img-gagal');
-                if (imgFail) imgFail.src = 'assets/gagal.jpg';
-                document.getElementById('teks-gagal').innerText = "Gagal presensi, lokasimu terlalu jauh!";
-                document.getElementById('modal-gagal').classList.add('active');
-                document.getElementById('btn-tutup-gagal').onclick = () => {
-                    document.getElementById('modal-gagal').classList.remove('active');
-                };
+                showFailModal('Lokasimu terlalu jauh dari area BPS Kota Banjar (Maksimal radius 50 meter)!');
                 return;
             }
 
@@ -2000,8 +2053,11 @@
                 document.getElementById('modal-izin').classList.remove('active');
                 resetLeaveForm();
 
-                document.getElementById('teks-berhasil').innerText = 'Pengajuan izin/sakit berhasil dikirim! Menunggu persetujuan admin.';
-                document.getElementById('img-berhasil').src = 'assets/terima.jpg';
+                const imgElem = document.getElementById('img-berhasil');
+                if (imgElem) imgElem.src = 'assets/terima.jpg';
+                const titleElem = document.getElementById('judul-berhasil');
+                if (titleElem) titleElem.innerText = 'Pengajuan Diterima';
+                document.getElementById('teks-berhasil').innerText = 'Pengajuan izin/sakit kamu berhasil dikirim! Menunggu persetujuan admin.';
                 document.getElementById('modal-berhasil').classList.add('active');
                 document.getElementById('btn-tutup-berhasil').onclick = () => {
                     document.getElementById('modal-berhasil').classList.remove('active');
