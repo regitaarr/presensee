@@ -1615,31 +1615,73 @@
                 const offset = now.getTimezoneOffset() * 60000;
                 const tgl = new Date(now - offset).toISOString().split('T')[0];
 
-                try {
-                    const userNik = (currentUserData && currentUserData.nik && currentUserData.nik !== '-') ? currentUserData.nik : null;
-                    const q = userNik
-                        ? query(collection(db, 'attendances'), where('nik', '==', userNik), where('tanggal', '==', tgl))
-                        : query(collection(db, 'attendances'), where('tanggal', '==', tgl));
-                    const snap = await getDocs(q);
+                const currentUid = uid || (currentUserData && currentUserData.uid) || (auth.currentUser ? auth.currentUser.uid : null);
+                const userNik = (currentUserData && currentUserData.nik && currentUserData.nik !== '-') ? String(currentUserData.nik).trim() : null;
+                const userName = (currentUserData && currentUserData.nama && currentUserData.nama !== '-') ? String(currentUserData.nama).trim().toLowerCase() : null;
 
-                    snap.forEach(docSnap => {
-                        const d = docSnap.data();
-                        const matchUser = !userNik || d.nik === userNik || (currentUserData && currentUserData.nama && d.nama === currentUserData.nama);
-                        if (!matchUser) return;
-                        if (d.status === 'check_in') {
-                            hasCheckIn = true;
-                            if (d.check_in_time && d.check_in_time.toDate) {
-                                const t = d.check_in_time.toDate();
-                                checkInTime = t.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace('.', ':');
-                            }
+                if (!currentUid && !userNik && !userName) {
+                    renderDashboardState(false, false, '');
+                    return;
+                }
+
+                try {
+                    let snap = null;
+                    if (currentUid) {
+                        try {
+                            const qUid = query(collection(db, 'attendances'), where('uid', '==', currentUid), where('tanggal', '==', tgl));
+                            const snapUid = await getDocs(qUid);
+                            if (!snapUid.empty) snap = snapUid;
+                        } catch (_) {}
+
+                        if (!snap) {
+                            try {
+                                const qUserId = query(collection(db, 'attendances'), where('user_id', '==', currentUid), where('tanggal', '==', tgl));
+                                const snapUserId = await getDocs(qUserId);
+                                if (!snapUserId.empty) snap = snapUserId;
+                            } catch (_) {}
                         }
-                        if (d.status === 'check_out') hasCheckOut = true;
-                    });
+                    }
+                    if (!snap && userNik) {
+                        try {
+                            const qNik = query(collection(db, 'attendances'), where('nik', '==', userNik), where('tanggal', '==', tgl));
+                            const snapNik = await getDocs(qNik);
+                            if (!snapNik.empty) snap = snapNik;
+                        } catch (_) {}
+                    }
+
+                    if (snap) {
+                        snap.forEach(docSnap => {
+                            const d = docSnap.data();
+                            let matchUser = false;
+                            if (currentUid && ((d.uid && d.uid === currentUid) || (d.user_id && d.user_id === currentUid))) {
+                                matchUser = true;
+                            } else if (!d.uid && !d.user_id) {
+                                if (userNik && d.nik && String(d.nik).trim() === userNik) {
+                                    matchUser = true;
+                                } else if (userName && d.nama && String(d.nama).trim().toLowerCase() === userName) {
+                                    matchUser = true;
+                                }
+                            }
+                            if (!matchUser) return;
+                            if (d.status === 'check_in') {
+                                hasCheckIn = true;
+                                if (d.check_in_time && d.check_in_time.toDate) {
+                                    const t = d.check_in_time.toDate();
+                                    checkInTime = t.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace('.', ':');
+                                }
+                            }
+                            if (d.status === 'check_out') hasCheckOut = true;
+                        });
+                    }
                 } catch (eAtt) {
-                    console.warn('Gagal membaca koleksi attendances, coba presensi:', eAtt.message);
+                    console.warn('Gagal membaca koleksi attendances:', eAtt.message);
+                }
+
+                // Fallback cek koleksi presensi (legacy) hanya jika belum terdeteksi dan ada currentUid
+                if (!hasCheckIn && currentUid) {
                     try {
                         const qOld = query(collection(db, 'presensi'),
-                            where('uid', '==', uid),
+                            where('uid', '==', currentUid),
                             where('tanggal', '==', tgl));
                         const snapOld = await getDocs(qOld);
                         snapOld.forEach(docSnap => {
@@ -1648,7 +1690,7 @@
                             if (d.status && d.status.includes('Pulang')) hasCheckOut = true;
                         });
                     } catch (eOld) {
-                        console.warn('Fallback presensi juga gagal:', eOld.message);
+                        console.warn('Fallback presensi legacy juga gagal:', eOld.message);
                     }
                 }
             } catch (err) {
@@ -1713,8 +1755,13 @@
 
                 const docData = {
                     id_attendance: id_attendance,
-                    nik: currentUserData.nik,
+                    uid: currentUserData.uid || (auth.currentUser ? auth.currentUser.uid : ''),
+                    user_id: currentUserData.uid || (auth.currentUser ? auth.currentUser.uid : ''),
+                    nik: currentUserData.nik || '',
                     nama: currentUserData.nama || '',
+                    posisi: currentUserData.posisi || '',
+                    perusahaan: currentUserData.perusahaan || '',
+                    email: currentUserData.email || '',
                     tanggal: tgl,
                     status: mode,
                     is_late,
@@ -1845,26 +1892,61 @@
 
                 let userData = null;
                 try {
-                    const docSnap = await getDoc(doc(db, "users", user.uid));
-                    if (docSnap.exists()) {
+                    let docSnap = await getDoc(doc(db, "users", user.uid));
+                    if (!docSnap.exists() && user.email) {
+                        try {
+                            docSnap = await getDoc(doc(db, "users", user.email.toLowerCase()));
+                        } catch (_) {}
+                        if (!docSnap || !docSnap.exists()) {
+                            try {
+                                const qEmail = query(collection(db, "users"), where("email", "==", user.email.toLowerCase()));
+                                const qSnap = await getDocs(qEmail);
+                                if (!qSnap.empty) docSnap = qSnap.docs[0];
+                            } catch (_) {}
+                        }
+                    }
+                    if (docSnap && docSnap.exists()) {
                         userData = docSnap.data();
+                        // Jika doc ID berbeda dengan UID, sinkronkan ke doc(db, "users", user.uid)
+                        if (docSnap.id !== user.uid) {
+                            try {
+                                await setDoc(doc(db, "users", user.uid), { ...userData, uid: user.uid }, { merge: true });
+                            } catch (_) {}
+                        }
                     }
                 } catch (eDoc) {
                     console.warn('Gagal membaca users doc:', eDoc);
                 }
 
+                // Cek cache localStorage jika doc Firestore belum lengkap/terbaca
+                if (!userData || !userData.posisi) {
+                    try {
+                        const cachedStr = localStorage.getItem('cached_user_profile_' + user.uid) || localStorage.getItem('cached_user_profile');
+                        if (cachedStr) {
+                            const cached = JSON.parse(cachedStr);
+                            if (cached && (cached.uid === user.uid || cached.email === user.email)) {
+                                userData = { ...(userData || {}), ...cached };
+                                setDoc(doc(db, "users", user.uid), { ...userData, uid: user.uid }, { merge: true }).catch(() => {});
+                            }
+                        }
+                    } catch (_) {}
+                }
+
                 if (!userData) {
                     userData = {
-                        nama: user.displayName || user.email.split('@')[0],
-                        posisi: 'Asisten Pranata Komputer',
+                        nama: user.displayName || (user.email ? user.email.split('@')[0] : 'Peserta'),
+                        posisi: 'Peserta Magang',
                         perusahaan: 'BPS Kota Banjar',
-                        email: user.email,
+                        email: user.email || '',
                         nik: '-'
                     };
                 }
 
                 currentUserData = userData;
                 currentUserData.uid = user.uid;
+                try {
+                    localStorage.setItem('cached_user_profile_' + user.uid, JSON.stringify(currentUserData));
+                } catch (_) {}
 
                 updateUserGreeting();
                 const avatarEl = document.getElementById('user-avatar');
@@ -2334,8 +2416,13 @@
 
                 await setDoc(leaveRef, {
                     id_leave: id_leave,
+                    uid: currentUserData.uid || (auth.currentUser ? auth.currentUser.uid : ''),
+                    user_id: currentUserData.uid || (auth.currentUser ? auth.currentUser.uid : ''),
                     nik: currentUserData.nik || '',
                     nama: currentUserData.nama || '',
+                    posisi: currentUserData.posisi || '',
+                    perusahaan: currentUserData.perusahaan || '',
+                    email: currentUserData.email || '',
                     leave_type: type,
                     start_date: startDate,
                     end_date: endDate,

@@ -998,7 +998,7 @@
     <!-- Firebase SDK Modular (v10.8) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // Konfigurasi Firebase
@@ -1083,6 +1083,8 @@
             }
         };
 
+        let isRegistering = false;
+
         // REGISTER LOGIC
         document.getElementById('btn-register').onclick = async () => {
             const btn = document.getElementById('btn-register');
@@ -1102,19 +1104,55 @@
             if (pass.length < 6) return alert("Peringatan: Kata sandi minimal 6 karakter.");
 
             btn.classList.add('loading');
+            isRegistering = true;
 
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
                 const newUser = userCredential.user;
 
-                await setDoc(doc(db, "users", newUser.uid), {
-                    uid: newUser.uid, nik, nama, no_hp: hp, email, perusahaan: perus, posisi, created_at: serverTimestamp()
-                });
-                await signOut(auth);
-                alert("Pendaftaran Sukses! Silakan masuk dengan akun kamu.");
-                btn.classList.remove('loading');
-                switchView(viewLogin);
+                try {
+                    await updateProfile(newUser, { displayName: nama });
+                } catch (_) {}
+
+                // Simpan profil user lengkap ke collection users dengan Document ID = UID
+                const userProfileData = {
+                    uid: newUser.uid,
+                    nik,
+                    nama,
+                    no_hp: hp,
+                    email,
+                    perusahaan: perus,
+                    posisi,
+                    created_at: serverTimestamp()
+                };
+
+                // Cache lokal profil user agar segera terbaca saat navigasi ke dashboard
+                try {
+                    const cacheData = {
+                        uid: newUser.uid,
+                        nik,
+                        nama,
+                        no_hp: hp,
+                        email,
+                        perusahaan: perus,
+                        posisi
+                    };
+                    localStorage.setItem('cached_user_profile_' + newUser.uid, JSON.stringify(cacheData));
+                    localStorage.setItem('cached_user_profile', JSON.stringify(cacheData));
+                } catch (_) {}
+
+                await setDoc(doc(db, "users", newUser.uid), userProfileData);
+
+                // Cadangkan juga dengan doc ID = email untuk kompatibilitas pencarian
+                try {
+                    await setDoc(doc(db, "users", email.toLowerCase()), userProfileData, { merge: true });
+                } catch (_) {}
+
+                alert("Pendaftaran Sukses! Selamat datang, " + nama + ".\nAkun Anda telah berhasil dibuat.");
+                isRegistering = false;
+                window.location.href = "dashboard.html";
             } catch (error) {
+                isRegistering = false;
                 btn.classList.remove('loading');
                 alert("Pendaftaran Gagal: " + error.message);
             }
@@ -1139,6 +1177,7 @@
 
         // AUTH STATE LISTENER (Redirect if logged in)
         onAuthStateChanged(auth, (user) => {
+            if (isRegistering) return;
             if (user) {
                 window.location.href = "dashboard.html";
             } else {

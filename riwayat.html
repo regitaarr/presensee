@@ -889,11 +889,24 @@
                     const uSnap = await getDoc(doc(db, "users", uid));
                     if (uSnap.exists()) {
                         const uData = uSnap.data();
-                        if (uData.nik) userNik = String(uData.nik).trim();
-                        if (uData.nama) userName = String(uData.nama).trim();
+                        if (uData.nik && uData.nik !== '-') userNik = String(uData.nik).trim();
+                        if (uData.nama && uData.nama !== '-') userName = String(uData.nama).trim();
                     }
                 } catch (eU) {
                     console.warn('Gagal membaca users doc di riwayat:', eU);
+                }
+
+                if (!userNik || !userName) {
+                    try {
+                        const cachedStr = localStorage.getItem('cached_user_profile_' + uid) || localStorage.getItem('cached_user_profile');
+                        if (cachedStr) {
+                            const cached = JSON.parse(cachedStr);
+                            if (cached) {
+                                if (!userNik && cached.nik && cached.nik !== '-') userNik = String(cached.nik).trim();
+                                if (!userName && cached.nama && cached.nama !== '-') userName = String(cached.nama).trim();
+                            }
+                        }
+                    } catch (_) {}
                 }
 
                 let dataMap = {};
@@ -912,18 +925,23 @@
                     });
                 } catch (eOld) { console.warn('presensi query in riwayat:', eOld); }
 
-                // 2. Muat dari koleksi attendances (berdasarkan id_attendance & nik/nama)
+                // 2. Muat dari koleksi attendances (berdasarkan id_attendance & uid/nik/nama)
                 try {
                     const attMap = new Map();
                     const snapAllAtt = await getDocs(collection(db, 'attendances'));
                     snapAllAtt.forEach(docSnap => {
                         const d = docSnap.data();
                         const docId = d.id_attendance || docSnap.id;
-                        const matchesUser =
-                            (!userNik && !userName) ||
-                            (userNik && d.nik && String(d.nik).trim() === userNik) ||
-                            (userName && d.nama && String(d.nama).trim().toLowerCase() === userName.toLowerCase()) ||
-                            (!d.nik && !d.nama);
+                        let matchesUser = false;
+                        if (uid && ((d.uid && d.uid === uid) || (d.user_id && d.user_id === uid))) {
+                            matchesUser = true;
+                        } else if (!d.uid && !d.user_id) {
+                            if (userNik && d.nik && String(d.nik).trim() === userNik) {
+                                matchesUser = true;
+                            } else if (userName && d.nama && String(d.nama).trim().toLowerCase() === userName.toLowerCase()) {
+                                matchesUser = true;
+                            }
+                        }
                         if (matchesUser) {
                             attMap.set(docId, { id_attendance: docId, ...d });
                         }
@@ -938,18 +956,23 @@
                     });
                 } catch (eAtt) { console.warn('attendances query in riwayat:', eAtt); }
 
-                // 3. Muat dari koleksi leaves (berdasarkan id_leave & nik/nama)
+                // 3. Muat dari koleksi leaves (berdasarkan id_leave & uid/nik/nama)
                 try {
                     const leavesMap = new Map();
                     const snapAllLeaves = await getDocs(collection(db, 'leaves'));
                     snapAllLeaves.forEach(docSnap => {
                         const d = docSnap.data();
                         const docId = d.id_leave || docSnap.id;
-                        const matchesUser =
-                            (!userNik && !userName) ||
-                            (userNik && d.nik && String(d.nik).trim() === userNik) ||
-                            (userName && d.nama && String(d.nama).trim().toLowerCase() === userName.toLowerCase()) ||
-                            (!d.nik && !d.nama);
+                        let matchesUser = false;
+                        if (uid && ((d.uid && d.uid === uid) || (d.user_id && d.user_id === uid))) {
+                            matchesUser = true;
+                        } else if (!d.uid && !d.user_id) {
+                            if (userNik && d.nik && String(d.nik).trim() === userNik) {
+                                matchesUser = true;
+                            } else if (userName && d.nama && String(d.nama).trim().toLowerCase() === userName.toLowerCase()) {
+                                matchesUser = true;
+                            }
+                        }
                         if (matchesUser) {
                             leavesMap.set(docId, { id_leave: docId, ...d });
                         }

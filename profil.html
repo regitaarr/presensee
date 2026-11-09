@@ -600,7 +600,7 @@
                         </div>
                         <h2 class="user-full-name" id="prof-nama">Memuat Akun...</h2>
                         <div class="user-posisi-pill">
-                            <span id="prof-posisi">Magang</span>
+                            <span id="prof-posisi">Memuat...</span>
                         </div>
                     </div>
                 </div>
@@ -879,7 +879,7 @@
             const profAv = document.getElementById('prof-avatar');
             if (profAv) profAv.innerText = nama.charAt(0).toUpperCase();
             const profPos = document.getElementById('prof-posisi');
-            if (profPos) profPos.innerText = currentUserData.posisi || 'Asisten Pranata Komputer';
+            if (profPos) profPos.innerText = currentUserData.posisi || 'Peserta Magang';
             const profNik = document.getElementById('prof-nik');
             if (profNik) profNik.innerText = currentUserData.nik || '-';
             const profEmail = document.getElementById('prof-email');
@@ -904,12 +904,32 @@
                         console.warn('Gagal membaca users doc:', eDoc);
                     }
 
+                    if (!userData && user.email) {
+                        try {
+                            const docEmail = await getDoc(doc(db, "users", user.email.toLowerCase()));
+                            if (docEmail.exists()) userData = docEmail.data();
+                        } catch (_) {}
+                    }
+
+                    // Cek cache localStorage jika doc Firestore belum lengkap/terbaca
+                    if (!userData || !userData.posisi) {
+                        try {
+                            const cachedStr = localStorage.getItem('cached_user_profile_' + user.uid) || localStorage.getItem('cached_user_profile');
+                            if (cachedStr) {
+                                const cached = JSON.parse(cachedStr);
+                                if (cached && (cached.uid === user.uid || cached.email === user.email)) {
+                                    userData = { ...(userData || {}), ...cached };
+                                }
+                            }
+                        } catch (_) {}
+                    }
+
                     if (!userData) {
                         userData = {
-                            nama: user.displayName || user.email.split('@')[0],
-                            posisi: 'Asisten Pranata Komputer',
+                            nama: user.displayName || (user.email ? user.email.split('@')[0] : 'Peserta'),
+                            posisi: 'Peserta Magang',
                             perusahaan: 'BPS Kota Banjar',
-                            email: user.email,
+                            email: user.email || '',
                             nik: '-'
                         };
                     }
